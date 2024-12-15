@@ -5,7 +5,7 @@
 # 아이디 : wjsqhd0827@gmail.com
 
 # OpenAI API 키(key) 값
-# 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
+# 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
 import matplotlib.pyplot as plt
 
 print(1 + 1)
