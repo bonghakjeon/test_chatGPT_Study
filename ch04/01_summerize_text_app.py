@@ -28,6 +28,9 @@ def main():
     # 패키지 streamlit 함수 set_page_config 사용해서 페이지 제목(page_title="요약 프로그램") 생성
     st.set_page_config(page_title="요약 프로그램")
     # 사이드바 생성 (처음에 Open AI API 키 입력받는 공간이 필요해서 생성)
+    # 파이썬 with문 
+    # 참고 URL - https://docs.python.org/ko/3/reference/compound_stmts.html#index-16
+    # 참고 2 URL - https://velog.io/@hyungraelee/Python-with
     with st.sidebar:
         # 아래는 사이드바 안에 위치하는 기능 이다.
         # Open AI API 키 입력받기
