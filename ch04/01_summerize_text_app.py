@@ -1,3 +1,7 @@
+# 비쥬얼스튜디오 코드(VSCode)
+# streamlit 터미널 실행 명령어
+# streamlit run 01_summerize_text_app.py
+
 ##### 기본 정보 불러오기 #####
 ##### (프로그램 개발할 때 패키지 정보 불러와서 정리) #####
 ##### (때에 따라서는 프로그램에 필요한 다른 API들의 키나 토큰들을 정리) #####
@@ -45,6 +49,7 @@ def main():
             openai.api_key  = open_apikey   # openai.api_key에 입력받은 open_apikey값을 저장 (이렇게 처음에 API키 지정 한번 해 놓으면 OpenAI의 패키지를 사용하는 코드 안에서는 더이상 따로 API 입력할 필요 없음.)
         st.markdown('---')   # 구분선 추가(--------) - 혹시라도 밑에 다른 엘리멘트들을 추가할 때를 대비해서 구현함.
 
+    #메인공간
     st.header("📃요약 프로그램") # 함수 st.header 사용해서 프로그램 제목 "📃요약 프로그램" 입력(이모지 📃추가 가능)
     st.markdown('---')   # 구분선 추가(--------) 
     
@@ -68,8 +73,8 @@ def main():
         - Use the format of a bullet point.
     -text : {text}
     '''
-        # 변수 prompt는 앞서 저희가 기능 구현 함수 askGpt에 input(파라미터)으로 들어감.
-        st.info(askGpt(prompt)) # 함수 askGpt 통해서 리턴 받은 ChatGPT 답변을 st.info 통해 화면에 예쁜 네모박스로 디스플레이(출력)함. 
+        # 변수 prompt는 앞서 구현한 기능 구현 함수 askGpt에 input(파라미터)으로 들어감.
+        st.info(askGpt(prompt))   # 함수 askGpt 통해서 리턴 받은 ChatGPT 답변을 st.info 통해 화면에 예쁜 네모박스로 디스플레이(출력)함. 
 
 if __name__=="__main__":
     main()
