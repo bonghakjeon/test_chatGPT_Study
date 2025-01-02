@@ -5,7 +5,7 @@ altair==5.5.0
 annotated-types==0.7.0
 anyio==4.7.0
 attrs==24.3.0
-# bardapi==1.0.0
+bardapi==1.0.0
 blinker==1.9.0
 browser-cookie3==0.20.1
 cachetools==5.5.0
@@ -49,7 +49,6 @@ Pygments==2.18.0
 python-dateutil==2.9.0.post0
 python-gemini-api==2.4.12
 pytz==2024.2
-pywin32==308
 referencing==0.35.1
 requests==2.32.3
 rich==13.9.4
