@@ -58,7 +58,7 @@ def main():
     if "Bard_TK" not in st.session_state:
         st.session_state["Bard_TK"] = ""
 
-    # 사이드바 
+    # 사이드바 생성 
     with st.sidebar:
         # st.text_input 사용해서 OpenAI API 키 입력받기
         open_apikey = st.text_input(label='OPENAI API 키', placeholder='Enter Your API Key', value='',type='password') 
