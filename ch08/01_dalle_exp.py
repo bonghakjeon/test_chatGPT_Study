@@ -17,7 +17,10 @@ openai.api_key = "OpenAI API 키 값 입력"
 # 생성하고자 하는 이미지의 사이즈를 파라미터 size에 할당 
 response = openai.Image.create(prompt="A futuristic city at night",n=1,size="512x512")
 # 주의사항 - 생성하고자 하는 이미지의 사이즈를 키울수록 비용은 더 크게 소모된다.
-# size : "256x256", "512x512","1024x1024" 
+# size "256x256"는 그림 1개당 price "0.016$" 소모된다.
+# size "512x512"는 그림 1개당 price "0.018$" 소모된다.
+# size "1024x1024"는 그림 1개당 price "0.02$" 소모된다.
+# size : "256x256", "512x512", "1024x1024" 
 # price : 0.016$, 0.018$, 0.02$
 
 # Dalle2로 생성한 이미지의 정보를 변수 response에 저장 
