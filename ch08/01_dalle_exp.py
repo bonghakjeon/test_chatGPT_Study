@@ -8,7 +8,7 @@ import urllib
 #        오류 메시지 "To push, remove secret from commit(s) or follow this URL to allow the secret." 출력 되므로 실제 OpenAI API 키 값은 제거 처리함 (2025.01.03 jbh)
 # 참고 URL - https://velog.io/@nigasa12/secret-key-%EC%9C%A0%EC%B6%9C%EC%82%AC%EA%B3%A0-%EB%B0%A9%EC%A7%80-git-secrets
 # 변수 openai.api_key에 OpenAI API 키값을 아래처럼 입력해준다. 
-openai.api_key = "OpenAI API 키 값 입력"
+openai.api_key = "api-key"
 
 # 이미지를 생성하기 위해 함수 openai.Image.create 사용 
 # 해당 함수 openai.Image.create 의 전달인자로 아래 3가지가 있다.
@@ -16,6 +16,8 @@ openai.api_key = "OpenAI API 키 값 입력"
 # 총 몇개의 이미지를 생성할지 파라미터 n에 할당 
 # 생성하고자 하는 이미지의 사이즈를 파라미터 size에 할당 
 response = openai.Image.create(prompt="A futuristic city at night",n=1,size="512x512")
+# response = openai.Image.create(prompt="Rock Festival", n=1, size="512x512")
+
 # 주의사항 - 생성하고자 하는 이미지의 사이즈를 키울수록 비용은 더 크게 소모된다.
 # size "256x256"는 그림 1개당 price "0.016$" 소모된다.
 # size "512x512"는 그림 1개당 price "0.018$" 소모된다.
@@ -35,5 +37,6 @@ image_url = response['data'][0]['url']
 # 파일명 "test.jpg" 다운로드 받은 경로는 가상환경이 설정된 
 # 루트 디렉토리 "ch08" 하위에 "test.jpg"로 다운로드 완료된다.
 urllib.request.urlretrieve(image_url, "test.jpg")
+# urllib.request.urlretrieve(image_url, "instaimg.jpg")
 # 생성하고자 하는 이미지 URL 주소 화면 출력(데이터 시각화)
 print(image_url)
