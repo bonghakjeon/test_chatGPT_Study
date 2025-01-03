@@ -4,8 +4,11 @@ import openai
 # 이 때, 해당 URL로 접근하기 위해 아래 urllib 패키지를 불러온다.(import)
 import urllib 
 
-# openai.api_key = "OpenAI API 키 값 입력"
+# TODO : 변수 openai.api_key에 실제 OpenAI API 키 값 입력후 Git push 진행시 
+#        오류 메시지 "To push, remove secret from commit(s) or follow this URL to allow the secret." 출력 되므로 실제 OpenAI API 키 값은 제거 처리함 (2025.01.03 jbh)
+# 참고 URL - https://velog.io/@nigasa12/secret-key-%EC%9C%A0%EC%B6%9C%EC%82%AC%EA%B3%A0-%EB%B0%A9%EC%A7%80-git-secrets
 # 변수 openai.api_key에 OpenAI API 키값을 아래처럼 입력해준다. 
+openai.api_key = "OpenAI API 키 값 입력"
 
 # 이미지를 생성하기 위해 함수 openai.Image.create 사용 
 # 해당 함수 openai.Image.create 의 전달인자로 아래 3가지가 있다.
