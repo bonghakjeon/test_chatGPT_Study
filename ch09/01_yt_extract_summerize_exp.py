@@ -1,3 +1,6 @@
+# OpenAI API 터미널 설치 명령어 
+# pip install openai==0.28.1
+
 # 랭체인(langchain) 공식 문서 
 # 참고 URL - https://python.langchain.com/docs/integrations/chat/openai/
 # 참고 2 URL - https://python.langchain.com/api_reference/openai/index.html
@@ -8,6 +11,9 @@
 
 # 유튜브 대본 api 터미널 설치 명령어
 # pip install youtube_transcript_api 
+
+# 유튜브 대본(스크립트) 번역할 동영상 URL 주소
+# 참고 URL - https://www.youtube.com/watch?v=Pn-W41hC764 
 
 # OpenAI에서 텍스트의 토큰수를 세어야 될 때 사용하는 패키지 "tiktoken" 설치하기 
 # pip install tiktoken
