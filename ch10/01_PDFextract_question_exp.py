@@ -200,3 +200,117 @@ sim_result = return_answer_candidate(df, '아무 것도 안 먹었더니 꼬르�
 # 그 외 유사하지 않은 다른 문장들은 코사인 유사도(Cosine Similarity)를 구하는 과정에서 걸러지고
 # 의미가 통하는 상위 3개의 문장들만 시맨틱 서치(Semantic Search)해서 구한다.
 print(sim_result)
+
+# Langchain을 활용하여 PDF 내용 질문 방법 익히기
+# 파이썬 패키지 "PyPDF2" 터미널 설치 명령어
+# pip install PyPDF2
+
+# 패키지 불러오기
+from PyPDF2 import PdfReader
+
+# PDF 파일 경로를 지정하여 불러오기. 
+pdf_reader = PdfReader('Summary of ChatGPTGPT-4 Research.pdf')
+
+# 텍스트 추출하기
+total_text = ""
+for page in pdf_reader.pages:
+    total_text += page.extract_text()
+
+# print('---------- 텍스트 추출하기 ----------')
+# print(total_text)
+
+# 텍스트 청크(Chunk) 사이즈로 자르기
+# 랭체인 프레임워크 "langchain" 터미널 설치 명령어
+# pip install -U langchain-community
+from langchain.text_splitter import CharacterTextSplitter
+
+text_splitter = CharacterTextSplitter(
+            separator="\n",
+            chunk_size=1000,
+            chunk_overlap=200,
+            length_function=len
+        )
+
+chunks = text_splitter.split_text(total_text)
+
+# print('----- total_text Chunk len -----')
+# print(len(chunks))
+# print('----- chunks[0] Messages -----')
+# 인덱스 0에 존재하는 chunk 문서 묶음 텍스트로 출력
+# print(chunks[0])
+# print('----- chunks[1] Messages -----')
+# 인덱스 1에 존재하는 chunk 문서 묶음 텍스트로 출력
+# print(chunks[1])
+
+# 텍스트 임베딩 / 시멘틱 인덱싱하기 
+# 패키지 "tiktoken" 터미널 설치 명령어 
+# pip install tiktoken
+# 패키지 "faiss-cpu" 터미널 설치 명령어 
+# pip install faiss-cpu
+from langchain.vectorstores import FAISS
+from langchain.embeddings import OpenAIEmbeddings
+
+embeddings = OpenAIEmbeddings(api_key="API_key 입력")
+knowledge_base = FAISS.from_texts(chunks, embeddings)
+# PDF 파일 "Summary of ChatGPTGPT-4 Research.pdf" 내에서 
+# 사용자의 질문 "where can i use chatGPT"과 가장 유사한 내용이 포함되어 있는
+# Chink 4개 추출하기 (질문에 대한 답변이 포함되어 있기 보다는 질문과 가장 유사한 의미를 내포하는 chunk 묶음을 뽑은 것이다.)
+docs = knowledge_base.similarity_search("where can i use chatGPT")
+# print(docs)
+
+# ChatGPT에게 최종 질문하기(load_qa_chain)
+# 위에서 추출한 chunk 묶음 "docs"와 사용자의 질문 "where can i use chatGPT"을 같이 포함해서 
+# ChatGPT에게 질문에 대한 답변을 요청하기 
+from langchain.chat_models import ChatOpenAI
+from langchain.chains.question_answering import load_qa_chain
+
+llm = ChatOpenAI(temperature=0,
+                 openai_api_key="API_key 입력",
+                 max_tokens=3000,
+                 model_name='gpt-3.5-turbo',
+                 request_timeout=120)
+
+chain = load_qa_chain(llm, chain_type="stuff")
+
+# 함수 chain.run 호출하면 
+# 사용자의 질문은 "where can i use chatGPT" 이고 
+# 그리고 이질문에 대한 답변은 함수 chain.run 매개변수 input_documents로 넣어준
+# 총 4개의 chunk(docs)를 ChatGPT 너가 읽어보고 답변 해주면 된다.
+response = chain.run(input_documents=docs, question="where can i use chatGPT")
+print('----- ChatGPT에게 최종 질문하기(load_qa_chain) -----')
+print(response)
+
+# Langchain을 활용한 또다른 질문방법 RetrivalQA
+# 패키지 "chromadb" 터미널 설치 명령어 
+# pip install chromadb
+from langchain.chains import RetrievalQA
+from langchain.vectorstores import Chroma
+
+db = Chroma.from_texts(chunks, embeddings)
+retriever = db.as_retriever(search_type="similarity", search_kwargs={"k":2})
+
+qa = RetrievalQA.from_chain_type(
+    llm=llm, chain_type="stuff", retriever=retriever, return_source_documents=True)
+query = "where can i use chatGPT"
+result = qa({"query": query})
+print(result["result"])
+print(result["source_documents"])
+
+# 이전 질문 기록을 포함하여 질문하는 방법 
+from langchain.memory import ConversationBufferMemory
+memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+
+from langchain.chains import ConversationalRetrievalChain
+qa = ConversationalRetrievalChain.from_llm(llm=llm, retriever=retriever, memory=memory)
+
+chat_history = []
+query = "where can i use chatGPT"
+result = qa({"question": query, "chat_history": chat_history})
+print(result["answer"])
+
+#이전 질문 및 답변 저장
+chat_history = [(query, result["answer"])]
+#다시 질문
+query = "which field is the most used?"
+result = qa({"question": query, "chat_history": chat_history})
+print(result["answer"])
