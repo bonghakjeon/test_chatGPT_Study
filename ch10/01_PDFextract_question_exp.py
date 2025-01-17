@@ -293,6 +293,7 @@ print(response)
 # pip install --no-deps chromadb
 # pip install -U langchain-chroma
 # pip install -U --no-deps langchain-chroma
+# pip install --no-deps langchain-openai==0.1.0
 
 from langchain.chains import RetrievalQA
 from langchain.vectorstores import Chroma
