@@ -36,6 +36,7 @@ from langchain.chains.question_answering import load_qa_chain
 # 종속성 해결 문제를 피하려면 아래처럼 
 # --no-deps 옵션을 사용하여 패키지 설치
 # pip install --no-deps googletrans==3.1.0a0
+# pip install --no-deps googletrans==4.0.0-rc1
 # 참고 URL - https://zziii.tistory.com/entry/ERROR-pips-dependency-resolver-does-not-currently-take-into-account-all-the-packages-that-are-installed
 from googletrans import Translator
 
