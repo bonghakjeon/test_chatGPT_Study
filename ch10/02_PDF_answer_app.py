@@ -23,7 +23,7 @@ from PyPDF2 import PdfReader
 # 패키지 langchain-core 터미널 설치 명령어 
 # 종속성 해결 문제를 피하려면 아래처럼 
 # --no-deps 옵션을 사용하여 패키지 설치
-# pip install --no-deps langchain-core
+# pip install --no-deps langchain-core==0.3.30
 # 참고 URL - https://zziii.tistory.com/entry/ERROR-pips-dependency-resolver-does-not-currently-take-into-account-all-the-packages-that-are-installed
 from langchain.chat_models import ChatOpenAI
 # from langchain_openai import ChatOpenAI
@@ -37,7 +37,8 @@ from langchain.chains.question_answering import load_qa_chain
 # --no-deps 옵션을 사용하여 패키지 설치
 # pip install --no-deps googletrans==3.1.0a0
 # pip install --no-deps googletrans==4.0.0-rc1
-# 참고 URL - https://zziii.tistory.com/entry/ERROR-pips-dependency-resolver-does-not-currently-take-into-account-all-the-packages-that-are-installed
+# 참고 URL - https://github.com/ssut/py-googletrans/issues/400
+# 참고 2 URL - https://zziii.tistory.com/entry/ERROR-pips-dependency-resolver-does-not-currently-take-into-account-all-the-packages-that-are-installed
 from googletrans import Translator
 
 ##### 기능 구현 함수 #####

@@ -285,6 +285,10 @@ print(response)
 # 종속성 해결 문제를 피하려면 아래처럼 
 # --no-deps 옵션을 사용하여 패키지 설치
 # 참고 URL - https://zziii.tistory.com/entry/ERROR-pips-dependency-resolver-does-not-currently-take-into-account-all-the-packages-that-are-installed
+# langchain-chroma 공식 문서  
+# 참고 URL - https://pypi.org/project/langchain-chroma/
+# langchain-chroma 인프런 참고 자료
+# 참고 URL - https://www.inflearn.com/community/questions/1409525/chromadb-%EC%98%A4%EB%A5%98?srsltid=AfmBOor5_crR2j2tJUJQjGYSqdYAwPYRwgF5QgamCC5-dWZHJS2fVfQ1
 # pip install langchain-chroma==0.1.0
 # pip install --no-deps chromadb
 # pip install -U langchain-chroma
