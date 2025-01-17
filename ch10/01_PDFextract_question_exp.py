@@ -221,7 +221,7 @@ for page in pdf_reader.pages:
 
 # 텍스트 청크(Chunk) 사이즈로 자르기
 # 랭체인 프레임워크 "langchain" 터미널 설치 명령어
-# pip install -U langchain-community
+# pip install --no-deps -U langchain-community
 from langchain.text_splitter import CharacterTextSplitter
 
 text_splitter = CharacterTextSplitter(
@@ -285,6 +285,7 @@ print(response)
 # 종속성 해결 문제를 피하려면 아래처럼 
 # --no-deps 옵션을 사용하여 패키지 설치
 # 참고 URL - https://zziii.tistory.com/entry/ERROR-pips-dependency-resolver-does-not-currently-take-into-account-all-the-packages-that-are-installed
+# pip install langchain-chroma==0.1.0
 # pip install --no-deps chromadb
 # pip install -U langchain-chroma
 # pip install -U --no-deps langchain-chroma
