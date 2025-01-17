@@ -282,7 +282,11 @@ print(response)
 
 # Langchain을 활용한 또다른 질문방법 RetrivalQA
 # 패키지 "chromadb" 터미널 설치 명령어 
-# pip install chromadb
+# 종속성 해결 문제를 피하려면 아래처럼 
+# --no-deps 옵션을 사용하여 패키지 설치
+# 참고 URL - https://zziii.tistory.com/entry/ERROR-pips-dependency-resolver-does-not-currently-take-into-account-all-the-packages-that-are-installed
+# pip install --no-deps chromadb
+
 from langchain.chains import RetrievalQA
 from langchain.vectorstores import Chroma
 

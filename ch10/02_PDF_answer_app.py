@@ -28,6 +28,8 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain.chains.question_answering import load_qa_chain
 # 구글 번역 API 불러오기
 # 구글 번역기 패키지 터미널 설치 명령어
+# 종속성 해결 문제를 피하려면 아래처럼 
+# --no-deps 옵션을 사용하여 패키지 설치
 # pip install --no-deps googletrans==3.1.0a0
 # 참고 URL - https://zziii.tistory.com/entry/ERROR-pips-dependency-resolver-does-not-currently-take-into-account-all-the-packages-that-are-installed
 from googletrans import Translator
