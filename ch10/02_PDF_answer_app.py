@@ -26,7 +26,7 @@ from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import FAISS
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.chains.question_answering import load_qa_chain
-# 구글 번역 API 
+# 구글 번역 API 불러오기
 from googletrans import Translator
 
 ##### 기능 구현 함수 #####
