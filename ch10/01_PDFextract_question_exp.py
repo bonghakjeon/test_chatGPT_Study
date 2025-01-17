@@ -287,6 +287,7 @@ print(response)
 # 참고 URL - https://zziii.tistory.com/entry/ERROR-pips-dependency-resolver-does-not-currently-take-into-account-all-the-packages-that-are-installed
 # pip install --no-deps chromadb
 # pip install -U langchain-chroma
+# pip install -U --no-deps langchain-chroma
 
 from langchain.chains import RetrievalQA
 from langchain.vectorstores import Chroma
