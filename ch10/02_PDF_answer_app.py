@@ -20,6 +20,11 @@ import streamlit as st
 # PDF reader
 from PyPDF2 import PdfReader
 # Langchain 패키지들
+# 패키지 langchain-core 터미널 설치 명령어 
+# 종속성 해결 문제를 피하려면 아래처럼 
+# --no-deps 옵션을 사용하여 패키지 설치
+# pip install --no-deps langchain-core
+# 참고 URL - https://zziii.tistory.com/entry/ERROR-pips-dependency-resolver-does-not-currently-take-into-account-all-the-packages-that-are-installed
 from langchain.chat_models import ChatOpenAI
 # from langchain_openai import ChatOpenAI
 from langchain.text_splitter import CharacterTextSplitter
