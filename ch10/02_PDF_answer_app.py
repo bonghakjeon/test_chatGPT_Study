@@ -20,8 +20,8 @@ import streamlit as st
 # PDF reader
 from PyPDF2 import PdfReader
 # Langchain 패키지들
-# from langchain.chat_models import ChatOpenAI
-from langchain_openai import ChatOpenAI
+from langchain.chat_models import ChatOpenAI
+# from langchain_openai import ChatOpenAI
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import FAISS
 from langchain.embeddings import OpenAIEmbeddings
