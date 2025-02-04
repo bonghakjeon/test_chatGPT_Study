@@ -53,6 +53,6 @@ url = "https://jsonplaceholder.typicode.com/posts/1"
 # http.request 함수 호출시 'GET', url 2가지 인자 전달
 response = http.request('GET', url) # HTTP Request(요청) - GET 방식
 
-print(response.data) # HTTP Response(응답) 데이터(response.data) 출력
+print(response.data) # HTTP Response(응답) 데이터(response.data) 터미널창 출력
 
 

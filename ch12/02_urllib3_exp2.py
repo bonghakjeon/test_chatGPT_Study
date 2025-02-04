@@ -60,6 +60,6 @@ response = http.request('POST', url, fields=data) # HTTP Request(요청) - POST 
 # HTTP Response(응답) 데이터(response.data) 출력
 # 출력결과 - b'{\n  "id": 101\n}'
 print(response.data)  
-# HTTP Response(응답) 상태 코드 결과값(response.status) 출력
+# HTTP Response(응답) 상태 코드 결과값(response.status) 터미널창 출력
 # 출력결과 - 201 (-2xx-성공 : 200번대의 상태 코드는 대부분 성공 의미)
 print(response.status) 
