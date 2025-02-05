@@ -35,7 +35,7 @@
 
 # 텔레그램 챗봇 프로그램 실행 순서 
 # 1 단계 : FastAPI를 사용해서 로컬 파이썬 서버(07_telegramebot_serverset.py) 실행(생성)
-# 2 단계 : ngrok를 활용해서 외부에서 개발자 로컬 PC로 접속하기 위한 주소 발급 받기
+# 2 단계 : ngrok를 활용해서 외부 서버에서 개발자 로컬 PC로 접속하기 위한 주소 발급 받기
 # 3 단계 : 텔레그램 API 웹훅을 사용해서 텔레그램 서버와 로컬 파이썬 서버(07_telegramebot_serverset.py) 연결 
 
 # 텔레그램 챗봇 프로그램 구조
@@ -43,7 +43,7 @@
 # - 실행파일 - 08_telegramebot.py 먼저 실행
 # - FastAPI 파이썬 서버(07_telegramebot_serverset.py) 실행(생성)
 # - 내부 주소로 실행 (http://localhost:8000/) 
-# - 외부에서 접근 불가 
+# - 외부 서버에서 접근 불가 
 
 # 2. FastAPI 서버 - 07_telegramebot_serverset.py 
 # - 주소 별 특정 기능 수행 
@@ -53,8 +53,8 @@
 #   http://localhost:8000/chat/
 
 # 3. 텔레그램 서버
-# - ngrok를 활용해서 외부에서 개발자 로컬 PC로 접속하기 위한 주소 발급 받기
-#   해당 외부접속 가능 주소를 Telegram API의 웹훅과 연결하기 
+# - ngrok를 활용해서 외부 서버에서 개발자 로컬 PC로 접속하기 위한 주소 발급 받기
+#   해당 외부 서버에서 접속 가능 주소를 Telegram API의 웹훅과 연결하기 
 
 from fastapi import FastAPI   # FastAPI 패키지 "fastapi" 불러오기 
 
