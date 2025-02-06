@@ -35,23 +35,26 @@
 
 # ngrok 응용 프로그램 실행 방법
 # 1) 비쥬얼스튜디오코드(VSCode) 실행 
-#    -> 유비콘 패키지 "uvicorn[standard]"를 사용하는 파이썬 파일 "07_telegramebot_serverset.py" 열기
+#    -> 유비콘 패키지 "uvicorn[standard]"를 사용하는 파이썬 파일 "07_telegramebot_serverset.py" 또는 "08_telegramebot.py" 열기
+#    -> OpenAI API 키 값 입력 
 #    -> 터미널창 열어서 명령어 "uvicorn 07_telegramebot_serverset:app --reload" 입력 및 엔터 
 #    -> FastAPI 서버(FastAPI 클래스 객체 app)가 정상적으로 생성 완료
 
-# 2) PC 바탕 화면 -> ngrok 바로가기 아이콘 더블 클릭
+# 2) 텔레그램 응용 프로그램 실행 
+
+# 3) PC 바탕 화면 -> ngrok 바로가기 아이콘 더블 클릭
 # ngrok 바로가기 아이콘 존재하지 않으면 아래 파일경로 들어가서 ngrok 응용 프로그램 실행
 # 파일 경로 - "C:\Users\bhjeon\Desktop\회사_업무_및_공부_자료\상상진화 회사 업무\AI 챗봇_개발\텔레그램_카카오_챗봇_ngrok_실행_프로그램" -> 응용 프로그램 ngrok
 
-# 3) ngrok 전용 터미널창 출력 
+# 4) ngrok 전용 터미널창 출력 
 #    -> 아래 명령어 "ngrok authtoken 2sZKZBZ9stzdWgsAPcHt9JtrNzN_5QpYosiEkadfnfffAvsvn" 입력 및 엔터 
 # (명령어 형식) ngrok authtoken <Your token>
 # (명령어 예시) ngrok authtoken 2sZKZBZ9stzdWgsAPcHt9JtrNzN_5QpYosiEkadfnfffAvsvn
 
-# 4) 3)번의 토큰 번호 입력이 잘 되었을 경우 터미널창에 아래와 같은 메시지 출력
+# 5) 4)번의 토큰 번호 입력이 잘 되었을 경우 터미널창에 아래와 같은 메시지 출력
 # Authtoken saved to configuration file: C:\Users\bhjeon\AppData\Local/ngrok/ngrok.yml
 
-# 5) ngrok 응용 프로그램 터미널창에 명령어 "ngrok http 8000" 입력 및 엔터 
+# 6) ngrok 응용 프로그램 터미널창에 명령어 "ngrok http 8000" 입력 및 엔터 
 #    -> 외부 서버에서도 개발자 로컬 PC로 접속할 수 있는 URL 주소 생성 
 # 참고사항 
 # - 위에 명령어 중 "8000"이 뜻하는 바는 개발자 로컬 PC안에 포트(Port) 번호를 의미함.
@@ -65,16 +68,17 @@
 #   외부 서버에서도 개발자 로컬 PC에 있는 포트(Port) 번호 "8000"에 있는
 #   새로 생성한 FastAPI 웹서버에 접속할 수 있는 URL 주소를 생성해준다.
 
-# 6) ngrok 응용 프로그램 터미널창에 아래와 같은 메시지가 출력되면
+# 7) ngrok 응용 프로그램 터미널창에 아래와 같은 메시지가 출력되면
 #    이제 외부 서버에서도 개발자 로컬 PC로 접속할 수 있는 FastAPI 웹서버 URL 주소 생성 완료.
 #    아래에 출력된 메시지 중 외부 서버에서도 개발자 로컬 PC로 접속할 수 있는 
-#    FastAPI 웹서버 URL 주소 "https://7839-14-52-67-173.ngrok-free.app" 
+#    FastAPI 웹서버 URL 주소 (예) "https://7839-14-52-67-173.ngrok-free.app" 
 #    로 외부 서버에서 접속을 하면 
 #    개발자 로컬 PC에 포트(Port) 번호 "8000"로 접속이 가능("http://localhost:8000")하다는 것을 의미한다.
 # 주의사항 - ngrok 응용 프로그램 터미널창에 URL 주소 "https://7839-14-52-67-173.ngrok-free.app" 
 #           복사하려고 단축키 Ctrl + C 키를 누르면 ngrok 응용 프로그램이 종료된다.(Ctrl+C to quit)
 #           하여 절대 단축키 Ctrl + C 키를 누르지 말고 마우스로 해당 URL 주소를 드래그 한 후 
 #           키보드 단축키 Ctrl + Insert 키를 눌러서 해당 URL 주소를 복사한다.
+# (예) 터미널창에 출력되는 메시지 예시
 # ngrok    (Ctrl+C to quit)        
 # Sign up to try new private endpoints https://ngrok.com/new-features-update?ref=private                                                                                                                                                                                                                          
 # Session Status                online                                                                                                                    
@@ -87,7 +91,7 @@
 # Connections                   ttl     opn     rt1     rt5     p50     p90                                                                                                             
 #                               0       0       0.00    0.00    0.00    0.00  
 
-# 7) 6)번에서 복사한 외부 서버에서도 개발자 로컬 PC로 접속할 수 있는 
+# 8) 7)번에서 복사한 외부 서버에서도 개발자 로컬 PC로 접속할 수 있는 
 #    FastAPI 웹서버 URL 주소를 가지고 구글 크롬(Chrome) 웹브라우저에서 붙여넣기 하면
 #    아래와 같은 메시지가 출력되면 버튼 "사이트 방문" 클릭
 # 당신은 방문하려고합니다 :
@@ -97,20 +101,21 @@
 # * 신뢰할 수 있는 경우에만 이 웹사이트를 방문하세요. 링크를 보낸 사람을 신뢰하는 경우에만 이 웹사이트를 방문하세요.
 # * 비밀번호, 전화번호, 신용카드 정보와 같은 개인정보나 금융정보를 공개하는 데는 주의하세요.
 
-# 8) 7)번 처럼 구글 크롬(Chrome) 웹브라우저 버튼 "사이트 방문" 클릭시 
+# 9) 8)번 처럼 구글 크롬(Chrome) 웹브라우저 버튼 "사이트 방문" 클릭시 
 #    아래와 같은 JSON 데이터가 웹브라우저 화면에 출력
 #    {"message":"TelegramChatbot"}
 #    해당 데이터가 출력되는 이유는 외부 서버(외부 구글 크롬(Chrome) 웹브라우저)에서 접속을 해서 
 #    유비콘 패키지 "uvicorn[standard]"를 사용하는 파이썬 파일 "07_telegramebot_serverset.py"을 통해
 #    생성한 "8000" 포트(Port)번호를 가진 FastAPI 웹서버 접속이 완료되었기 때문이다.
 
-# 9) ngrok 터미널창에서 생성한 외부 서버(텔레그램 서버)에서도 개발자 로컬 PC로 접속할 수 있는 
+# 10) ngrok 터미널창에서 생성한 외부 서버(텔레그램 서버)에서도 개발자 로컬 PC로 접속할 수 있는 
 #    FastAPI 웹서버 URL 주소 "https://7839-14-52-67-173.ngrok-free.app" 
 #    와 텔레그램 서버만 연결 진행 
-#    -> 구글 크롬(Chrome) 웹브라우저에 아래와 같은 URL 주소 입력 및 엔터
+#    -> 구글 크롬(Chrome) 웹브라우저에 아래와 같은 URL 주소 (예) https://7839-14-52-67-173.ngrok-free.app
+#       입력 및 엔터
 #    "https://api.telegram.org/bot7717605195:AAHJGNKRR_aK_dG0HELQUBu1WeEsclERRb0/setWebhook?url=https://7839-14-52-67-173.ngrok-free.app/chat" 
 #    (URL 주소 형식) 
-#    * 텔레그램 챗봇의 메인코드를 실행하는 chat함수를
+#    * 텔레그램 챗봇의 메인코드를 실행하는 chat 함수를
 #      실행할 수 있는 주소 ('/chat')를 아래처럼 추가해야 
 #      텔레그램 서버와 개발자 로컬 PC로 접속할 수 있는 FastAPI 웹서버가 연결될 수 있다.
 #    https://api.telegram.org/bot<토큰>/setWebhook?url=<ngrok 터미널창에서 생성한 FastAPI 웹서버 URL 주소>/chat
@@ -130,7 +135,7 @@
 #    해당 URL 주소를 통해서 개발자 로컬 PC에 포트(Port) 번호 "8000"로 
 #    접속을("http://localhost:8000") 하여 채팅 정보가 넘어온다.
 
-# 10) 구글 크롬(Chrome) 웹브라우저에 아래와 같은 JSON 데이터 출력되고,
+# 11) 구글 크롬(Chrome) 웹브라우저에 아래와 같은 JSON 데이터 출력되고,
 #     이 때, 항목 "description"에 "Webhook was set"이라고 출력되면
 #     텔레그램 채팅방과 개발자 로컬 PC에서 생성한 FastAPI 연결 완료
 # {"ok":true,"result":true,"description":"Webhook was set"} 

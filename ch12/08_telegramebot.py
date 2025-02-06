@@ -152,7 +152,8 @@ def getTextFromGPT(messages):   # ChatGPT한테 질문을 하게 될 프롬프�
     # 시스템 프롬프트의 내용("content": 'You are a thoughtful assistant. Respond to all input in 25 words and answer in korea')을
     # 개발자의 요구사항에 맞게 변경하면 된다.
     # ChatGPT API에서 요구하는 프롬프트(messages) input 양식으로 변경 및 변경한 input 양식을 변수 messages_prompt에 저장 
-    messages_prompt = [{"role": "system", "content": 'You are a thoughtful assistant. Respond to all input in 25 words and answer in korea'}]
+    # messages_prompt = [{"role": "system", "content": 'You are a thoughtful assistant. Respond to all input in 25 words and answer in korea'}]
+    messages_prompt = [{"role": "system", "content": 'You are a thoughtful assistant. Respond to all input in 100 words and answer in korea'}]
     messages_prompt += [{"role": "user", "content": messages}]  
 
     # openai.ChatCompletion.create 함수 파라미터 "messages"에 messages_prompt 저장 
@@ -168,6 +169,14 @@ def getTextFromGPT(messages):   # ChatGPT한테 질문을 하게 될 프롬프�
 # 생성된 그림의 URL 주소 받기
 # 텔레그램 채팅방 안에서 사용자가 텔레그램 챗봇(ChatGPT)에게 그림 생성을 요청하면
 # 요청한 내용이 변수 messages로 input돼서 해당 함수 getImageURLFromDALLE 실행
+# DALLE.2 주의사항 
+# 1. 특정 유명인 (예) 도널드 트럼프, 바이든 등등… 을 그림 그려달라고 요청 시 오류 발생 
+#    참고 URL - https://community.openai.com/t/your-request-was-rejected-as-a-result-of-our-safety-system-your-prompt-may-contain-text-that-is-not-allowed-by-our-safety-system/285641
+#    1번 오류 발생시 위의 ChatGPT로 부터 답변받기 함수 "getTextFromGPT" 몸체 안 변수 "messages_prompt"에 할당되는 시스템 프롬프트 문자열(항목 "content") 아래처럼 변경 후 컴파일 빌드 다시 실행 필요 
+# (변경 전) messages_prompt = [{"role": "system", "content": 'You are a thoughtful assistant. Respond to all input in 25 words and answer in korea'}]
+# (변경 후) messages_prompt = [{"role": "system", "content": 'You are a thoughtful assistant. Respond to all input in 100 words and answer in korea'}]
+# 2. 영어가 아닌 한글로 그림 그려달라고 요청 시 요청사항과 전혀 다른 그림으로 그려줌.
+# 3. 사용자가 그림 그려달라고 요청시 시간이 소요됨 (간단한 그림은 몇초 단위 / 복잡한 그림은 그 이상 시간 소요)
 def getImageURLFromDALLE(messages):   
     # 사용자가 DALLE.2에게 그림 생성을 요청한 내용이 
     # 문자열로 저장된 변수 messages를 
