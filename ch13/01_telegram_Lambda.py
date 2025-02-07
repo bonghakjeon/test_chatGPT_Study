@@ -1,3 +1,25 @@
+# 텔레그램 채팅방에서 사용자가 질문(또는 그림 생성 요청) 입력될 때마다
+# 텔레그램 서버 -> 아마존 웹서비스(AWS) API Gateway 주소로 
+# 사용자가 질문(또는 그림 생성 요청)이 전달될 수 있도록 
+# 텔레그램 API "setWebhook" 사용한 연결 방법
+# 1. 구글 크롬(Chrome) 웹브라우저에 아래와 같은 URL 주소 형식 입력 및 엔터
+# (형식) https://api.telegram.org/bot<토큰>/setWebhook?url=<아마존 웹서비스(AWS) API Gateway URL 주소>
+# (예) https://api.telegram.org/bot7717605195:AAHJGNKRR_aK_dG0HELQUBu1WeEsclERRb0/setWebhook?url=https://9qfl81l1ng.execute-api.ap-northeast-2.amazonaws.com/inflearn_Telegram
+
+# 2. 구글 크롬(Chrome) 웹브라우저에 json 데이터 출력 
+# -> 항목 "description"에 매핑된 값이 "Webhook was set" 이라고 출력되면
+# -> 텔레그램 채팅방에서 사용자가 질문(또는 그림 생성 요청) 입력될 때마다
+#    텔레그램 서버 -> 아마존 웹서비스(AWS) API Gateway 주소 연결 완료
+# {"ok":true,"result":true,"description":"Webhook was set"}
+
+# 3. 2번 처럼 텔레그램 채팅방에서 사용자가 질문(또는 그림 생성 요청) 입력될 때마다
+#    텔레그램 서버 -> 아마존 웹서비스(AWS) API Gateway 주소 연결 완료되면 
+#    기존에 ngrok 사용하여 setWebhook 처리한 URL 주소 "https://api.telegram.org/bot7717605195:AAHJGNKRR_aK_dG0HELQUBu1WeEsclERRb0/setWebhook?url=https://7839-14-52-67-173.ngrok-free.app/chat"
+#    는 setWebhook 처리가 해제된다.
+#    왜냐면 setWebhook은 채팅방에 단 하나의 URL 주소만 setWebhook 처리해주기 때문이다.
+#    즉, 동시에 두 개의 URL 주소를 연결 안 해준다.
+
+
 # 람다(lambda) 함수 소스파일 "lambda_function.py" 열고 -> 화면 좌측 버튼 "Test" 클릭 
 # -> 컴파일 실행시 아래 "OUTPUT - Execution Results" 탭 화면 출력되고
 # 아래 응답값(Response) -> 오류 메시지("errorMessage") "Unable to import module 'lambda_function': No module named 'openai'"가 출력되는
