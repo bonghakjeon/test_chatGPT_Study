@@ -5,7 +5,7 @@
 
 # 테스트용 텔레그램 챗봇 채팅방에 채팅 메시지 보내기 
 
-import urllib3   # HTTP 통신을 하기위해 패키지 urllib3 불러오기
+import urllib3   # HTTP 통신을 하기위해 파이썬 기본 내장 패키지(함수) urllib3 불러오기 - 아마존 웹서비스(AWS)에서 사용하기 용이하다.
 import json   # 텔레그램 서버로부터 받은 json 데이터 처리하기 위해 패키지 json 불러오기 
 
 # 테스트용 텔레그램 챗봇 채팅방에서 
@@ -38,6 +38,10 @@ def sendMessage(chat_id, text):
     # http.request 함수 호출시 'POST', url, fields=data 3가지 인자 전달 
     response = http.request('POST',url ,fields=data)
     # 텔레그램 채팅방에 보낸 채팅 메시지 정보 아래처럼 리턴 
+    # json.loads 함수 호출 하여 JSON 문자열 -> Dictionary 객체 변환 처리 
+    # JSON 문자열 (예) '{"name": "홍길동", "birth": "0525", "age": 30}'
+    # Dictionary 객체 (예) {'name': '홍길동', 'birth': '0525', 'age': 30}
+    # 참고 URL - https://wikidocs.net/126088 
     return json.loads(response.data.decode('utf-8'))
 
 # 텔레그램 채팅방에 채팅 메시지 보내기위해 

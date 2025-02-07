@@ -43,7 +43,7 @@
 # 2) pip install urllib3==1.26.18
 
 # HTTP 통신 Request(요청) 테스트 코드 
-import urllib3
+import urllib3   # HTTP 통신을 하기위해 파이썬 기본 내장 패키지(함수) urllib3 불러오기 - 아마존 웹서비스(AWS)에서 사용하기 용이하다.
 
 # 라이브러리(패키지) urllib3의 PoolManager 클래스 객체 http 생성
 http = urllib3.PoolManager()

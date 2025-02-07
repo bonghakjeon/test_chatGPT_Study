@@ -7,7 +7,7 @@
 # uvicorn 08_telegramebot:app --reload
 
 ###### 기본 정보 설정 단계 ######
-import urllib3   # HTTP 통신을 하기위해 패키지 urllib3 불러오기
+import urllib3   # HTTP 통신을 하기위해 파이썬 기본 내장 패키지(함수) urllib3 불러오기 - 아마존 웹서비스(AWS)에서 사용하기 용이하다.
 import json   # 텔레그램 서버로부터 받은 json 데이터 처리하기 위해 패키지 json 불러오기 
 import openai  # OPENAI 패키지 openai 불러오기 
 # FastAPI 패키지 "fastapi" 불러오기
@@ -78,6 +78,7 @@ async def chat(request: Request):
     return {"message": "TelegramChatbot/chat"}
 
 ###### 기능 함수 구현 단계 ######
+
 # 메세지 전송
 # 텔레그램 채팅방에 ChatGPT의 답변을 채팅 메시지로 보내기
 # ChatGPT의 답변을 아래 sendMessage 함수를 호출하여
@@ -105,6 +106,10 @@ def sendMessage(chat_id, text,msg_id):
     # http.request 함수 호출시 'POST', url, fields=data 3가지 인자 전달 
     response = http.request('POST',url ,fields=data)
     # 텔레그램 채팅방에 보낸 채팅 메시지 정보 아래처럼 리턴 
+    # json.loads 함수 호출 하여 JSON 문자열 -> Dictionary 객체 변환 처리 
+    # JSON 문자열 (예) '{"name": "홍길동", "birth": "0525", "age": 30}'
+    # Dictionary 객체 (예) {'name': '홍길동', 'birth': '0525', 'age': 30}
+    # 참고 URL - https://wikidocs.net/126088 
     return json.loads(response.data.decode('utf-8'))
 
 # 사진 전송
@@ -137,6 +142,10 @@ def sendPhoto(chat_id, image_url,msg_id):
     # 텔레그램 채팅방에 전송한 이미지 정보 및 
     # 텔레그램 서버에서 채팅방으로 이미지를 잘 전송했다고 
     # 이미지를 전송한 행위에 대한 정보 아래처럼 리턴 
+    # json.loads 함수 호출 하여 JSON 문자열 -> Dictionary 객체 변환 처리 
+    # JSON 문자열 (예) '{"name": "홍길동", "birth": "0525", "age": 30}'
+    # Dictionary 객체 (예) {'name': '홍길동', 'birth': '0525', 'age': 30}
+    # 참고 URL - https://wikidocs.net/126088 
     return json.loads(response.data.decode('utf-8'))
 
 # OpenAI API 사용해서 사용자가 ChatGPT에게 질문하고

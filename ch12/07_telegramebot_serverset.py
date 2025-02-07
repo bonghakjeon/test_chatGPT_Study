@@ -23,15 +23,20 @@
 # INFO:     Waiting for application startup.
 # INFO:     Application startup complete.
 
-# 텔레그램과 소통할 텔레그램 서버 구현
+# 텔레그램 서버와 통신할 개발자 PC에서 실행시키는 FastAPI 로컬 서버 구현
 
 # ngrok 역할?
 # 외부에서 개발자 로컬 PC로 접속할 수 있는 URL 주소가 필요하다.
 # ngrok는 개발자 로컬 PC에서 생성한 서버 개발 환경을
 # 외부 서버에서도(전세계 어디 서버에서도) 접속할 수 있도록 공유해주는 서비스이다.
 # 즉, 외부에서 개발자 로컬 PC로 접속할 수 있는 URL 주소를 발급해준다.
+# 또한 서로 다른 네트워크(텔레그램 서버와 개발자 PC에서 실행시키는 FastAPI 로컬 서버)를
+# 연결 해주는 통로의 역할을 하는 게이트웨이와 비슷한 역할이다.
 # ngrok 웹사이트
 # 참고 URL - https://ngrok.com/ 
+
+# 게이트웨이 용어 설명
+# 참고 URL - https://ko.wikipedia.org/wiki/%EA%B2%8C%EC%9D%B4%ED%8A%B8%EC%9B%A8%EC%9D%B4
 
 # ngrok 응용 프로그램 실행 방법
 # 1) 비쥬얼스튜디오코드(VSCode) 실행 
