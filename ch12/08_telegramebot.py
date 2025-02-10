@@ -5,10 +5,10 @@
 # ch12_env\Scripts\activate.bat
 
 # 주의사항 
-# 유비콘 패키지 "uvicorn[standard]"를 사용하는 파이썬 파일의 경우 
+# 비동기(async - await) 웹서버 생성하는 유비콘 패키지 "uvicorn[standard]"를 사용하는 파이썬 파일의 경우 
 # 일반 파이썬 파일을 터미널에서 실행하는 명령어(python 08_telegramebot.py)를 
 # 그대로 쓰면 파일 안에 있는 FastAPI 서버(FastAPI 클래스 객체 app)가 생성 불가하다.
-# 하여 유비콘 패키지 "uvicorn[standard]"를 사용하는 파이썬 파일은
+# 하여 비동기(async - await) 웹서버 생성하는 유비콘 패키지 "uvicorn[standard]"를 사용하는 파이썬 파일은
 # 아래와 같은 명령어를 입력 해야만 해당 파일 안에 있는 FastAPI 서버(FastAPI 클래스 객체 app)가 생성된다.
 # uvicorn 08_telegramebot:app --reload
 
@@ -67,8 +67,8 @@ async def root():
 # 매개변수 request로 인자를 전달 받는다.
 async def chat(request: Request):
     # 텔레그램 채팅방에서 사용자가 채팅 입력 
-    # -> 해당 채팅에 대한 정보가 텔레그램 API webhook 메소드 통해서
-    # 해당 FastAPI 웹서버 URL 주소 "/chat"로 넘어오고 ->
+    # -> 해당 채팅에 대한 정보가 텔레그램 API webhook 메소드 사용해서 
+    # 텔레그램 서버 -> ngrok 프로그램을 지나서 -> 해당 FastAPI 웹서버 URL 주소 "/chat"로 넘어오고 ->
     # 함수 chat 실행 -> print 함수 호출 -> 텔레그램 채팅 정보가 터미널창에 출력
     # 쉽게 말해서 텔레그램 채팅방에 채팅이 입력될 때마다
     # 해당 chat 함수 실행되서 

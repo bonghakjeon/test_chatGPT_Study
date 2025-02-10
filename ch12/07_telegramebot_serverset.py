@@ -9,12 +9,12 @@
 
 # 주의사항 
 # 1. FastAPI 패키지 "fastapi" 단독으로는 웹개발을 할 수 없다.
-#    하여 아래처럼 유비콘 패키지 "uvicorn[standard]"를 추가로 터미널 설치 진행 
+#    하여 아래처럼 비동기(async - await) 웹서버 생성하는 유비콘 패키지 "uvicorn[standard]"를 추가로 터미널 설치 진행 
 #    pip install "uvicorn[standard]"
-# 2. 유비콘 패키지 "uvicorn[standard]"를 사용하는 파이썬 파일의 경우 
+# 2. 비동기(async - await) 웹서버 생성하는 유비콘 패키지 "uvicorn[standard]"를 사용하는 파이썬 파일의 경우 
 #     일반 파이썬 파일을 터미널에서 실행하는 명령어(python 07_telegramebot_serverset.py)를 
 #     그대로 쓰면 파일 안에 있는 FastAPI 서버(FastAPI 클래스 객체 app)가 생성 불가하다.
-#     하여 유비콘 패키지 "uvicorn[standard]"를 사용하는 파이썬 파일은
+#     하여 비동기(async - await) 웹서버 생성하는 유비콘 패키지 "uvicorn[standard]"를 사용하는 파이썬 파일은
 #     아래와 같은 명령어를 입력 해야만 해당 파일 안에 있는 FastAPI 서버(FastAPI 클래스 객체 app)가 생성된다.
 #     uvicorn 07_telegramebot_serverset:app --reload
 # 터미널 명령어 "uvicorn 07_telegramebot_serverset:app --reload" 입력 및 엔터 
@@ -88,7 +88,7 @@
 # 주의사항 - ngrok 응용 프로그램 터미널창에 URL 주소 "https://7839-14-52-67-173.ngrok-free.app" 
 #           복사하려고 단축키 Ctrl + C 키를 누르면 ngrok 응용 프로그램이 종료된다.(Ctrl+C to quit)
 #           하여 절대 단축키 Ctrl + C 키를 누르지 말고 마우스로 해당 URL 주소를 드래그 한 후 
-#           키보드 단축키 Ctrl + Insert 키를 눌러서 해당 URL 주소를 복사한다.
+#           키보드 단축키 Ctrl + Insert 키를 눌러서 해당 URL 주소를 복사 및 메모장에 저장 한다.
 # (예) 터미널창에 출력되는 메시지 예시
 # ngrok    (Ctrl+C to quit)        
 # Sign up to try new private endpoints https://ngrok.com/new-features-update?ref=private                                                                                                                                                                                                                          
@@ -188,8 +188,8 @@ async def root():
 # 매개변수 request로 인자를 전달 받는다.
 async def chat(request: Request):
     # 텔레그램 채팅방에서 사용자가 채팅 입력 
-    # -> 해당 채팅에 대한 정보가 텔레그램 API webhook 메소드 통해서
-    # 해당 FastAPI 웹서버 URL 주소 "/chat"로 넘어오고 ->
+    # -> 해당 채팅에 대한 정보가 텔레그램 API webhook 메소드 사용해서 
+    # 텔레그램 서버 -> ngrok 프로그램을 지나서 -> 해당 FastAPI 웹서버 URL 주소 "/chat"로 넘어오고 ->
     # 함수 chat 실행 -> print 함수 호출 -> 텔레그램 채팅 정보가 터미널창에 출력
     
     # 텔레그램 채팅에서 날라온 채팅 정보를 json 데이터 형태로 정리해서 변수 telegramrequest에 저장

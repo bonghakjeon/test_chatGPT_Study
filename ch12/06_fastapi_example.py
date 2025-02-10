@@ -18,12 +18,12 @@
 
 # 주의사항 
 # 1. FastAPI 패키지 "fastapi" 단독으로는 웹개발을 할 수 없다.
-#    하여 아래처럼 유비콘 패키지 "uvicorn[standard]"를 추가로 터미널 설치 진행 
+#    하여 아래처럼 비동기(async - await) 웹서버 생성하는 유비콘 패키지 "uvicorn[standard]"를 추가로 터미널 설치 진행 
 #    pip install "uvicorn[standard]"
-# 2. 유비콘 패키지 "uvicorn[standard]"를 사용하는 파이썬 파일의 경우 
+# 2. 비동기(async - await) 웹서버 생성하는 유비콘 패키지 "uvicorn[standard]"를 사용하는 파이썬 파일의 경우 
 #     일반 파이썬 파일을 터미널에서 실행하는 명령어(python 06_fastapi_example.py)를 
 #     그대로 쓰면 파일 안에 있는 FastAPI 서버(FastAPI 클래스 객체 app)가 생성 불가하다.
-#     하여 유비콘 패키지 "uvicorn[standard]"를 사용하는 파이썬 파일은
+#     하여 비동기(async - await) 웹서버 생성하는 유비콘 패키지 "uvicorn[standard]"를 사용하는 파이썬 파일은
 #     아래와 같은 명령어를 입력 해야만 해당 파일 안에 있는 FastAPI 서버(FastAPI 클래스 객체 app)가 생성된다.
 #     uvicorn 06_fastapi_example:app --reload
 # 터미널 명령어 "uvicorn 06_fastapi_example:app --reload" 입력 및 엔터 
@@ -40,18 +40,18 @@
 
 
 # 텔레그램 챗봇 프로그램 실행 순서 
-# 1 단계 : FastAPI를 사용해서 로컬 파이썬 서버(07_telegramebot_serverset.py) 실행(생성)
-# 2 단계 : ngrok를 활용해서 외부 서버에서 개발자 로컬 PC로 접속하기 위한 주소 발급 받기
-# 3 단계 : 텔레그램 API 웹훅을 사용해서 텔레그램 서버와 로컬 파이썬 서버(07_telegramebot_serverset.py) 연결 
+# 1 단계 : FastAPI를 사용해서 개발자 로컬 파이썬 서버(08_telegramebot.py) 실행(생성)
+# 2 단계 : ngrok를 활용해서 외부 서버에서 개발자 로컬 PC로 접속하기 위한 URL 주소 발급 받기
+# 3 단계 : 텔레그램 API 웹훅을 사용해서 텔레그램 서버와 FastAPI 개발자 로컬 파이썬 서버(08_telegramebot.py) 연결 
 
 # 텔레그램 챗봇 프로그램 구조
 # 1. 실행파일 - 08_telegramebot.py 
 # - 실행파일 - 08_telegramebot.py 먼저 실행
-# - FastAPI 파이썬 서버(07_telegramebot_serverset.py) 실행(생성)
+# - FastAPI 파이썬 서버(08_telegramebot.py) 실행(생성)
 # - 내부 주소로 실행 (http://localhost:8000/) 
 # - 외부 서버에서 접근 불가 
 
-# 2. FastAPI 서버 - 07_telegramebot_serverset.py 
+# 2. FastAPI 서버 - 08_telegramebot.py 
 # - 주소 별 특정 기능 수행 
 # - 기본 연결 확인 "/"
 #   http://localhost:8000/
@@ -59,8 +59,8 @@
 #   http://localhost:8000/chat/
 
 # 3. 텔레그램 서버
-# - ngrok를 활용해서 외부 서버에서 개발자 로컬 PC로 접속하기 위한 주소 발급 받기
-#   해당 외부 서버에서 접속 가능 주소를 Telegram API의 웹훅과 연결하기 
+# - ngrok를 활용해서 외부 서버에서 개발자 로컬 PC로 접속하기 위한 URL 주소 발급 받기
+#   해당 외부 서버에서 개발자 로컬 PC로 접속 가능 URL 주소를 Telegram API의 웹훅과 연결하기 
 
 from fastapi import FastAPI   # FastAPI 패키지 "fastapi" 불러오기 
 
