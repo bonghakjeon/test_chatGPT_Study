@@ -1,3 +1,9 @@
+# 가상환경 폴더 "ch12_env" 생성 터미널 명령어
+# python -m venv ch12_env
+
+# 가상환경 폴더 "ch12_env" 활성화 터미널 명령어
+# ch12_env\Scripts\activate.bat
+
 # 웹훅이란?
 # 텔레그램 API의 getUpdates 메소드와 비슷한 기능으로 
 # 텔레그램 채팅방에서 새로운 채팅이 생성될 때마다

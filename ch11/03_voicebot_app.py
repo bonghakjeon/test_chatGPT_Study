@@ -1,3 +1,9 @@
+# 가상환경 폴더 "ch11_env" 생성 터미널 명령어
+# python -m venv ch11_env
+
+# 가상환경 폴더 "ch11_env" 활성화 터미널 명령어
+# ch11_env\Scripts\activate.bat
+
 # Streamlit 패키지 터미널 설치 명령어
 # pip install streamlit
 # 참고 URL - https://python-programming-diary.tistory.com/111

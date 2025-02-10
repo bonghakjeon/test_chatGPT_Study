@@ -1,3 +1,9 @@
+# 가상환경 폴더 "ch08_env" 생성 터미널 명령어
+# python -m venv ch08_env
+
+# 가상환경 폴더 "ch08_env" 활성화 터미널 명령어
+# ch08_env\Scripts\activate.bat
+
 import openai 
 # Dalle2 에서 생성한 이미지를 파일 형태로 제공을 하지 않고 인터넷 접속 주소인 URL로 제공을 해준다. 
 # 그럼 해당 URL로 접근해서 그 그림을 다운을 받아야 되는데, 

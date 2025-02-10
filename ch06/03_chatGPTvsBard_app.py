@@ -1,3 +1,9 @@
+# 가상환경 폴더 "ch06_env" 생성 터미널 명령어
+# python -m venv ch06_env
+
+# 가상환경 폴더 "ch06_env" 활성화 터미널 명령어
+# ch06_env\Scripts\activate.bat
+
 # 비쥬얼스튜디오 코드(VSCode)
 # streamlit 터미널 실행 명령어
 # streamlit run 03_chatGPTvsBard_app.py

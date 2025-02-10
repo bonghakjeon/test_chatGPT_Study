@@ -1,3 +1,9 @@
+# 가상환경 폴더 "ch12_env" 생성 터미널 명령어
+# python -m venv ch12_env
+
+# 가상환경 폴더 "ch12_env" 활성화 터미널 명령어
+# ch12_env\Scripts\activate.bat
+
 # FastAPI 패키지 "fastapi" 터미널 설치 명령어 
 # pip install fastapi
 

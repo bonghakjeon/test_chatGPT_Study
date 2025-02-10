@@ -1,3 +1,9 @@
+# 가상환경 폴더 "ch07_env" 생성 터미널 명령어
+# python -m venv ch07_env
+
+# 가상환경 폴더 "ch07_env" 활성화 터미널 명령어
+# ch07_env\Scripts\activate.bat
+
 ##### 기본 정보 불러오기 ####
 # Streamlit 패키지 추가
 import streamlit as st

@@ -1,3 +1,9 @@
+# 가상환경 폴더 "ch07_env" 생성 터미널 명령어
+# python -m venv ch07_env
+
+# 가상환경 폴더 "ch07_env" 활성화 터미널 명령어
+# ch07_env\Scripts\activate.bat
+
 # TODO : DeepL API 신용카드 등록 오류로 인하여 DeepL API 키 발급 실패함. (2025.01.02 jbh)
 # DeepL 파이썬 오픈 소스 패키지 deepl 
 # 터미널 설치 명령어

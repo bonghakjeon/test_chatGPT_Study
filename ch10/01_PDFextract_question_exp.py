@@ -1,3 +1,9 @@
+# 가상환경 폴더 "ch10_env" 생성 터미널 명령어
+# python -m venv ch10_env
+
+# 가상환경 폴더 "ch10_env" 활성화 터미널 명령어
+# ch10_env\Scripts\activate.bat
+
 # PDF 문서 파일을 넣으면 해당 내용을 토대로 
 # ChatGPT가 Hallucination(환각) 증상 일으키지 않고 
 # 답변해주는 프로그램 제작하기

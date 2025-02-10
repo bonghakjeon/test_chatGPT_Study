@@ -1,3 +1,9 @@
+# 가상환경 폴더 "ch10_env" 생성 터미널 명령어
+# python -m venv ch10_env
+
+# 가상환경 폴더 "ch10_env" 활성화 터미널 명령어
+# ch10_env\Scripts\activate.bat
+
 # TODO : 아래 오류 메시지 해결하기 위해 가상환경 "ch10_env" -> 폴더 Lib -> 폴더 site-packages -> 폴더 googletrans -> client.py
 #        -> def __init__ 생성자에 들어가는 파라미터 "proxies" 수정 (2025.01.17 jbh)
 # 오류 메시지 

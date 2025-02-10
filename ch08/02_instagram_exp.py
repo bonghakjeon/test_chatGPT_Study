@@ -1,3 +1,9 @@
+# 가상환경 폴더 "ch08_env" 생성 터미널 명령어
+# python -m venv ch08_env
+
+# 가상환경 폴더 "ch08_env" 활성화 터미널 명령어
+# ch08_env\Scripts\activate.bat
+
 # 파이썬 패키지 PIL 불러오기 
 from pathlib import Path  # 파이썬 패키지 pathlib의 Path 클래스 불러오기 
 from instagrapi import Client   # 파이썬 패키지 instagrapi의 Client 클래스 불러오기 

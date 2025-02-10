@@ -1,3 +1,9 @@
+# 가상환경 폴더 "ch02_env" 생성 터미널 명령어
+# python -m venv ch02_env
+
+# 가상환경 폴더 "ch02_env" 활성화 터미널 명령어
+# ch02_env\Scripts\activate.bat
+
 # OpenAI API 키(key) 발급 사이트 
 # 참고 URL - https://platform.openai.com/
 

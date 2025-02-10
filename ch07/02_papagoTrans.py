@@ -1,3 +1,9 @@
+# 가상환경 폴더 "ch07_env" 생성 터미널 명령어
+# python -m venv ch07_env
+
+# 가상환경 폴더 "ch07_env" 활성화 터미널 명령어
+# ch07_env\Scripts\activate.bat
+
 # 파파고 API 지원 종료 안내 [24.2.29.예정]
 # 등록일2023-12-07||조회수46593||
 # Papago API를 이용해주셔서 감사드립니다.

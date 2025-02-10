@@ -1,3 +1,9 @@
+# 가상환경 폴더 "ch07_env" 생성 터미널 명령어
+# python -m venv ch07_env
+
+# 가상환경 폴더 "ch07_env" 활성화 터미널 명령어
+# ch07_env\Scripts\activate.bat
+
 # 구글 번역기 파이썬 오픈소스 패키지 googletrans
 # 참고 URL - https://pypi.org/project/googletrans/
 

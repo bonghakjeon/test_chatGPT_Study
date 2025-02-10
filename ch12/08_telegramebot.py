@@ -1,3 +1,9 @@
+# 가상환경 폴더 "ch12_env" 생성 터미널 명령어
+# python -m venv ch12_env
+
+# 가상환경 폴더 "ch12_env" 활성화 터미널 명령어
+# ch12_env\Scripts\activate.bat
+
 # 주의사항 
 # 유비콘 패키지 "uvicorn[standard]"를 사용하는 파이썬 파일의 경우 
 # 일반 파이썬 파일을 터미널에서 실행하는 명령어(python 08_telegramebot.py)를 

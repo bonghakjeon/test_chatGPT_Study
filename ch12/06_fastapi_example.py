@@ -1,3 +1,9 @@
+# 가상환경 폴더 "ch12_env" 생성 터미널 명령어
+# python -m venv ch12_env
+
+# 가상환경 폴더 "ch12_env" 활성화 터미널 명령어
+# ch12_env\Scripts\activate.bat
+
 # 개발자 로컬 PC룰 FastAPI와 ngrok를 사용해서
 # 텔레그램이란 손님을 초대해 보는 기능 구현
 

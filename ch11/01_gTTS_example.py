@@ -1,3 +1,9 @@
+# 가상환경 폴더 "ch11_env" 생성 터미널 명령어
+# python -m venv ch11_env
+
+# 가상환경 폴더 "ch11_env" 활성화 터미널 명령어
+# ch11_env\Scripts\activate.bat
+
 # 나만의 음성비서 프로그램 실행 구조 
 # 1. 사용자에게 음성 파일 입력받기 
 # 2. OpenAI API Whisper라는 모델 사용하여 

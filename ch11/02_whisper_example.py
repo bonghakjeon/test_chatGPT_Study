@@ -1,3 +1,9 @@
+# 가상환경 폴더 "ch11_env" 생성 터미널 명령어
+# python -m venv ch11_env
+
+# 가상환경 폴더 "ch11_env" 활성화 터미널 명령어
+# ch11_env\Scripts\activate.bat
+
 # 파이썬 스크립트 파일 "02_whisper_example.py" 터미널 실행 명령어 
 # python 02_whisper_example.py
 

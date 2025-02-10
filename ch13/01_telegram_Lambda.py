@@ -1,3 +1,9 @@
+# 가상환경 폴더 "ch13_env" 생성 터미널 명령어
+# python -m venv ch13_env
+
+# 가상환경 폴더 "ch13_env" 활성화 터미널 명령어
+# ch13_env\Scripts\activate.bat
+
 # 아마존 웹서비스(AWS)
 # 클라우드 워치(CloudWatch) 서비스란?
 

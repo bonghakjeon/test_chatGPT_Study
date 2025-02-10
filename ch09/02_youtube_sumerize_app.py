@@ -1,3 +1,9 @@
+# 가상환경 폴더 "ch09_env" 생성 터미널 명령어
+# python -m venv ch09_env
+
+# 가상환경 폴더 "ch09_env" 활성화 터미널 명령어
+# ch09_env\Scripts\activate.bat
+
 # OpenAI API 터미널 설치 명령어 
 # pip install openai==0.28.1
 

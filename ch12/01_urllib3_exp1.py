@@ -1,3 +1,9 @@
+# 가상환경 폴더 "ch12_env" 생성 터미널 명령어
+# python -m venv ch12_env
+
+# 가상환경 폴더 "ch12_env" 활성화 터미널 명령어
+# ch12_env\Scripts\activate.bat
+
 # HTTP(Hypertext Transfer Protocol) 통신이란?
 # HTTP 통신은 컴퓨터가 인터넷을 통해 서로 통신하는 방식이다.
 # 예를들어 구글 크롬(Chrome)과 애플의 사파리(Safari) 같은 웹브라우저와
