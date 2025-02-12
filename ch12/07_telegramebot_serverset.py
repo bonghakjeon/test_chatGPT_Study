@@ -192,7 +192,7 @@ async def chat(request: Request):
     # 텔레그램 서버 -> ngrok 프로그램을 지나서 -> 해당 FastAPI 웹서버 URL 주소 "/chat"로 넘어오고 ->
     # 함수 chat 실행 -> print 함수 호출 -> 텔레그램 채팅 정보가 터미널창에 출력
     
-    # 텔레그램 채팅에서 날라온 채팅 정보를 json 데이터 형태로 정리해서 변수 telegramrequest에 저장
+    # 텔레그램 채팅에서 날라온 채팅 정보를 json 데이터 형태로 정리(request.json())해서 변수 telegramrequest에 저장
     telegramrequest = await request.json()
     # 텔레그램 채팅 정보 터미널창에 출력
     # 텔레그램 채팅 정보 "연결이 잘 되었나요?"가 아래처럼 json 데이터 형식으로 출력
