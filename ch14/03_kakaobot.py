@@ -219,7 +219,7 @@ def imageResponseFormat(bot_response,prompt):
     output_text = prompt+"내용에 관한 이미지 입니다"
     # 카카오톡 채팅방에 보낼 DALLE.2가 생성한 그림 URL 주소가 저장된 매개변수 bot_response를
     # 아래 json 형태(Format)에서 항목 'outputs' -> 항목 "simpleImage" -> "imageUrl"안에 매개변수 bot_response을 넣어서
-    # 변수 responsedp 저장하기 
+    # 변수 response에 저장하기 
     response = {'version': '2.0', 'template': {
     'outputs': [{"simpleImage": {"imageUrl": bot_response,"altText":output_text}}], 'quickReplies': []}}
     return response   # 카카오톡 서버로 DALLE.2가 생성한 그림 URL 주소 전송하기 위해  이미지 전송 전용 JSON 형태(Format)의 데이터가 저장된 변수 response 리턴  
