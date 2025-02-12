@@ -76,7 +76,7 @@ async def chat(request: Request):
     # 메인함수 chatBot이 실행될 때는 텔레그램 채팅방에
     # 방금 전에 사용자가 입력한 채팅의 정보가 넘어오면서 메인함수 chatBot이 실행된다.
 
-    # 텔레그램 채팅에서 날라온 채팅 정보를 json 데이터 형태로 정리해서 변수 telegramrequest에 저장  
+    # 텔레그램 채팅에서 날라온 채팅 정보를 json 데이터 형태로 정리(request.json())해서 변수 telegramrequest에 저장  
     telegramrequest = await request.json()
     # 텔레그램 챗봇의 모든 기능 실행할 수 있는 메인함수 chatBot에
     # 위의 변수 telegramrequest를 인자로 전달 
