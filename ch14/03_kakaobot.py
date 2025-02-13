@@ -1,3 +1,6 @@
+# 카카오톡 챗봇 채널 웹사이트
+# 참고 URL - https://pf.kakao.com/_sNBsn
+
 # 가상환경 폴더 "ch14_env" 생성 터미널 명령어
 # python -m venv ch14_env
 

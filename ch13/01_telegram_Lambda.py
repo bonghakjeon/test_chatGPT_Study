@@ -190,8 +190,8 @@ def lambda_handler(event, context):
     # JSON 문자열 (예) '{"name": "홍길동", "birth": "0525", "age": 30}'
     # Dictionary 객체 (예) {'name': '홍길동', 'birth': '0525', 'age': 30}
     # 참고 URL - https://wikidocs.net/126088 
-    # 텔레그램 채팅방 정보가 event 파라미터를 통해서 람다(lambda) 함수 lambda_handler 로 넘어온다.
-    # event['body'] - 텔레그램 채팅방 정보가 들어있는 변수이다.
+    # 텔레그램 채팅방 채팅 정보가 event 파라미터를 통해서 람다(lambda) 함수 lambda_handler 로 넘어온다.
+    # event['body'] - 텔레그램 채팅방 채팅 정보가 들어있는 변수이다.
     result = json.loads(event['body'])
     
     # 텔레그램을 통해 입력받은 채팅 정보(메시지)가
