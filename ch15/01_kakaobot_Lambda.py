@@ -379,6 +379,74 @@ def responseOpenAI(request,response_queue,filename):
 
         with open(filename, 'w') as f:
             f.write(save_log)
+
+    # TODO : 추후 필요시 시작 웹페이지(start.html) 구현 예정 (2025.02.18 minjae)
+    # 시작페이지(start.html) 출력 요청한 경우
+    # 만약 시작페이지(start.html) 웹페이지 출력을 요청하면
+    # 만약 카카오톡 채팅방에 사용자가 입력한 메시지 안에
+    # '/start'란 문자열이 포함되어 있으면,  
+    # 즉, 시작페이지(start.html) 웹페이지 출력을 요청한 경우 
+    elif '/start' in request["userRequest"]["utterance"]:
+        # response_queue.put(textCardResponseFormat())
+        # TODO : 파이썬 문법 pass 사용하여 해당 elif 조건문 로직이 실행되지 않고 무시 되도록 구현 (2025.02.20 minjae)
+        # 참고 URL - https://docs.python.org/ko/3.13/tutorial/controlflow.html
+        pass 
+
+    # level1 텍스트 카드
+    elif '/level1' in request["userRequest"]["utterance"]:
+        dbReset(filename)   # 함수 dbReset 실행하여 텍스트 파일('/tmp/botlog.txt')에 save_log = "level1"+ " " + "테스트" 초기화
+        response_queue.put(level1textCardResponseFormat())
+
+        # 텍스트 파일('/tmp/botlog.txt')에 임시로 저장함.
+        save_log = "level1"+ " " + "테스트"
+
+        with open(filename, 'w') as f:
+            f.write(save_log)
+
+    # level2 바로가기 그룹
+    elif '/level2' in request["userRequest"]["utterance"]:
+        dbReset(filename)   # 함수 dbReset 실행하여 텍스트 파일('/tmp/botlog.txt')에 save_log = "level2"+ " " + "테스트" 초기화
+        response_queue.put(level2quickRepliesResponseFormat())
+
+        # 텍스트 파일('/tmp/botlog.txt')에 임시로 저장함.
+        save_log = "level2"+ " " + "테스트"
+
+        with open(filename, 'w') as f:
+            f.write(save_log)
+
+    # level3 텍스트 카드
+    elif '/level3' in request["userRequest"]["utterance"]:
+        dbReset(filename)   # 함수 dbReset 실행하여 텍스트 파일('/tmp/botlog.txt')에 save_log = "level3"+ " " + "테스트" 초기화
+        response_queue.put(level3textCardResponseFormat())
+
+        # 텍스트 파일('/tmp/botlog.txt')에 임시로 저장함.
+        save_log = "level3"+ " " + "테스트"
+
+        with open(filename, 'w') as f:
+            f.write(save_log)
+
+    # level4 텍스트 카드
+    elif '/level4' in request["userRequest"]["utterance"]:
+        dbReset(filename)   # 함수 dbReset 실행하여 텍스트 파일('/tmp/botlog.txt')에 save_log = "level4"+ " " + "테스트" 초기화
+        response_queue.put(level4textCardResponseFormat())
+
+        # 텍스트 파일('/tmp/botlog.txt')에 임시로 저장함.
+        save_log = "level4"+ " " + "테스트"
+
+        with open(filename, 'w') as f:
+            f.write(save_log)
+
+    # level5 텍스트 카드 + 텍스트
+    elif '/level5' in request["userRequest"]["utterance"]:
+        dbReset(filename)   # 함수 dbReset 실행하여 텍스트 파일('/tmp/botlog.txt')에 save_log = "level5"+ " " + "테스트" 초기화
+        response_queue.put(level5textCardResponseFormat())
+
+        # 텍스트 파일('/tmp/botlog.txt')에 임시로 저장함.
+        save_log = "level5"+ " " + "테스트"
+
+        with open(filename, 'w') as f:
+            f.write(save_log)
+
             
     # 아무 답변 요청이 없는 채팅일 경우
     # 카카오톡 채팅방의 사용자의 입력이 버튼('생각 다 끝났나요?')을 클릭한 경우도 아니고
@@ -397,6 +465,204 @@ def responseOpenAI(request,response_queue,filename):
 # 아래 2가지 함수에서 사용할 수 있도록 정리 
 # 메인 함수 "mainChat", 답변/그림 요청 및 응답 확인 함수 "responseOpenAI"
 # 메인 함수 
+
+# level1 텍스트 카드 (카카오톡 서버로 텍스트 전송)
+def level1textCardResponseFormat():
+    response = {
+        "version": "2.0",
+        "template": {
+            "outputs": [
+                {
+                    "textCard": {
+                        "title": "[상담시간 안내]",
+                        "description": "월~금요일 : 9시~18시\n주말, 공휴일 : 상담불가",
+                        "buttons": [
+                            {
+                                "action": "message",
+                                "label": "1. Autodesk 제품 설치파일 문의",
+                                "messageText": "[구현 예정!] 1. Autodesk 제품 설치파일 문의"
+                            },
+                            {
+                                "action": "message",
+                                "label": "2. 상상진화 BOX 설치파일 문의",
+                                "messageText": "[구현 예정!] 2. 상상진화 BOX 설치파일 문의"
+                            },
+                            {
+                                "action": "message",
+                                "label": "3. 네트워크 라이선스 오류",
+                                "messageText": "[구현 예정!] 3. 네트워크 라이선스 오류"
+                            },
+                            {
+                                "action": "message",
+                                "label": "4. 오토데스크 계정 및 제품 배정 문의",
+                                "messageText": "[구현 예정!] 4. 오토데스크 계정 및 제품 배정 문의"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "quickReplies": []
+        }
+    }
+    return response
+
+# level2 바로가기 그룹 전송 (카카오톡 서버로 텍스트 전송)
+def level2quickRepliesResponseFormat():
+    response = {
+        'version': '2.0', 
+        'template': {
+            'outputs': [
+                {
+                    "simpleText" : {
+                        "text": "안내가 필요한 항목을 선택해주세요"
+                    }
+                }
+            ], 
+            "quickReplies": [
+                {
+                    "action": "message",
+                    "label": "1. AUTOCAD",
+                    "messageText": "[구현 예정!] 1. AUTOCAD"
+                },
+                {
+                    "action": "message",
+                    "label": "2. Revit",
+                    "messageText": "[구현 예정!] 2. Revit"
+                },
+                {
+                    "action": "message",
+                    "label": "3. Navisworks",
+                    "messageText": "[구현 예정!] 3. Navisworks"
+                },
+                {
+                    "action": "message",
+                    "label": "4. Civil 3D",
+                    "messageText": "[구현 예정!] 4. Civil 3D"
+                },
+                {
+                    "action": "message",
+                    "label": "5. InfraWorks",
+                    "messageText": "[구현 예정!] 5. InfraWorks"
+                },
+                {
+                    "action": "message",
+                    "label": "6. Advanced Steel",
+                    "messageText": "[구현 예정!] 6. Advanced Steel"
+                },
+                {
+                    "action": "message",
+                    "label": "7. AutoCAD DWG True Viewer (CAD 뷰어)",
+                    "messageText": "[구현 예정!] 7. AutoCAD DWG True Viewer (CAD 뷰어)"
+                },
+                {
+                    "action": "message",
+                    "label": "8. Navisworks Exporter",
+                    "messageText": "[구현 예정!] 8. Navisworks Exporter"
+                },
+                {
+                    "action": "message",
+                    "label": "9. Revit Content Library (레빗 라이브러리)",
+                    "messageText": "[구현 예정!] 9. Revit Content Library (레빗 라이브러리)"
+                }
+            ]
+        }
+    }
+    return response
+
+# level3 텍스트 카드 (카카오톡 서버로 텍스트 전송)
+def level3textCardResponseFormat():
+    response = {
+        'version': '2.0', 
+        'template': {
+            'outputs': [
+                {
+                    "textCard": {
+                        "title": "버전을 선택해주세요",
+                        "description": "level3 테스트",
+                        "buttons": [
+                            {
+                                "action": "message",
+                                "label": "2022",
+                                "messageText": "[구현 예정!] 2022버전"
+                            },
+                            {
+                                "action": "message",
+                                "label": "2023",
+                                "messageText": "[구현 예정!] 2023버전"
+                            },
+                            {
+                                "action": "message",
+                                "label": "2024",
+                                "messageText": "[구현 예정!] 2024버전"
+                            },
+                            {
+                                "action": "message",
+                                "label": "2025",
+                                "messageText": "[구현 예정!] 2025버전"
+                            }
+                        ]
+                    }
+                }
+            ], 
+            'quickReplies': []
+        }
+    }
+    return response
+
+# level4 텍스트 카드 (카카오톡 서버로 텍스트 전송)
+def level4textCardResponseFormat():
+    response = {
+        'version': '2.0', 
+        'template': {
+            'outputs': [
+                {
+                    "textCard": {
+                        "title": "설치 언어를 선택해주세요",
+                        "description": "level4 테스트",
+                        "buttons": [
+                            {
+                                "action": "message",
+                                "label": "한국어",
+                                "messageText": "[구현 예정!] 한국어"
+                            },
+                            {
+                                "action": "message",
+                                "label": "English",
+                                "messageText": "[구현 예정!] English"
+                            }
+                        ]
+                    }
+                }
+            ], 
+            'quickReplies': []
+        }
+    }
+    return response
+
+# level5 텍스트 카드 + 텍스트 (카카오톡 서버로 텍스트 전송)
+def level5textCardResponseFormat():
+    response = {
+        'version': '2.0', 
+        'template': {
+            'outputs': [
+                {
+                    "textCard": {
+                        "title": "아래 링크를 클릭해주세요",
+                        "description": "level5 테스트",
+                        "buttons": []
+                    }
+                },
+                {   
+                    "simpleText" : {
+                        "text": "https://www.autodesk.com/support/download-install"
+                    }
+                }
+            ], 
+            'quickReplies': []
+        }
+    }
+    return response
+
 
 # 메세지 전송 (카카오톡 서버로 텍스트 전송)
 # ChatGPT의 답변을 카카오톡 서버로 답변 전송 전용 JSON 형태(Format)의 데이터로 전달하기 위한 함수
