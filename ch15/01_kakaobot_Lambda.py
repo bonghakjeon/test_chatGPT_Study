@@ -153,7 +153,26 @@
 #         'body': json.dumps('Hello from Lambda!')
 #     }
 
-    
+
+# ----- ★파이썬 logging 모듈(라이브러리) 사용해서 카카오챗봇의 로그 기록 작성 및
+# -----   아마존 웹서비스(AWS) 람다(Lambda) 함수 CloudWatch에 작성한 로그 기록 보관하기 
+# ----- 유튜브 참고 URL - https://youtu.be/KmTzw7Hqlw4?si=yjN4X3VUoNSJ6od2
+# ----- 참고 URL - https://velog.io/@goo-gy/CloudWatch%EC%97%90%EC%84%9C-Lambda-%EB%A1%9C%EA%B7%B8-%ED%99%95%EC%9D%B8%ED%95%98%EA%B8%B0
+# ----- 참고 2 URL - https://asleea88.medium.com/aws-%EB%9E%8C%EB%8B%A4-%EB%A1%9C%EA%B7%B8-%EC%9E%98-%EB%82%A8%EA%B8%B0%EA%B3%A0-%EC%B6%94%EC%A0%81%ED%95%98%EA%B8%B0-aws-lambda-logging-f097dddbbc52
+# ----- 참고 3 URL - https://jibinary.tistory.com/338
+
+# ----- ★파이썬 예외처리 try ~ except 
+# ----- 참고 URL - https://docs.python.org/ko/3.6/tutorial/errors.html
+# ----- 참고 2 URL - https://dojang.io/mod/page/view.php?id=2400
+# ----- 참고 3 URL - https://loklee9.tistory.com/117
+# ----- 참고 4 URL - https://youtu.be/M63Y_Sdu71k?si=Dyay0l1ZYRMIBiP1
+
+# ----- ★테스트 시나리오 양식 
+# ----- 참고 URL - https://brunch.co.kr/@cysstory/108
+# ----- 참고 2 URL - https://m.blog.naver.com/jenny1257/222447352507
+# ----- 참고 3 URL - https://dongmin-house.tistory.com/10
+# ----- 참고 4 URL - https://velog.io/@ninthsun91/TDD-1.-%ED%85%8C%EC%8A%A4%ED%8A%B8-%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4-%EC%9E%91%EC%84%B1
+
 ###### 기본 정보 설정 단계 #######
 # 참고사항
 # 아마존 웹서비스(AWS) 활용할 때에는 FastAPI 개발자 로컬 웹서버를 따로 생성할 필요가 없으니까
@@ -165,6 +184,7 @@ import threading  # 프로그램 안에서 동시에 작업하는 멀티스레�
 import time   # ChatGPT 답변 시간 계산하기 위해 패키지 "time" 불러오기
 import queue as q   # 자료구조 queue(deque 기반) 이용하기 위해 패키지 "queue" 불러오기
 import os   # 답변 결과를 테스트 파일로 저장할 때 경로 생성해야 해서 패키지 "os" 불러오기
+from modules import kakao # 폴더 "modules" -> 카카오 API 전용 모듈 "kakao" 불러오기 
 
 # OpenAI API KEY
 # 테스트용 카카오톡 챗봇 채팅방에서 
@@ -185,6 +205,14 @@ def lambda_handler(event, context):
     # 변수 run_flag 값이 False면  "답변/그림이 응답 제한시간 3.5초 초과 및 미완성" 의미
     run_flag = False
     start_time = time.time()   # 답변/그림 응답시간 계산하기 위해 답변/그림을 시작하는 시간을 변수 start_time에 저장 
+
+    # TODO : event['body'] - 카카오톡 채팅방 채팅 정보가 들어있는 변수 사용 및 파이썬 logging 모듈(라이브러리) 사용해서 카카오챗봇의 로그 기록 작성 기능 구현하기 (2025.02.21 minjae)
+    # ----- ★파이썬 logging 모듈(라이브러리) 사용해서 카카오챗봇의 로그 기록 작성 및
+    # -----   아마존 웹서비스(AWS) 람다(Lambda) 함수 CloudWatch에 작성한 로그 기록 보관하기 
+    # ----- 유튜브 참고 URL - https://youtu.be/KmTzw7Hqlw4?si=yjN4X3VUoNSJ6od2
+    # ----- 참고 URL - https://velog.io/@goo-gy/CloudWatch%EC%97%90%EC%84%9C-Lambda-%EB%A1%9C%EA%B7%B8-%ED%99%95%EC%9D%B8%ED%95%98%EA%B8%B0
+    # ----- 참고 2 URL - https://asleea88.medium.com/aws-%EB%9E%8C%EB%8B%A4-%EB%A1%9C%EA%B7%B8-%EC%9E%98-%EB%82%A8%EA%B8%B0%EA%B3%A0-%EC%B6%94%EC%A0%81%ED%95%98%EA%B8%B0-aws-lambda-logging-f097dddbbc52
+    # ----- 참고 3 URL - https://jibinary.tistory.com/338
 
     # 카카오 정보 저장
     # json.loads 함수 호출 하여 JSON 문자열 -> Dictionary 객체 변환 처리 및
@@ -395,7 +423,8 @@ def responseOpenAI(request,response_queue,filename):
     # level1 텍스트 카드
     elif '/level1' in request["userRequest"]["utterance"]:
         dbReset(filename)   # 함수 dbReset 실행하여 텍스트 파일('/tmp/botlog.txt')에 save_log = "level1"+ " " + "테스트" 초기화
-        response_queue.put(level1textCardResponseFormat())
+        # response_queue.put(level1textCardResponseFormat())
+        response_queue.put(kakao.level1textCardResponseFormat())
 
         # 텍스트 파일('/tmp/botlog.txt')에 임시로 저장함.
         save_log = "level1"+ " " + "테스트"
@@ -404,34 +433,118 @@ def responseOpenAI(request,response_queue,filename):
             f.write(save_log)
 
     # level2 바로가기 그룹
-    elif '/level2' in request["userRequest"]["utterance"]:
+    # elif '/level2' in request["userRequest"]["utterance"]:
+    #     dbReset(filename)   # 함수 dbReset 실행하여 텍스트 파일('/tmp/botlog.txt')에 save_log = "level2"+ " " + "테스트" 초기화
+    #     response_queue.put(level2quickRepliesResponseFormat())
+
+    #     # 텍스트 파일('/tmp/botlog.txt')에 임시로 저장함.
+    #     save_log = "level2"+ " " + "테스트"
+
+    #     with open(filename, 'w') as f:
+    #         f.write(save_log)
+
+    # level2 바로가기 그룹 
+    # 1. 제품 설치파일 문의
+    elif '1. 제품 설치파일 문의' in request["userRequest"]["utterance"]:
         dbReset(filename)   # 함수 dbReset 실행하여 텍스트 파일('/tmp/botlog.txt')에 save_log = "level2"+ " " + "테스트" 초기화
-        response_queue.put(level2quickRepliesResponseFormat())
+        # response_queue.put(level2quickRepliesResponseFormat())
+        messageTextAutoDesk = 'AutoDesk 제품 버전 문의'   # 카카오 채팅방에 챗봇이 사용자에게 답변할 내용 'AutoDesk 제품 버전 문의' 설정 
+        messageTextRevit = '레빗 버전 문의'   # 카카오 채팅방에 챗봇이 사용자에게 답변할 내용 '레빗 버전 문의' 설정 
+        response_queue.put(kakao.level2InstallerquickRepliesResponseFormat(messageTextAutoDesk, messageTextRevit))
 
         # 텍스트 파일('/tmp/botlog.txt')에 임시로 저장함.
-        save_log = "level2"+ " " + "테스트"
+        save_log = "level2"+ " " + "1. 제품 설치파일 문의"
+
+        with open(filename, 'w') as f:
+            f.write(save_log)
+
+    # level2 바로가기 그룹
+    # 2. 네트워크 라이선스
+    elif '2. 네트워크 라이선스' in request["userRequest"]["utterance"]:
+        dbReset(filename)   # 함수 dbReset 실행하여 텍스트 파일('/tmp/botlog.txt')에 save_log = "level2"+ " " + "테스트" 초기화
+        # response_queue.put(level2quickRepliesResponseFormat())
+        response_queue.put(kakao.level2NetworkquickRepliesResponseFormat())
+
+        # 텍스트 파일('/tmp/botlog.txt')에 임시로 저장함.
+        save_log = "level2"+ " " + "2. 네트워크 라이선스"
+
+        with open(filename, 'w') as f:
+            f.write(save_log)
+
+    # level2 바로가기 그룹
+    # 3. 계정&제품배정 문의
+    elif '3. 계정&제품배정 문의' in request["userRequest"]["utterance"]:
+        dbReset(filename)   # 함수 dbReset 실행하여 텍스트 파일('/tmp/botlog.txt')에 save_log = "level2"+ " " + "테스트" 초기화
+        # response_queue.put(level2quickRepliesResponseFormat())
+        response_queue.put(kakao.level2AccountquickRepliesResponseFormat())
+
+        # 텍스트 파일('/tmp/botlog.txt')에 임시로 저장함.
+        save_log = "level2"+ " " + "3. 계정&제품배정 문의"
 
         with open(filename, 'w') as f:
             f.write(save_log)
 
     # level3 텍스트 카드
-    elif '/level3' in request["userRequest"]["utterance"]:
+    # elif '/level3' in request["userRequest"]["utterance"]:
+    #     dbReset(filename)   # 함수 dbReset 실행하여 텍스트 파일('/tmp/botlog.txt')에 save_log = "level3"+ " " + "테스트" 초기화
+    #     response_queue.put(level3textCardResponseFormat())
+
+    #     # 텍스트 파일('/tmp/botlog.txt')에 임시로 저장함.
+    #     save_log = "level3"+ " " + "테스트"
+
+    #     with open(filename, 'w') as f:
+    #         f.write(save_log)
+
+    # level3 바로가기 그룹
+    # AutoDesk 제품 버전 문의
+    elif 'AutoDesk 제품 버전 문의' in request["userRequest"]["utterance"]:
         dbReset(filename)   # 함수 dbReset 실행하여 텍스트 파일('/tmp/botlog.txt')에 save_log = "level3"+ " " + "테스트" 초기화
-        response_queue.put(level3textCardResponseFormat())
+        # response_queue.put(level3textCardResponseFormat())
+        messageText = 'AutoDesk 제품 설치 언어'   # 카카오 채팅방에 챗봇이 사용자에게 답변할 내용 'AutoDesk 제품 설치 언어' 설정 
+        response_queue.put(kakao.level3VersionquickRepliesResponseFormat(messageText))
 
         # 텍스트 파일('/tmp/botlog.txt')에 임시로 저장함.
-        save_log = "level3"+ " " + "테스트"
+        save_log = "level3"+ " " + "AutoDesk 제품 버전 문의"
+
+        with open(filename, 'w') as f:
+            f.write(save_log)
+
+    # level3 바로가기 그룹
+    # BOX 제품 버전 문의
+    elif '레빗 버전 문의' in request["userRequest"]["utterance"]:
+        dbReset(filename)   # 함수 dbReset 실행하여 텍스트 파일('/tmp/botlog.txt')에 save_log = "level3"+ " " + "테스트" 초기화
+        # response_queue.put(level3textCardResponseFormat())
+        messageText = '레빗 제품 설치 방법 안내'   # 카카오 채팅방에 챗봇이 사용자에게 답변할 내용 'BOX 제품 설치 방법 안내' 설정 
+        response_queue.put(kakao.level3VersionquickRepliesResponseFormat(messageText))
+
+        # 텍스트 파일('/tmp/botlog.txt')에 임시로 저장함.
+        save_log = "level3"+ " " + "레빗 버전 문의"
 
         with open(filename, 'w') as f:
             f.write(save_log)
 
     # level4 텍스트 카드
-    elif '/level4' in request["userRequest"]["utterance"]:
+    # elif '/level4' in request["userRequest"]["utterance"]:
+    #     dbReset(filename)   # 함수 dbReset 실행하여 텍스트 파일('/tmp/botlog.txt')에 save_log = "level4"+ " " + "테스트" 초기화
+    #     response_queue.put(level4textCardResponseFormat())
+
+    #     # 텍스트 파일('/tmp/botlog.txt')에 임시로 저장함.
+    #     save_log = "level4"+ " " + "테스트"
+
+    #     with open(filename, 'w') as f:
+    #         f.write(save_log)
+
+    # level4 텍스트 카드
+    elif 'AutoDesk 제품 설치 언어' in request["userRequest"]["utterance"]:
         dbReset(filename)   # 함수 dbReset 실행하여 텍스트 파일('/tmp/botlog.txt')에 save_log = "level4"+ " " + "테스트" 초기화
-        response_queue.put(level4textCardResponseFormat())
+        # response_queue.put(level4textCardResponseFormat())
+        messageTextKor = '한국어 설치 방법'   # 카카오 채팅방에 챗봇이 사용자에게 답변할 내용 '한국어 설치 방법' 설정 
+        messageTextEng = '영어 설치 방법'   # 카카오 채팅방에 챗봇이 사용자에게 답변할 내용 '영어 설치 방법' 설정 
+        response_queue.put(kakao.level4LanguagetextCardResponseFormat(messageTextKor, messageTextEng))
+        
 
         # 텍스트 파일('/tmp/botlog.txt')에 임시로 저장함.
-        save_log = "level4"+ " " + "테스트"
+        save_log = "level4"+ " " + "AutoDesk 제품 설치 언어"
 
         with open(filename, 'w') as f:
             f.write(save_log)
