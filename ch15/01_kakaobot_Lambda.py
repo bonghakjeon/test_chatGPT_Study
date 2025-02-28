@@ -173,6 +173,7 @@
 # ----- 참고 3 URL - https://dongmin-house.tistory.com/10
 # ----- 참고 4 URL - https://velog.io/@ninthsun91/TDD-1.-%ED%85%8C%EC%8A%A4%ED%8A%B8-%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4-%EC%9E%91%EC%84%B1
 
+
 ###### 기본 정보 설정 단계 #######
 # 참고사항
 # 아마존 웹서비스(AWS) 활용할 때에는 FastAPI 개발자 로컬 웹서버를 따로 생성할 필요가 없으니까
@@ -191,6 +192,16 @@ from modules import kakao # 폴더 "modules" -> 카카오 API 전용 모듈 "kak
 # ChatGPT와 통신하기 위해 OpenAI API 키 입력
 # 아마존 웹서비스(AWS) 함수 lambda_handler -> 환경변수로 저장한 OpenAI API 키 'OPENAI_API' 불러오기
 openai.api_key = os.environ['OPENAI_API']
+
+imagineBuilderList = ['/level1', '1. 제품 설치파일 문의', '2. 네트워크 라이선스', '3. 계정&제품배정 문의', 'AutoDesk 제품 버전 문의', '레빗 버전 문의', 'AutoDesk 제품 설치 언어', '/level5'] 
+infoIndex = 0   # '/level1' 인덱스 
+installerIndex = 1   # '1. 제품 설치파일 문의' 인덱스
+licenseIndex = 2   # '2. 네트워크 라이선스' 인덱스
+accountIndex = 3   # '3. 계정&제품배정 문의' 인덱스
+autoDeskVersionIndex = 4   # 'AutoDesk 제품 버전 문의' 인덱스
+revitVersionIndex = 5   # '레빗 버전 문의' 인덱스
+languageIndex = 6   # 'AutoDesk 제품 설치 언어' 인덱스 
+answerIndex = 7   # '/level5' 인덱스 
 
 ###### 메인 함수 단계 #######
 
@@ -421,7 +432,8 @@ def responseOpenAI(request,response_queue,filename):
         pass 
 
     # level1 텍스트 카드
-    elif '/level1' in request["userRequest"]["utterance"]:
+    # elif '/level1' in request["userRequest"]["utterance"]:
+    elif imagineBuilderList[infoIndex] in request["userRequest"]["utterance"]:
         dbReset(filename)   # 함수 dbReset 실행하여 텍스트 파일('/tmp/botlog.txt')에 save_log = "level1"+ " " + "테스트" 초기화
         # response_queue.put(level1textCardResponseFormat())
         response_queue.put(kakao.level1textCardResponseFormat())
@@ -445,11 +457,14 @@ def responseOpenAI(request,response_queue,filename):
 
     # level2 바로가기 그룹 
     # 1. 제품 설치파일 문의
-    elif '1. 제품 설치파일 문의' in request["userRequest"]["utterance"]:
+    # elif '1. 제품 설치파일 문의' in request["userRequest"]["utterance"]:
+    elif imagineBuilderList[installerIndex] in request["userRequest"]["utterance"]:
         dbReset(filename)   # 함수 dbReset 실행하여 텍스트 파일('/tmp/botlog.txt')에 save_log = "level2"+ " " + "테스트" 초기화
         # response_queue.put(level2quickRepliesResponseFormat())
-        messageTextAutoDesk = 'AutoDesk 제품 버전 문의'   # 카카오 채팅방에 챗봇이 사용자에게 답변할 내용 'AutoDesk 제품 버전 문의' 설정 
-        messageTextRevit = '레빗 버전 문의'   # 카카오 채팅방에 챗봇이 사용자에게 답변할 내용 '레빗 버전 문의' 설정 
+        # messageTextAutoDesk = 'AutoDesk 제품 버전 문의'  # 카카오 채팅방에 챗봇이 사용자에게 답변할 내용 'AutoDesk 제품 버전 문의' 설정 
+        messageTextAutoDesk = imagineBuilderList[autoDeskVersionIndex]  # 카카오 채팅방에 챗봇이 사용자에게 답변할 내용 'AutoDesk 제품 버전 문의' 설정 
+        # messageTextRevit = '레빗 버전 문의'   # 카카오 채팅방에 챗봇이 사용자에게 답변할 내용 '레빗 버전 문의' 설정 
+        messageTextRevit = imagineBuilderList[revitVersionIndex]   # 카카오 채팅방에 챗봇이 사용자에게 답변할 내용 '레빗 버전 문의' 설정 
         response_queue.put(kakao.level2InstallerquickRepliesResponseFormat(messageTextAutoDesk, messageTextRevit))
 
         # 텍스트 파일('/tmp/botlog.txt')에 임시로 저장함.
@@ -460,7 +475,8 @@ def responseOpenAI(request,response_queue,filename):
 
     # level2 바로가기 그룹
     # 2. 네트워크 라이선스
-    elif '2. 네트워크 라이선스' in request["userRequest"]["utterance"]:
+    # elif '2. 네트워크 라이선스' in request["userRequest"]["utterance"]:
+    elif imagineBuilderList[licenseIndex] in request["userRequest"]["utterance"]:
         dbReset(filename)   # 함수 dbReset 실행하여 텍스트 파일('/tmp/botlog.txt')에 save_log = "level2"+ " " + "테스트" 초기화
         # response_queue.put(level2quickRepliesResponseFormat())
         response_queue.put(kakao.level2NetworkquickRepliesResponseFormat())
@@ -473,7 +489,8 @@ def responseOpenAI(request,response_queue,filename):
 
     # level2 바로가기 그룹
     # 3. 계정&제품배정 문의
-    elif '3. 계정&제품배정 문의' in request["userRequest"]["utterance"]:
+    # elif '3. 계정&제품배정 문의' in request["userRequest"]["utterance"]:
+    elif imagineBuilderList[accountIndex] in request["userRequest"]["utterance"]:
         dbReset(filename)   # 함수 dbReset 실행하여 텍스트 파일('/tmp/botlog.txt')에 save_log = "level2"+ " " + "테스트" 초기화
         # response_queue.put(level2quickRepliesResponseFormat())
         response_queue.put(kakao.level2AccountquickRepliesResponseFormat())
@@ -497,10 +514,12 @@ def responseOpenAI(request,response_queue,filename):
 
     # level3 바로가기 그룹
     # AutoDesk 제품 버전 문의
-    elif 'AutoDesk 제품 버전 문의' in request["userRequest"]["utterance"]:
+    # elif 'AutoDesk 제품 버전 문의' in request["userRequest"]["utterance"]:
+    elif imagineBuilderList[autoDeskVersionIndex] in request["userRequest"]["utterance"]:
         dbReset(filename)   # 함수 dbReset 실행하여 텍스트 파일('/tmp/botlog.txt')에 save_log = "level3"+ " " + "테스트" 초기화
         # response_queue.put(level3textCardResponseFormat())
-        messageText = 'AutoDesk 제품 설치 언어'   # 카카오 채팅방에 챗봇이 사용자에게 답변할 내용 'AutoDesk 제품 설치 언어' 설정 
+        # messageText = 'AutoDesk 제품 설치 언어'   # 카카오 채팅방에 챗봇이 사용자에게 답변할 내용 'AutoDesk 제품 설치 언어' 설정 
+        messageText = imagineBuilderList[languageIndex]   # 카카오 채팅방에 챗봇이 사용자에게 답변할 내용 'AutoDesk 제품 설치 언어' 설정 
         response_queue.put(kakao.level3VersionquickRepliesResponseFormat(messageText))
 
         # 텍스트 파일('/tmp/botlog.txt')에 임시로 저장함.
@@ -511,7 +530,8 @@ def responseOpenAI(request,response_queue,filename):
 
     # level3 바로가기 그룹
     # BOX 제품 버전 문의
-    elif '레빗 버전 문의' in request["userRequest"]["utterance"]:
+    # elif '레빗 버전 문의' in request["userRequest"]["utterance"]:
+    elif imagineBuilderList[revitVersionIndex]  in request["userRequest"]["utterance"]:
         dbReset(filename)   # 함수 dbReset 실행하여 텍스트 파일('/tmp/botlog.txt')에 save_log = "level3"+ " " + "테스트" 초기화
         # response_queue.put(level3textCardResponseFormat())
         messageText = '레빗 제품 설치 방법 안내'   # 카카오 채팅방에 챗봇이 사용자에게 답변할 내용 'BOX 제품 설치 방법 안내' 설정 
@@ -535,7 +555,8 @@ def responseOpenAI(request,response_queue,filename):
     #         f.write(save_log)
 
     # level4 텍스트 카드
-    elif 'AutoDesk 제품 설치 언어' in request["userRequest"]["utterance"]:
+    # elif 'AutoDesk 제품 설치 언어' in request["userRequest"]["utterance"]:
+    elif imagineBuilderList[languageIndex] in request["userRequest"]["utterance"]:
         dbReset(filename)   # 함수 dbReset 실행하여 텍스트 파일('/tmp/botlog.txt')에 save_log = "level4"+ " " + "테스트" 초기화
         # response_queue.put(level4textCardResponseFormat())
         messageTextKor = '한국어 설치 방법'   # 카카오 채팅방에 챗봇이 사용자에게 답변할 내용 '한국어 설치 방법' 설정 
@@ -550,7 +571,8 @@ def responseOpenAI(request,response_queue,filename):
             f.write(save_log)
 
     # level5 텍스트 카드 + 텍스트
-    elif '/level5' in request["userRequest"]["utterance"]:
+    # elif '/level5' in request["userRequest"]["utterance"]:
+    elif imagineBuilderList[answerIndex] in request["userRequest"]["utterance"]:
         dbReset(filename)   # 함수 dbReset 실행하여 텍스트 파일('/tmp/botlog.txt')에 save_log = "level5"+ " " + "테스트" 초기화
         response_queue.put(level5textCardResponseFormat())
 
