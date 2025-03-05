@@ -1,5 +1,4 @@
 # TODO : 파이썬 예외처리(Python Exception) 기능 구현 (2025.02.28 minjae)
-# 유튜브 참고 URL - https://youtu.be/M63Y_Sdu71k?si=frcOwEpjNA7C1n3p
 # 참고 URL - https://docs.python.org/ko/3.6/tutorial/errors.html
 # 참고 2 URL - https://dojang.io/mod/page/view.php?id=2400
 # 참고 3 URL - https://loklee9.tistory.com/117
@@ -7,7 +6,7 @@
 
 # 특정 오류(예외) 감지하는 예외처리(try: ~ except:) 코드 구현
 try:   # try: 문 안에는 어떤 오류가 발생할 수 있는 여지가 있는 내용이 들어가 있는 코드가 실행된다.
-    # 파이썬 파일 "01-input.py" 컴파일 실행시 
+    # 파이썬 스크립트 파일 "03-except.py" 컴파일 실행시 
     # input 함수 사용해서 문자열 "나이를 입력하세요." 출력되고
     # 사용자가 나이를 입력하면 
     # 입력한 나이는 문자열 -> int로 형변환 처리 및 변수 age에 할당 
@@ -15,7 +14,7 @@ try:   # try: 문 안에는 어떤 오류가 발생할 수 있는 여지가 있�
     # 오류 메시지 (예시) ValueError: invalid literal for int() with base 10: 'ㅁㅇㄴㄹ'
     age = int(input("나이를 입력하세요.")) 
 
-    # 파이썬 파일 "01-input.py" 컴파일 실행시 
+    # 파이썬 스크립트 파일 "03-except.py" 컴파일 실행시 
     # input 함수 사용해서 문자열 "나이를 입력하세요." 출력되고
     # 사용자가 이름을 입력 -> 함수 encode 호출해서 아스키("ascii") 형태로 인코딩 처리 후 변수 ename에 저장 
     ename = input("영문 이름을 입력하세요.").encode("ascii")
