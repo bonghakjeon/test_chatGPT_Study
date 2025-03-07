@@ -7,7 +7,7 @@
 # 참고 2 URL - https://velog.io/@goo-gy/CloudWatch%EC%97%90%EC%84%9C-Lambda-%EB%A1%9C%EA%B7%B8-%ED%99%95%EC%9D%B8%ED%95%98%EA%B8%B0
 # 참고 3 URL - https://asleea88.medium.com/aws-%EB%9E%8C%EB%8B%A4-%EB%A1%9C%EA%B7%B8-%EC%9E%98-%EB%82%A8%EA%B8%B0%EA%B3%A0-%EC%B6%94%EC%A0%81%ED%95%98%EA%B8%B0-aws-lambda-logging-f097dddbbc52
 # 참고 4 URL - https://jibinary.tistory.com/338
-# 참고 5 URL - https://docs.python.org/3/library/logging.html
+# 참고 5 URL - https://docs.python.org/ko/3/library/logging.html
 # 참고 6 URL - https://wikidocs.net/84432
 # 참고 7 URL - https://docs.python.org/ko/3.13/howto/logging.html
 
@@ -81,7 +81,9 @@ def log():
 
     # 3. handler 생성(설정) (streamHandler : 콘솔 출력용 // fileHandler : 파일 기록용)
     streamHandler = logging.StreamHandler()
-    fileHandler = logging.FileHandler("server.log")    # 로그를 기록할 파일 이름 "server.log" 지정 (파일 이름은 다른 것으로 변경해도 된다.)
+    fileHandler = logging.FileHandler("server.log")           # 로그를 기록할 파일 이름(경로) "server.log" 지정 (파일 이름은 다른 것으로 변경해도 된다.)
+    # fileHandler = logging.FileHandler("botlog.txt")         # 로그를 기록할 파일 이름(경로) "botlog.txt" 지정 (파일 이름은 다른 것으로 변경해도 된다.)
+    # fileHandler = logging.FileHandler("/tmp/botlog.txt")    # 로그를 기록할 파일 이름(경로) "/tmp/botlog.txt" 지정 (파일 이름은 다른 것으로 변경해도 된다.)
 
     # 4. logger instance에 formatter 설정(할당) (각각의 Handler에 formatter 설정 적용)
     streamHandler.setFormatter(formatter)
