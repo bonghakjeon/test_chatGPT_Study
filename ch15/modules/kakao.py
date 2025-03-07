@@ -3,9 +3,41 @@
 # 파이썬 스크립트 파일(01_kakaobot_Lambda.py)에 속한 
 # 메인 함수 "lambda_handler" -> 답변/사진 요청 및 응답 확인 함수 "responseOpenAI"에서 사용할 수 있도록 정리 
 
+# 오류 메세지 전송 (카카오톡 서버로 텍스트 전송)
+# 오류 발생시 카카오톡 서버로 오류 메시지 전송 전용 JSON 형태(Format)의 데이터로 전달하기 위한 함수
+# 카카오톡 채팅방에 보낼 메시지를 매개변수 errorMessage에 input으로 받기(인자로 전달)
+def errorTextResponseFormat(errorMessage):
+    # 카카오톡 채팅방에 보낼 메시지가 저장된 매개변수 errorMessage를
+    # 아래 json 형태(Format)에서 항목 'outputs' -> 항목 "simpleText" -> "text"안에 매개변수 errorMessage을 넣어서
+    # 변수 response에 저장하기 
+    response = {
+        'version': '2.0', 
+        'template': {
+            'outputs': [
+                {
+                    "simpleText": {
+                        "text": errorMessage
+                    }
+                }
+            ], 
+            'quickReplies': []
+        }
+    }
+    return response   # 카카오톡 서버로 답변 전송하기 위해 답변 전송 전용 JSON 형태(Format)의 데이터가 저장된 변수 response 리턴  
+
 # level1 텍스트 카드 (카카오톡 서버로 텍스트 전송)
 # 상담시간 안내
 def level1textCardResponseFormat():
+    # TODO : 함수 level1textCardResponseFormat 로직 수정 예정 (2025.03.05 minjae)
+    # ----- # TODO : 바로 아래 소스코드는 파이썬 스크립트 파일 "D:\minjae\test_BotProject\05.카카오톡\04-kakao-money.py" -> 함수 "get_exchange_from_won"의 로직을 참고 하여 구현함 (2025.03.04 minjae)
+    # ----- testButtons = []
+    # ----- for test in testButtonList:
+    #     testButtons.append({
+    #         "action": "message",
+    #         "label": f"{test}",
+    #         "messageText": f"[구현 예정!] {test}"
+    #     })
+        
     response = {
         "version": "2.0",
         "template": {
@@ -37,11 +69,26 @@ def level1textCardResponseFormat():
             "quickReplies": []
         }
     }
+    # TODO : 함수 level1textCardResponseFormat 로직 수정 예정 (2025.03.05 minjae)
+    # 함수 len 사용하여 testButtons 배열 안에 존재하는 요소의 갯수가 0보다 큰경우
+    # ----- if len(testButtons) > 0:
+    #     response["template"]["buttons"] = testButtons
+
     return response
 
 # level2 바로가기 그룹 전송 (카카오톡 서버로 텍스트 전송)
 # 1. 제품 설치파일 문의
 def level2InstallerquickRepliesResponseFormat(messageTextAutoDesk, messageTextRevit):
+    # TODO : 함수 level2InstallerquickRepliesResponseFormat 로직 수정 예정 (2025.03.05 minjae)
+    # TODO : 바로 아래 소스코드는 파이썬 스크립트 파일 "D:\minjae\test_BotProject\05.카카오톡\04-kakao-money.py" -> 함수 "get_exchange_from_won"의 로직을 참고 하여 구현함 (2025.03.04 minjae)
+    # ----- testQuick = []
+    # ----- for test in testList:
+    #     testQuick.append({
+    #         "action": "message",
+    #         "label": f"{test}",
+    #         "messageText": f"[구현 예정!] {test}"
+    #     })
+
     response = {
         "version": "2.0", 
         "template": {
@@ -106,11 +153,26 @@ def level2InstallerquickRepliesResponseFormat(messageTextAutoDesk, messageTextRe
             ]
         }
     }
+
+    # TODO : 함수 level2InstallerquickRepliesResponseFormat 로직 수정 예정 (2025.03.05 minjae)
+    # 함수 len 사용하여 testQuick 배열 안에 존재하는 요소의 갯수가 0보다 큰경우
+    # ----- if len(testQuick) > 0:
+    #     response["template"]["quickReplies"] = testQuick
     return response
 
 # level2 바로가기 그룹 전송 (카카오톡 서버로 텍스트 전송)
 # 2. 네트워크 라이선스
 def level2NetworkquickRepliesResponseFormat():
+    # TODO : 함수 level2NetworkquickRepliesResponseFormat 로직 수정 예정 (2025.03.05 minjae)
+    # TODO : 바로 아래 소스코드는 파이썬 스크립트 파일 "D:\minjae\test_BotProject\05.카카오톡\04-kakao-money.py" -> 함수 "get_exchange_from_won"의 로직을 참고 하여 구현함 (2025.03.04 minjae)
+    # ----- testQuick = []
+    # ----- for test in testList:
+    #     testQuick.append({
+    #         "action": "message",
+    #         "label": f"{test}",
+    #         "messageText": f"[구현 예정!] {test}"
+    #     })
+
     response = {
         "version": "2.0", 
         "template": {
@@ -175,11 +237,26 @@ def level2NetworkquickRepliesResponseFormat():
             ]
         }
     }
+
+    # TODO : 함수 level2NetworkquickRepliesResponseFormat 로직 수정 예정 (2025.03.05 minjae)
+    # 함수 len 사용하여 testQuick 배열 안에 존재하는 요소의 갯수가 0보다 큰경우
+    # ----- if len(testQuick) > 0:
+    #     response["template"]["quickReplies"] = testQuick
     return response
 
 # level2 바로가기 그룹 전송 (카카오톡 서버로 텍스트 전송)
 # 3. 계정&제품배정 문의
 def level2AccountquickRepliesResponseFormat():
+    # TODO : 함수 level2AccountquickRepliesResponseFormat 로직 수정 예정 (2025.03.05 minjae)
+    # TODO : 바로 아래 소스코드는 파이썬 스크립트 파일 "D:\minjae\test_BotProject\05.카카오톡\04-kakao-money.py" -> 함수 "get_exchange_from_won"의 로직을 참고 하여 구현함 (2025.03.04 minjae)
+    # ----- testQuick = []
+    # ----- for test in testList:
+    #     testQuick.append({
+    #         "action": "message",
+    #         "label": f"{test}",
+    #         "messageText": f"[구현 예정!] {test}"
+    #     })
+
     response = {
         "version": "2.0", 
         "template": {
@@ -244,11 +321,25 @@ def level2AccountquickRepliesResponseFormat():
             ]
         }
     }
+    # TODO : 함수 level2AccountquickRepliesResponseFormat 로직 수정 예정 (2025.03.05 minjae)
+    # 함수 len 사용하여 testQuick 배열 안에 존재하는 요소의 갯수가 0보다 큰경우
+    # ----- if len(testQuick) > 0:
+    #     response["template"]["quickReplies"] = testQuick
     return response
 
 # level3 바로가기 그룹 전송 (카카오톡 서버로 텍스트 전송)
 # AutoDesk 제품 또는 레빗 버전 선택
 def level3VersionquickRepliesResponseFormat(messageText):
+    # TODO : 함수 level3VersionquickRepliesResponseFormat 로직 수정 예정 (2025.03.05 minjae)
+    # TODO : 바로 아래 소스코드는 파이썬 스크립트 파일 "D:\minjae\test_BotProject\05.카카오톡\04-kakao-money.py" -> 함수 "get_exchange_from_won"의 로직을 참고 하여 구현함 (2025.03.04 minjae)
+    # ----- testQuick = []
+    # ----- for test in testList:
+    #     testQuick.append({
+    #         "action": "message",
+    #         "label": f"{test}",
+    #         "messageText": f"[구현 예정!] {test}"
+    #     })
+
     response = {
         "version": "2.0", 
         "template": {
@@ -283,6 +374,10 @@ def level3VersionquickRepliesResponseFormat(messageText):
             ]
         }
     }
+    # TODO : 함수 level3VersionquickRepliesResponseFormat 로직 수정 예정 (2025.03.05 minjae)
+    # 함수 len 사용하여 testQuick 배열 안에 존재하는 요소의 갯수가 0보다 큰경우
+    # ----- if len(testQuick) > 0:
+    #     response["template"]["quickReplies"] = testQuick
     return response
 
 # level4 텍스트 카드 (카카오톡 서버로 텍스트 전송)

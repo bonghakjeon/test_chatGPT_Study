@@ -73,67 +73,71 @@ import sys
 
 # 로그 초기 설정
 def configureLogger():
+    # 1. logger instance 설정 - logger의 이름(__name__)을 명시해서 logger instance 설정하기 
     # TODO : 아래 주석친 코드 처럼 함수 logging.getLogger 안에 인자값으로 __name__ 작성시 
     #        아마존 웹서비스(AWS) 람다 함수 (Lambda Function) -> CloudWatch -> Live Tail에서 
     #        실시간 기록되는 로그 문자열이 2줄로 찍혀 나오므로
     #        logger = logging.getLogger() 이런 식으로만 작성해야함. (2025.03.06 minjae)
     # logger = logging.getLogger(__name__)
     logger = logging.getLogger()
-    for h in logger.handlers:
-      logger.removeHandler(h)
-    
-    h = logging.StreamHandler(sys.stdout)
-    
-    # use whatever format you want here
-    # FORMAT = '%(asctime)s %(message)s'
-    # h.setFormatter(logging.Formatter(FORMAT))
+
+    for handler in logger.handlers:
+        logger.removeHandler(handler)
+
+    # 2. formatter 생성 (로그 작성/출력/저장에 사용할 날짜 + 로그 메시지)
+    # 로그 기록 포맷(format) 예시 - [2025-03-06 10:53:33]
+    # formatter = logging.Formatter('[%(asctime)s] %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    # formatter = logging.Formatter('[%(asctime)s] %(filename)s %(funcName)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    # formatter = logging.Formatter('[%(asctime)s] [%(pathname)s] %(funcName)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
     formatter = logging.Formatter('[%(levelname)s] [%(asctime)s] [%(filename)s | %(funcName)s] : %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
-    h.setFormatter(formatter)
-    logger.addHandler(h)
-    logger.setLevel(logging.INFO)
+
+    # 3. handler 생성(설정) (streamHandler : 콘솔 출력용 // fileHandler : 파일 기록용)
+    # streamHandler = logging.StreamHandler()
+    streamHandler = logging.StreamHandler(sys.stdout)
+    fileHandler = logging.FileHandler("/tmp/botlog.txt")      # 로그를 기록할 파일 이름(경로) "/tmp/botlog.txt" 지정 (파일 이름은 다른 것으로 변경해도 된다.)
+    # fileHandler = logging.FileHandler("botlog.txt")         # 로그를 기록할 파일 이름(경로) "botlog.txt" 지정 (파일 이름은 다른 것으로 변경해도 된다.)
     
+
+    # 4. logger instance에 formatter 설정(할당) (각각의 Handler에 formatter 설정 적용)
+    streamHandler.setFormatter(formatter)
+    fileHandler.setFormatter(formatter)
+
+    # 5. logger instance(logger)에 handler 추가 (addHandler) (입력받는 log에 handler 사용)
+    logger.addHandler(streamHandler)
+    logger.addHandler(fileHandler)
+
+    # 6. 기록할 로그 레벨(log level) 지정하기 - DEBUG 로그(level=logging.DEBUG)는 로그 레벨(log level) 중 가장 낮은 레벨(level)이다.
+    logger.setLevel(level=logging.DEBUG)    # INFO 레벨로 지정하면, INFO 레벨보다 낮은 DEBUG 로그는 무시함.
+                                            # Python의 기본 logging 시스템의 레벨은 WARNING으로 설정되어 있음.
+                                            # 따라서 특별한 설정을 하지 않으면, WARNING 레벨 이상만 기록됨. (WARNING 레벨보다 낮은 로그들은 무시하고 콘솔창 또는 파일에 기록되지 않음.)
+
+    # 설정된 log setting 반환 - setting 완료된(설정 완료된) logger instance "logger" 반환
     return logger
 
-# TODO : 아래 주석친 내용 필요시 참고 (2025.03.06 minjae)
+# TODO : 아래 주석친 테스트 코드 필요시 참고 (2025.03.06 minjae)
 # 로그 초기 설정
 # def configureLogger():
-
-#     # 1. logger instance 설정 - logger의 이름(__name__)을 명시해서 logger instance 설정하기 
-#     logger = logging.getLogger(__name__)
-
-#     for handler in logger.handlers:
-#       logger.removeHandler(handler)
-
-#     # 2. formatter 생성 (로그 작성/출력/저장에 사용할 날짜 + 로그 메시지)
-#     # 로그 기록 포맷(format) 예시 - [2025-03-06 10:53:33]
-#     # formatter = logging.Formatter('[%(asctime)s] %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
-#     # formatter = logging.Formatter('[%(asctime)s] %(filename)s %(funcName)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
-#     formatter = logging.Formatter('[%(asctime)s] [%(pathname)s] %(funcName)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
-
-#     # 3. handler 생성(설정) (streamHandler : 콘솔 출력용 // fileHandler : 파일 기록용)
-#     # streamHandler = logging.StreamHandler()
-#     streamHandler = logging.StreamHandler(sys.stdout)
-#     fileHandler = logging.FileHandler("/tmp/botlog.txt")    # 로그를 기록할 파일 이름(경로) "/tmp/botlog.txt" 지정 (파일 이름은 다른 것으로 변경해도 된다.)
-#     # fileHandler = logging.FileHandler("botlog.txt")         # 로그를 기록할 파일 이름(경로) "botlog.txt" 지정 (파일 이름은 다른 것으로 변경해도 된다.)
+#     # TODO : 아래 주석친 코드 처럼 함수 logging.getLogger 안에 인자값으로 __name__ 작성시 
+#     #        아마존 웹서비스(AWS) 람다 함수 (Lambda Function) -> CloudWatch -> Live Tail에서 
+#     #        실시간 기록되는 로그 문자열이 2줄로 찍혀 나오므로
+#     #        logger = logging.getLogger() 이런 식으로만 작성해야함. (2025.03.06 minjae)
+#     # logger = logging.getLogger(__name__)
+#     logger = logging.getLogger()
+#     for h in logger.handlers:
+#       logger.removeHandler(h)
     
-
-#     # 4. logger instance에 formatter 설정(할당) (각각의 Handler에 formatter 설정 적용)
-#     streamHandler.setFormatter(formatter)
-#     fileHandler.setFormatter(formatter)
-
-#     # 5. logger instance(logger)에 handler 추가 (addHandler) (입력받는 log에 handler 사용)
-#     logger.addHandler(streamHandler)
-#     logger.addHandler(fileHandler)
-
-#     # 6. 기록할 로그 레벨(log level) 지정하기 - DEBUG 로그(level=logging.DEBUG)는 로그 레벨(log level) 중 가장 낮은 레벨(level)이다.
-#     logger.setLevel(level=logging.DEBUG)    # INFO 레벨로 지정하면, INFO 레벨보다 낮은 DEBUG 로그는 무시함.
-#                                             # Python의 기본 logging 시스템의 레벨은 WARNING으로 설정되어 있음.
-#                                             # 따라서 특별한 설정을 하지 않으면, WARNING 레벨 이상만 기록됨. (WARNING 레벨보다 낮은 로그들은 무시하고 콘솔창 또는 파일에 기록되지 않음.)
-
-#     # 설정된 log setting 반환 - setting 완료된(설정 완료된) logger instance "logger" 반환
+#     h = logging.StreamHandler(sys.stdout)
+    
+#     # use whatever format you want here
+#     # FORMAT = '%(asctime)s %(message)s'
+#     # h.setFormatter(logging.Formatter(FORMAT))
+#     formatter = logging.Formatter('[%(levelname)s] [%(asctime)s] [%(filename)s | %(funcName)s] : %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+#     h.setFormatter(formatter)
+#     logger.addHandler(h)
+#     logger.setLevel(logging.INFO)
+    
 #     return logger
 
-# TODO : 아래 주석친 테스트 코드 필요시 참고 (2025.03.06 minjae)
 # 7. log 함수 선 호출 (함수를 한번만 호출해 놓으면, 이후에 logger.debug("메시지") 형식으로 필요 시마다 간단하게 로그를 기록할 수 있음.
 # logger=configureLogger()
 

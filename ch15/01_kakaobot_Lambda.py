@@ -154,28 +154,34 @@
 #     }
 
 
-# ----- ★파이썬 현재 실행 중인 함수 이름 가져오기 기능 구현 (2025.03.05 minjae)
-# ----- 참고 URL - https://stackoverflow.com/questions/4492559/how-to-get-current-function-into-a-variable
-# ----- 참고 2 URL - https://gist.github.com/andyxning/3a747afd02ab52483666
+# ★파이썬 현재 실행 중인 함수 이름 가져오기 기능 구현 (2025.03.05 minjae)
+# 참고 URL - https://stackoverflow.com/questions/4492559/how-to-get-current-function-into-a-variable
+# 참고 2 URL - https://gist.github.com/andyxning/3a747afd02ab52483666
 
-# ----- ★파이썬 logging 모듈(라이브러리) 사용해서 카카오챗봇의 로그 기록 작성 및
-# -----   아마존 웹서비스(AWS) 람다(Lambda) 함수 CloudWatch에 작성한 로그 기록 보관하기 
-# ----- 유튜브 참고 URL - https://youtu.be/KmTzw7Hqlw4?si=yjN4X3VUoNSJ6od2
-# ----- 참고 URL - https://velog.io/@goo-gy/CloudWatch%EC%97%90%EC%84%9C-Lambda-%EB%A1%9C%EA%B7%B8-%ED%99%95%EC%9D%B8%ED%95%98%EA%B8%B0
-# ----- 참고 2 URL - https://asleea88.medium.com/aws-%EB%9E%8C%EB%8B%A4-%EB%A1%9C%EA%B7%B8-%EC%9E%98-%EB%82%A8%EA%B8%B0%EA%B3%A0-%EC%B6%94%EC%A0%81%ED%95%98%EA%B8%B0-aws-lambda-logging-f097dddbbc52
-# ----- 참고 3 URL - https://jibinary.tistory.com/338
+# ★파이썬 logging 모듈(라이브러리) 사용해서 카카오챗봇의 로그 기록 작성 및
+#   아마존 웹서비스(AWS) 람다(Lambda) 함수 CloudWatch에 작성한 로그 기록 보관하기 
+# TODO : event['body'] - 카카오톡 채팅방 채팅 정보가 들어있는 변수 사용 및 
+#        파이썬 logging 모듈(라이브러리) 사용해서 카카오챗봇의 로그 기록 작성 기능 구현하기 (2025.02.21 minjae)
+# 유튜브 참고 URL - https://youtu.be/KmTzw7Hqlw4?si=yjN4X3VUoNSJ6od2
+# 참고 URL - https://blog.naver.com/sangja84/222970140189
+# 참고 2 URL - https://velog.io/@goo-gy/CloudWatch%EC%97%90%EC%84%9C-Lambda-%EB%A1%9C%EA%B7%B8-%ED%99%95%EC%9D%B8%ED%95%98%EA%B8%B0
+# 참고 3 URL - https://asleea88.medium.com/aws-%EB%9E%8C%EB%8B%A4-%EB%A1%9C%EA%B7%B8-%EC%9E%98-%EB%82%A8%EA%B8%B0%EA%B3%A0-%EC%B6%94%EC%A0%81%ED%95%98%EA%B8%B0-aws-lambda-logging-f097dddbbc52
+# 참고 4 URL - https://jibinary.tistory.com/338
+# 참고 5 URL - https://docs.python.org/ko/3/library/logging.html
+# 참고 6 URL - https://wikidocs.net/84432
+# 참고 7 URL - https://docs.python.org/ko/3.13/howto/logging.html
 
-# ----- ★파이썬 예외처리 try ~ except 
-# ----- 참고 URL - https://docs.python.org/ko/3.6/tutorial/errors.html
-# ----- 참고 2 URL - https://dojang.io/mod/page/view.php?id=2400
-# ----- 참고 3 URL - https://loklee9.tistory.com/117
-# ----- 참고 4 URL - https://youtu.be/M63Y_Sdu71k?si=Dyay0l1ZYRMIBiP1
+# ★파이썬 예외처리 try ~ except 
+# 참고 URL - https://docs.python.org/ko/3.6/tutorial/errors.html
+# 참고 2 URL - https://dojang.io/mod/page/view.php?id=2400
+# 참고 3 URL - https://loklee9.tistory.com/117
+# 참고 4 URL - https://youtu.be/M63Y_Sdu71k?si=Dyay0l1ZYRMIBiP1
 
-# ----- ★테스트 시나리오 양식 
-# ----- 참고 URL - https://brunch.co.kr/@cysstory/108
-# ----- 참고 2 URL - https://m.blog.naver.com/jenny1257/222447352507
-# ----- 참고 3 URL - https://dongmin-house.tistory.com/10
-# ----- 참고 4 URL - https://velog.io/@ninthsun91/TDD-1.-%ED%85%8C%EC%8A%A4%ED%8A%B8-%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4-%EC%9E%91%EC%84%B1
+# ★테스트 시나리오 양식 
+# 참고 URL - https://brunch.co.kr/@cysstory/108
+# 참고 2 URL - https://m.blog.naver.com/jenny1257/222447352507
+# 참고 3 URL - https://dongmin-house.tistory.com/10
+# 참고 4 URL - https://velog.io/@ninthsun91/TDD-1.-%ED%85%8C%EC%8A%A4%ED%8A%B8-%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4-%EC%9E%91%EC%84%B1
 
 
 ###### 기본 정보 설정 단계 #######
@@ -231,7 +237,7 @@ def lambda_handler(event, context):
 
     # 카카오 정보 저장
     # json.loads 함수 호출 하여 JSON 문자열 -> Dictionary 객체 변환 처리 및
-    # Dictionary 객체를 변수 result에 저장 
+    # Dictionary 객체를 변수 kakaorequest에 저장 
     # JSON 문자열 (예) '{"name": "홍길동", "birth": "0525", "age": 30}'
     # Dictionary 객체 (예) {'name': '홍길동', 'birth': '0525', 'age': 30}
     # 참고 URL - https://wikidocs.net/126088 

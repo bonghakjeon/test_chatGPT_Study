@@ -10,6 +10,9 @@ import time   # ChatGPT 답변 시간 계산하기 위해 패키지 "time" 불�
 import queue as q   # 자료구조 queue(deque 기반) 이용하기 위해 패키지 "queue" 불러오기
 import os   # 답변 결과를 테스트 파일로 저장할 때 경로 생성해야 해서 패키지 "os" 불러오기
 from modules import kakao # 폴더 "modules" -> 카카오 API 전용 모듈 "kakao" 불러오기 
+from modules import logger # 폴더 "modules" -> 로그 설정 전용 모듈 "logger" 불러오기 
+
+botLogger=logger.configureLogger()
 
 # OpenAI API KEY
 # 테스트용 카카오톡 챗봇 채팅방에서 
@@ -37,10 +40,13 @@ answerIndex = 7   # '/level5' 인덱스
 # TODO : event['body'] - 카카오톡 채팅방 채팅 정보가 들어있는 변수 사용 및 
 #        파이썬 logging 모듈(라이브러리) 사용해서 카카오챗봇의 로그 기록 작성 기능 구현하기 (2025.02.21 minjae)
 # 유튜브 참고 URL - https://youtu.be/KmTzw7Hqlw4?si=yjN4X3VUoNSJ6od2
-# 참고 URL - https://velog.io/@goo-gy/CloudWatch%EC%97%90%EC%84%9C-Lambda-%EB%A1%9C%EA%B7%B8-%ED%99%95%EC%9D%B8%ED%95%98%EA%B8%B0
-# 참고 2 URL - https://asleea88.medium.com/aws-%EB%9E%8C%EB%8B%A4-%EB%A1%9C%EA%B7%B8-%EC%9E%98-%EB%82%A8%EA%B8%B0%EA%B3%A0-%EC%B6%94%EC%A0%81%ED%95%98%EA%B8%B0-aws-lambda-logging-f097dddbbc52
-# 참고 3 URL - https://jibinary.tistory.com/338
-# 참고 4 URL - https://docs.python.org/3/library/logging.html
+# 참고 URL - https://blog.naver.com/sangja84/222970140189
+# 참고 2 URL - https://velog.io/@goo-gy/CloudWatch%EC%97%90%EC%84%9C-Lambda-%EB%A1%9C%EA%B7%B8-%ED%99%95%EC%9D%B8%ED%95%98%EA%B8%B0
+# 참고 3 URL - https://asleea88.medium.com/aws-%EB%9E%8C%EB%8B%A4-%EB%A1%9C%EA%B7%B8-%EC%9E%98-%EB%82%A8%EA%B8%B0%EA%B3%A0-%EC%B6%94%EC%A0%81%ED%95%98%EA%B8%B0-aws-lambda-logging-f097dddbbc52
+# 참고 4 URL - https://jibinary.tistory.com/338
+# 참고 5 URL - https://docs.python.org/ko/3/library/logging.html
+# 참고 6 URL - https://wikidocs.net/84432
+# 참고 7 URL - https://docs.python.org/ko/3.13/howto/logging.html
 
 ###### 메인 함수 단계 #######
 
@@ -53,6 +59,14 @@ def lambda_handler(event, context):
         run_flag = False
         start_time = time.time()   # 답변/그림 응답시간 계산하기 위해 답변/그림을 시작하는 시간을 변수 start_time에 저장 
 
+        # 카카오 정보 저장
+        # json.loads 함수 호출 하여 JSON 문자열 -> Dictionary 객체 변환 처리 및
+        # Dictionary 객체를 변수 kakaorequest에 저장 
+        # JSON 문자열 (예) '{"name": "홍길동", "birth": "0525", "age": 30}'
+        # Dictionary 객체 (예) {'name': '홍길동', 'birth': '0525', 'age': 30}
+        # 참고 URL - https://wikidocs.net/126088 
+        # 카카오톡 채팅방 채팅 정보가 event 파라미터를 통해서 람다(lambda) 함수 lambda_handler 로 넘어온다.
+        # event['body'] - 카카오톡 채팅방 채팅 정보가 들어있는 변수이다.
         kakaorequest = json.loads(event['body'])
 
         filename = "/tmp/botlog.txt"
@@ -62,6 +76,11 @@ def lambda_handler(event, context):
         else:
             print("File Exists")   # print 함수 호출하여 지금 현재 파일이 있다고 메시지 "File Exists" 출력 
 
+        # 테스트 로그 기록 
+        botLogger.info("[테스트] 사용자 입력 채팅 정보 - %s" %event['body'])
+        # botLogger.info("[테스트2] 사용자 입력 채팅 정보 - %s" %kakaorequest)
+        # botLogger.error('챗봇 로그 오류 테스트 : ')
+
         response_queue = q.Queue()   #.put(), .get()
 
         request_respond = threading.Thread(target=responseOpenAI,
@@ -69,8 +88,10 @@ def lambda_handler(event, context):
         request_respond.start()
 
     except Exception as e:   # 하위 코드 블록에서 예외가 발생해도 변수 e에다 넣고 아래 코드 실행됨
-        pass
-        # 오류 로그 기록  
+        # pass
+        # 테스트 오류 로그 기록  
+        errorMessage = str(e)  # str() 함수 사용해서 Exception 클래스 객체 e를 문자열로 변환 및 오류 메시지 변수 errorMessage에 할당 (문자열로 변환 안할시 카카오 챗봇에서 스킬서버 오류 출력되면서 챗봇이 답변도 안하고 장시간 멈춤 상태 발생.)
+        botLogger.error('[테스트] 오류 - %s' %errorMessage)
     finally:   # 예외 발생 여부와 상관없이 항상 마지막에 실행할 코드
         while(time.time() - start_time < 3.5):
             if not response_queue.empty():
@@ -79,8 +100,12 @@ def lambda_handler(event, context):
                 break   
             time.sleep(0.01)
 
-        if run_flag== False:     
+        if run_flag == False:     
             response = timeover()   
+
+        # 테스트 로그 기록
+        responseMessage = json.dumps(response)
+        botLogger.info("[테스트] 챗봇 답변 채팅 정보 - %s" %responseMessage)
 
         # 카카오톡 서버로 json 형태의 데이터(response 포함) 리턴
         return {
@@ -227,7 +252,9 @@ def responseOpenAI(request,response_queue,filename):
             response_queue.put(base_response)
 
     except Exception as e:   # 하위 코드 블록에서 예외가 발생해도 변수 e에다 넣고 아래 코드 실행됨
+        # 테스트 오류 로그 기록  
         errorMessage = str(e)  # str() 함수 사용해서 Exception 클래스 객체 e를 문자열로 변환 및 오류 메시지 변수 errorMessage에 할당 (문자열로 변환 안할시 카카오 챗봇에서 스킬서버 오류 출력되면서 챗봇이 답변도 안하고 장시간 멈춤 상태 발생.)
+        botLogger.error('[테스트] 오류 - %s' %errorMessage)
         response_queue.put(kakao.errorTextResponseFormat(errorMessage))
         # 오류 로그 기록 
         raise    # raise로 함수 responseOpenAI의 현재 예외를 다시 발생시켜서 함수 responseOpenAI 호출한 상위 코드 블록으로 넘김
