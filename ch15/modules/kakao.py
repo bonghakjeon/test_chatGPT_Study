@@ -401,6 +401,14 @@ def level4LanguagetextCardResponseFormat(messageTextKor, messageTextEng):
                                 "action": "message",
                                 "label": "English",
                                 "messageText": f"[구현 예정!] {messageTextEng}"
+                            },
+                            {
+                                "action": "message",
+                                "label": "PDF 테스트",
+                                "messageText": "[PDF 테스트]\n" + 
+                                               "Revit 한국어 프로그램 설치 방법 확인하시려면\n" + 
+                                               "아래 URL 클릭하세요.\n" + 
+                                               "https://damassets.autodesk.net/content/dam/autodesk/www/campaigns/AEC-KR-Test-Drive-BIM-Program/fy15-aec-test-drive-bim-interoperability-guide-ko.pdf"
                             }
                         ]
                     }

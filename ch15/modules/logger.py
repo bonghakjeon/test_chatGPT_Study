@@ -89,7 +89,7 @@ def configureLogger():
     # formatter = logging.Formatter('[%(asctime)s] %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
     # formatter = logging.Formatter('[%(asctime)s] %(filename)s %(funcName)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
     # formatter = logging.Formatter('[%(asctime)s] [%(pathname)s] %(funcName)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
-    formatter = logging.Formatter('[%(levelname)s] [%(asctime)s] [%(filename)s | %(funcName)s] : %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    formatter = logging.Formatter('[%(levelname)s] [%(asctime)s] [%(filename)s | %(funcName)s - L%(lineno)d ] : %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
     # 3. handler 생성(설정) (streamHandler : 콘솔 출력용 // fileHandler : 파일 기록용)
     # streamHandler = logging.StreamHandler()
@@ -110,6 +110,8 @@ def configureLogger():
     logger.setLevel(level=logging.DEBUG)    # INFO 레벨로 지정하면, INFO 레벨보다 낮은 DEBUG 로그는 무시함.
                                             # Python의 기본 logging 시스템의 레벨은 WARNING으로 설정되어 있음.
                                             # 따라서 특별한 설정을 하지 않으면, WARNING 레벨 이상만 기록됨. (WARNING 레벨보다 낮은 로그들은 무시하고 콘솔창 또는 파일에 기록되지 않음.)
+
+    logger.info("로그 초기 설정 완료")
 
     # 설정된 log setting 반환 - setting 완료된(설정 완료된) logger instance "logger" 반환
     return logger

@@ -1,3 +1,6 @@
+# 아마존 웹서비스(AWS) 다중인증(MFA는 Multi-Factor Authentication) 등록 방법 및 모바일 어플 Google Authenticator 설치 및 사용 방법 
+# 참고 URL - https://happy-jjang-a.tistory.com/223
+
 ###### 기본 정보 설정 단계 #######
 # 참고사항
 # 아마존 웹서비스(AWS) 활용할 때에는 FastAPI 개발자 로컬 웹서버를 따로 생성할 필요가 없으니까
@@ -19,6 +22,11 @@ botLogger=logger.configureLogger()
 # ChatGPT와 통신하기 위해 OpenAI API 키 입력
 # 아마존 웹서비스(AWS) 함수 lambda_handler -> 환경변수로 저장한 OpenAI API 키 'OPENAI_API' 불러오기
 openai.api_key = os.environ['OPENAI_API']
+# 비쥬얼스튜디오코드(VSCode) cmd 터미널창에 
+# 아래처럼 최신 버전 OpenAI 라이브러리 "openai" 설치 및 함수 "getTextFromGPTNew" 구현 및 사용하기
+# pip install openai
+OPENAI_KEY = os.environ['OPENAI_API']
+# OPENAI_KEY = os.getenv("OPENAI_KEY")
 
 imagineBuilderList = ['/level1', '1. 제품 설치파일 문의', '2. 네트워크 라이선스', '3. 계정&제품배정 문의', 'AutoDesk 제품 버전 문의', '레빗 버전 문의', 'AutoDesk 제품 설치 언어', '/level5'] 
 infoIndex = 0   # '/level1' 인덱스 
@@ -47,6 +55,16 @@ answerIndex = 7   # '/level5' 인덱스
 # 참고 5 URL - https://docs.python.org/ko/3/library/logging.html
 # 참고 6 URL - https://wikidocs.net/84432
 # 참고 7 URL - https://docs.python.org/ko/3.13/howto/logging.html
+
+# 카카오 챗봇 OpenAI API 또는 Rest API 호출시 
+# 호출 시간이 5초이상 초과되더라도 카카오톡 서버가 멈추지 않고 답변을 할 수 있도록
+# 카카오 챗봇 기능을 실행하려면 
+# 1. 카카오 챗봇 관리자 센터 화면 -> 화면 좌측 버튼 "설정" 클릭 
+# 2. 화면 "설정" 이동 -> 해당 화면 탭 "AI 챗봇 관리" 클릭 -> 화면 "AI" 챗봇 설정 하단 버튼 "일반 챗봇 전환" 클릭
+# 3. AI 챗봇 목적 "고객 기술지원 답변 목적" 작성 
+# 4. 요청 사유 "ChatGPT AI 결과를 처리하는데 시간이 초과됩니다." 입력 -> 버튼 "확인" 클릭
+# 5. 2~3일 후 심사 결과 완료되면 호출 시간이 5초이상 초과되더라도 카카오톡 서버가 멈추지 않고 답변을 할 수 있다.
+
 
 ###### 메인 함수 단계 #######
 
@@ -211,6 +229,8 @@ def responseOpenAI(request,response_queue,filename):
             messageText = imagineBuilderList[languageIndex]  
             response_queue.put(kakao.level3VersionquickRepliesResponseFormat(messageText))
 
+            # botLogger.debug("[테스트] 챗봇 사용자 입력 정보 - %s" %request["userRequest"])
+
             save_log = "level3"+ " " + "AutoDesk 제품 버전 문의"
 
             with open(filename, 'w') as f:
@@ -298,6 +318,22 @@ def getTextFromGPT(prompt):
 
     message = response["choices"][0]["message"]["content"]
     return message   
+
+# 비쥬얼스튜디오코드(VSCode) cmd 터미널창에 
+# 아래처럼 최신 버전 OpenAI 라이브러리 "openai" 설치 및 함수 "getTextFromGPTNew" 구현 및 사용하기
+# pip install openai
+# def getTextFromGPTNew(prompt):
+#     client = OpenAI(api_key=OPENAI_KEY)
+#     messages_prompt = [{"role": "system", "content": 'You are a thoughtful assistant. Respond to all input in 300 words and answer in korea'}]
+#     messages_prompt += [{"role": "user", "content": prompt}]
+
+#     response = client.chat.completions.create(
+#         model="gpt-3.5-turbo",
+#         messages=[
+#             {"role": "user", "content": prompt}
+#         ]
+#     )
+#     return response.choices[0].message.content
 
 def getImageURLFromDALLE(prompt):
     response = openai.Image.create(prompt=prompt,n=1,size="512x512")

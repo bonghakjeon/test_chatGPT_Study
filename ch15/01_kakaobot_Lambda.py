@@ -7,6 +7,9 @@
 # 가상환경 폴더 "ch15_env" 활성화 터미널 명령어
 # ch15_env\Scripts\activate.bat
 
+# 아마존 웹서비스(AWS) 다중인증(MFA는 Multi-Factor Authentication) 등록 방법 및 모바일 어플 Google Authenticator 설치 및 사용 방법 
+# 참고 URL - https://happy-jjang-a.tistory.com/223
+
 # 아마존 웹서비스(AWS)
 # 클라우드 워치(CloudWatch) 서비스란?
 
@@ -184,6 +187,16 @@
 # 참고 4 URL - https://velog.io/@ninthsun91/TDD-1.-%ED%85%8C%EC%8A%A4%ED%8A%B8-%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4-%EC%9E%91%EC%84%B1
 
 
+# 카카오 챗봇 OpenAI API 또는 Rest API 호출시 
+# 호출 시간이 5초이상 초과되더라도 카카오톡 서버가 멈추지 않고 답변을 할 수 있도록
+# 카카오 챗봇 기능을 실행하려면 
+# 1. 카카오 챗봇 관리자 센터 화면 -> 화면 좌측 버튼 "설정" 클릭 
+# 2. 화면 "설정" 이동 -> 해당 화면 탭 "AI 챗봇 관리" 클릭 -> 화면 "AI" 챗봇 설정 하단 버튼 "일반 챗봇 전환" 클릭
+# 3. AI 챗봇 목적 "고객 기술지원 답변 목적" 작성 
+# 4. 요청 사유 "ChatGPT AI 결과를 처리하는데 시간이 초과됩니다." 입력 -> 버튼 "확인" 클릭
+# 5. 2~3일 후 심사 결과 완료되면 호출 시간이 5초이상 초과되더라도 카카오톡 서버가 멈추지 않고 답변을 할 수 있다.
+
+
 ###### 기본 정보 설정 단계 #######
 # 참고사항
 # 아마존 웹서비스(AWS) 활용할 때에는 FastAPI 개발자 로컬 웹서버를 따로 생성할 필요가 없으니까
@@ -202,6 +215,11 @@ from modules import kakao # 폴더 "modules" -> 카카오 API 전용 모듈 "kak
 # ChatGPT와 통신하기 위해 OpenAI API 키 입력
 # 아마존 웹서비스(AWS) 함수 lambda_handler -> 환경변수로 저장한 OpenAI API 키 'OPENAI_API' 불러오기
 openai.api_key = os.environ['OPENAI_API']
+# 비쥬얼스튜디오코드(VSCode) cmd 터미널창에 
+# 아래처럼 최신 버전 OpenAI 라이브러리 "openai" 설치 및 함수 "getTextFromGPTNew" 구현 및 사용하기
+# pip install openai
+OPENAI_KEY = os.environ['OPENAI_API']
+# OPENAI_KEY = os.getenv("OPENAI_KEY")
 
 imagineBuilderList = ['/level1', '1. 제품 설치파일 문의', '2. 네트워크 라이선스', '3. 계정&제품배정 문의', 'AutoDesk 제품 버전 문의', '레빗 버전 문의', 'AutoDesk 제품 설치 언어', '/level5'] 
 infoIndex = 0   # '/level1' 인덱스 
@@ -893,6 +911,22 @@ def getTextFromGPT(prompt):   # ChatGPT한테 질문을 하게 될 프롬프트(
     # 변수 system_message에 저장
     message = response["choices"][0]["message"]["content"]
     return message   # ChatGPT의 응답 메시지에 속한 답변 내용 부분(system_message["content"])만 발췌 및 리턴
+
+# 비쥬얼스튜디오코드(VSCode) cmd 터미널창에 
+# 아래처럼 최신 버전 OpenAI 라이브러리 "openai" 설치 및 함수 "getTextFromGPTNew" 구현 및 사용하기
+# pip install openai
+# def getTextFromGPTNew(prompt):
+#     client = OpenAI(api_key=OPENAI_KEY)
+#     messages_prompt = [{"role": "system", "content": 'You are a thoughtful assistant. Respond to all input in 300 words and answer in korea'}]
+#     messages_prompt += [{"role": "user", "content": prompt}]
+
+#     response = client.chat.completions.create(
+#         model="gpt-3.5-turbo",
+#         messages=[
+#             {"role": "user", "content": messages_prompt}
+#         ]
+#     )
+#     return response.choices[0].message.content 
 
 # DALLE.2에게 질문/그림 URL 받기
 # 생성된 그림의 URL 주소 받기
