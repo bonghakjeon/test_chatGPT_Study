@@ -63,6 +63,7 @@ import logging  # 로깅 함수 호출
 
 import logging   # Logging 모듈은 파이썬 기본 라이브러리 중 하나로 콘솔에 출력할 뿐만 아니라 파일 형태로 로그를 생성 할 수 있다.
 import sys
+import openai    # OPENAI 패키지 openai 불러오기 (ChatGPT, DALLE.2 사용)
 # import time
 
 # TODO : 아마존 웹서비스(AWS) 람다 함수 (Lambda Function) -> CloudWatch -> Live Tail에서 실시간 기록되는 
@@ -111,6 +112,23 @@ def configureLogger():
                                             # Python의 기본 logging 시스템의 레벨은 WARNING으로 설정되어 있음.
                                             # 따라서 특별한 설정을 하지 않으면, WARNING 레벨 이상만 기록됨. (WARNING 레벨보다 낮은 로그들은 무시하고 콘솔창 또는 파일에 기록되지 않음.)
 
+    # TODO : openai api 사용하여 호출 후 아래와 같은 오류(message='Request to OpenAI API') 또는 [DEBUG] 로그 기록이 카카오 챗봇 답변으로 출력시 
+    #        해당 로그 기록이 챗봇 답변으로 출력 안 되게 하기 위해 
+    #        openai 로그 레벨(log level)을 경고(logging.WARNING)로 설정해서 구현 (2025.03.20 minjae)
+    #        openai.util.logging.getLogger().setLevel(level=logging.WARNING) 
+    # UG] [2025-03-20 04:51:43] [util.py | log_debug - L60 ] : message='Request to OpenAI API' method=post path=https://api.openai.com/v1/chat/completions
+    # [DEBUG] [2025-03-20 04:51:43] [util.py | log_debug - L60 ] : api_version=None data='{"model": "gpt-3.5-turbo", "messages": [{"role": "system", "content": "You are a thoughtful assistant. Respond to all input in 300 words and answer in korea"}, {"role": "user", "content": " \\uc9c1\\ubb34\\uc911\\uc2ec\\uc73c\\ub85c \\uc5c5\\ubb34\\uccb4\\uacc4\\ub97c \\uac16\\ucd94\\ub824\\uba74 \\ubb50\\ubd80\\ud130 \\uc2dc\\uc791\\ud574\\uc57c\\ud574?"}]}' message='Post details'
+    # [DEBUG] [2025-03-20 04:51:43] [retry.py | from_int - L351 ] : Converted retries value: 2 -> Retry(total=2, connect=None, read=None, redirect=None, status=None)
+    # [DEBUG] [2025-03-20 04:51:43] [connectionpool.py | _new_conn - L1003 ] : Starting new HTTPS connection (1): api.openai.com:443
+    # "How to suppress OpenAI API warnings in Python"
+    # 참고 URL - https://stackoverflow.com/questions/71893613/how-to-suppress-openai-api-warnings-in-python
+    # "How can I disable OpenAI client logs in Python"
+    # 참고 2 URL - https://community.openai.com/t/how-can-i-disable-openai-client-logs-in-python/522139/4
+
+    # 7. 기록할 openai 로그 레벨(log level) 지정하기
+    # openai.util.logger.setLevel(logging.WARNING)
+    openai.util.logging.getLogger().setLevel(level=logging.WARNING)
+    
     logger.info("로그 초기 설정 완료")
 
     # 설정된 log setting 반환 - setting 완료된(설정 완료된) logger instance "logger" 반환
