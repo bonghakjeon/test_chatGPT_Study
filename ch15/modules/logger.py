@@ -80,7 +80,9 @@ def configureLogger():
     #        실시간 기록되는 로그 문자열이 2줄로 찍혀 나오므로
     #        logger = logging.getLogger() 이런 식으로만 작성해야함. (2025.03.06 minjae)
     # logger = logging.getLogger(__name__)
+    # logger = logging.getLogger("Assitant")
     logger = logging.getLogger()
+    openai_logger = logging.getLogger("openai")
 
     for handler in logger.handlers:
         logger.removeHandler(handler)
@@ -127,7 +129,9 @@ def configureLogger():
 
     # 7. 기록할 openai 로그 레벨(log level) 지정하기
     # openai.util.logger.setLevel(logging.WARNING)
-    openai.util.logging.getLogger().setLevel(level=logging.WARNING)
+    # openai.util.logging.getLogger().setLevel(level=logging.WARNING)
+    # logging.getLogger("openai").setLevel(level=logging.WARNING)
+    openai_logger.setLevel(level=logging.WARNING)
     
     logger.info("로그 초기 설정 완료")
 

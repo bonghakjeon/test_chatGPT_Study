@@ -6,7 +6,7 @@
 # 오류 메세지 전송 (카카오톡 서버로 텍스트 전송)
 # 오류 발생시 카카오톡 서버로 오류 메시지 전송 전용 JSON 형태(Format)의 데이터로 전달하기 위한 함수
 # 카카오톡 채팅방에 보낼 메시지를 매개변수 errorMessage에 input으로 받기(인자로 전달)
-def errorTextResponseFormat(errorMessage):
+def error_textResponseFormat(errorMessage):
     # 카카오톡 채팅방에 보낼 메시지가 저장된 매개변수 errorMessage를
     # 아래 json 형태(Format)에서 항목 'outputs' -> 항목 "simpleText" -> "text"안에 매개변수 errorMessage을 넣어서
     # 변수 response에 저장하기 
@@ -27,16 +27,15 @@ def errorTextResponseFormat(errorMessage):
 
 # level1 텍스트 카드 (카카오톡 서버로 텍스트 전송)
 # 상담시간 안내
-def level1textCardResponseFormat():
-    # TODO : 함수 level1textCardResponseFormat 로직 수정 예정 (2025.03.05 minjae)
-    # ----- # TODO : 바로 아래 소스코드는 파이썬 스크립트 파일 "D:\minjae\test_BotProject\05.카카오톡\04-kakao-money.py" -> 함수 "get_exchange_from_won"의 로직을 참고 하여 구현함 (2025.03.04 minjae)
-    # ----- testButtons = []
-    # ----- for test in testButtonList:
-    #     testButtons.append({
-    #         "action": "message",
-    #         "label": f"{test}",
-    #         "messageText": f"[구현 예정!] {test}"
-    #     })
+def level1_textCardResponseFormat(level1ButtonList):
+    level1Buttons = []
+    # 상담시간 안내 3가지 버튼 텍스트 및 메세지 추가 
+    for level1Button in level1ButtonList:
+        level1Buttons.append({
+            "action": "message",
+            "label": level1Button,
+            "messageText": level1Button
+        })
         
     response = {
         "version": "2.0",
@@ -46,48 +45,71 @@ def level1textCardResponseFormat():
                     "textCard": {
                         "title": "[상담시간 안내]",
                         "description": "▶ 기술지원문의\n월~금요일: 오전 9시 ~ 오후 6시\n주말, 공휴일: 휴무",
-                        "buttons": [
-                            {
-                                "action": "message",
-                                "label": "1. 제품 설치파일 문의",
-                                "messageText": "1. 제품 설치파일 문의"
-                            },
-                            {
-                                "action": "message",
-                                "label": "2. 네트워크 라이선스",
-                                "messageText": "2. 네트워크 라이선스"
-                            },
-                            {
-                                "action": "message",
-                                "label": "3. 계정&제품배정 문의",
-                                "messageText": "3. 계정&제품배정 문의"
-                            }
-                        ]
+                        "buttons": level1Buttons
                     }
                 }
             ],
             "quickReplies": []
         }
     }
-    # TODO : 함수 level1textCardResponseFormat 로직 수정 예정 (2025.03.05 minjae)
+    # TODO : 함수 level1_textCardResponseFormat 로직 수정 예정 (2025.03.05 minjae)
     # 함수 len 사용하여 testButtons 배열 안에 존재하는 요소의 갯수가 0보다 큰경우
     # ----- if len(testButtons) > 0:
     #     response["template"]["buttons"] = testButtons
 
     return response
 
-# level2 바로가기 그룹 전송 (카카오톡 서버로 텍스트 전송)
-# 1. 제품 설치파일 문의
-def level2InstallerquickRepliesResponseFormat(messageTextAutoDesk, messageTextRevit):
-    # TODO : 함수 level2InstallerquickRepliesResponseFormat 로직 수정 예정 (2025.03.05 minjae)
-    # TODO : 바로 아래 소스코드는 파이썬 스크립트 파일 "D:\minjae\test_BotProject\05.카카오톡\04-kakao-money.py" -> 함수 "get_exchange_from_won"의 로직을 참고 하여 구현함 (2025.03.04 minjae)
-    # ----- testQuick = []
-    # ----- for test in testList:
-    #     testQuick.append({
-    #         "action": "message",
-    #         "label": f"{test}",
-    #         "messageText": f"[구현 예정!] {test}"
-    #     })
+
+# level2 텍스트 카드 (카카오톡 서버로 텍스트 전송)
+# 상담유형 안내
+def level2_textCardResponseFormat(type, level2ButtonList):
+    level2Buttons = []
+    # 상담유형 안내 버튼 텍스트 및 메세지 추가 
+    for level2Button in level2ButtonList:
+        level2Buttons.append({
+            "action": "message",
+            "label": level2Button,
+            "messageText": f"{type} {level2Button}"
+        })
+        
+    response = {
+        "version": "2.0",
+        "template": {
+            "outputs": [
+                {
+                    "textCard": {
+                        "title": "상담 유형",
+                        "description": "안내가 필요한 항목 선택해주세요.",
+                        "buttons" : level2Buttons
+                    }
+                }
+            ],
+            "quickReplies": []
+        }
+    }
+    # TODO : 함수 level2_textCardResponseFormat 로직 수정 예정 (2025.03.05 minjae)
+    # 함수 len 사용하여 testButtons 배열 안에 존재하는 요소의 갯수가 0보다 큰경우
+    # ----- if len(testButtons) > 0:
+    #     response["template"]["buttons"] = testButtons
+
+    return response
+
+# level3 바로가기 그룹 전송 (카카오톡 서버로 텍스트 전송)
+# 1. Autodesk 제품 설치 문의
+def level3_autodesk_quickRepliesResponseFormat(is_autodeskSeeMore, autodeskInstVersion, autodeskInstButtonList):
+    autodeskQuickReplies = []
+    # 1. Autodesk 제품 설치 문의 10가지 버튼 텍스트 및 메세지 추가 
+    for autodeskInstButton in autodeskInstButtonList:
+        autodeskQuickReplies.append({
+            "action": "message",
+            "label": autodeskInstButton,
+            "messageText": autodeskInstVersion
+        })
+
+    # '더보기' 버튼 클릭 안 한 경우 - '더보기' 버튼 클릭시 메시지 '더보기' 출력 되도록 아래처럼 구현  
+    if False == is_autodeskSeeMore: 
+        autodeskSeeMoreIndex = len(autodeskInstButtonList) - 1    # '더보기' 버튼 인덱스는 리스트 객체 autodeskInstButtonList 마지막 인덱스에 있음.
+        autodeskQuickReplies[autodeskSeeMoreIndex]["messageText"] = autodeskInstButtonList[autodeskSeeMoreIndex]
 
     response = {
         "version": "2.0", 
@@ -95,70 +117,86 @@ def level2InstallerquickRepliesResponseFormat(messageTextAutoDesk, messageTextRe
             "outputs": [
                 {
                     "simpleText": {
-                        "text": "안내가 필요한 항목을 선택해주세요."
+                        "text": "안내가 필요한 항목 선택해주세요."
                     }
                 }
             ], 
-            "quickReplies": [
-                {
-                    "action": "message",
-                    "label": "1. 오토캐드",
-                    "messageText": f"{messageTextAutoDesk}"
-                },
-                {
-                    "action": "message",
-                    "label": "2. 레빗",
-                    "messageText": f"{messageTextAutoDesk}"
-                },
-                {
-                    "action": "message",
-                    "label": "3. 나비스웍스",
-                    "messageText": f"{messageTextAutoDesk}"
-                },
-                {
-                    "action": "message",
-                    "label": "4. Civil 3D",
-                    "messageText": f"{messageTextAutoDesk}"
-                },
-                {
-                    "action": "message",
-                    "label": "5. CADBOX",
-                    "messageText": f"[구현 예정!] 5. CADBOX"
-                },
-                {
-                    "action": "message",
-                    "label": "6. RevitBOX",
-                    "messageText": f"{messageTextRevit}"
-                },
-                {
-                    "action": "message",
-                    "label": "7. EnergyBOX",
-                    "messageText": f"[구현 예정!] 7. EnergyBOX"
-                },
-                {
-                    "action": "message",
-                    "label": "8. DWGTrueView",
-                    "messageText": f"[구현 예정!] 8. DWGTrueView"
-                },
-                {
-                    "action": "message",
-                    "label": "9. 레빗->나비스웍스",
-                    "messageText": f"{messageTextRevit}"
-                },
-                {
-                    "action": "message",
-                    "label": "10. 레빗 라이브러리",
-                    "messageText": f"{messageTextRevit}"
-                }
-            ]
+            "quickReplies": autodeskQuickReplies
         }
     }
-
-    # TODO : 함수 level2InstallerquickRepliesResponseFormat 로직 수정 예정 (2025.03.05 minjae)
+    # TODO : 함수 level3_autodesk_quickRepliesResponseFormat 로직 수정 예정 (2025.03.21 minjae)
     # 함수 len 사용하여 testQuick 배열 안에 존재하는 요소의 갯수가 0보다 큰경우
     # ----- if len(testQuick) > 0:
     #     response["template"]["quickReplies"] = testQuick
     return response
+
+# level3 텍스트 카드 (카카오톡 서버로 텍스트 전송)
+# 2. 상상진화 BOX 제품 설치 문의
+def level3_box_textCardResponseFormat(boxInstVersion, boxInstButtonList):
+    boxInstButtons = []
+    # 2. 상상진화 BOX 제품 설치 문의 3가지 버튼 텍스트 및 메세지 추가 
+    for boxInstButton in boxInstButtonList:
+        boxInstButtons.append({
+            "action": "message",
+            "label": boxInstButton,
+            "messageText": boxInstVersion
+        })
+
+    response = {
+        "version": "2.0",
+        "template": {
+            "outputs": [
+                {
+                    "textCard": {
+                        "title": "",
+                        "description": "안내가 필요한 항목 선택해주세요.",
+                        "buttons" : boxInstButtons
+                    }
+                }
+            ],
+            "quickReplies": []
+        }
+    }
+
+    # TODO : 함수 level3_box_textCardResponseFormat 로직 수정 예정 (2025.03.21 minjae)
+    # 함수 len 사용하여 testQuick 배열 안에 존재하는 요소의 갯수가 0보다 큰경우
+    # ----- if len(testQuick) > 0:
+    #     response["template"]["quickReplies"] = testQuick
+    return response
+
+
+# level3 바로가기 그룹 전송 (카카오톡 서버로 텍스트 전송)
+# 3. 계정&제품배정 문의
+def level3_account_textCardResponseFormat(accountButtonList):
+    accountQuickReplies = []
+    # 3. 계정&제품배정 문의 10가지 버튼 텍스트 및 메세지 추가 
+    for accountButton in accountButtonList:
+        accountQuickReplies.append({
+            "action": "message",
+            "label": accountButton,
+            "messageText": accountButton
+        })
+
+    response = {
+        "version": "2.0", 
+        "template": {
+            "outputs": [
+                {
+                    "simpleText": {
+                        "text": "안내가 필요한 항목 선택해주세요."
+                    }
+                }
+            ], 
+            "quickReplies": accountQuickReplies
+        }
+    }
+    # TODO : 함수 level3_autodesk_quickRepliesResponseFormat 로직 수정 예정 (2025.03.21 minjae)
+    # 함수 len 사용하여 testQuick 배열 안에 존재하는 요소의 갯수가 0보다 큰경우
+    # ----- if len(testQuick) > 0:
+    #     response["template"]["quickReplies"] = testQuick
+    return response
+
+
 
 # level2 바로가기 그룹 전송 (카카오톡 서버로 텍스트 전송)
 # 2. 네트워크 라이선스
@@ -179,7 +217,7 @@ def level2NetworkquickRepliesResponseFormat():
             "outputs": [
                 {
                     "simpleText": {
-                        "text": "안내가 필요한 항목을 선택해주세요."
+                        "text": "안내가 필요한 항목 선택해주세요."
                     }
                 }
             ], 
@@ -263,7 +301,7 @@ def level2AccountquickRepliesResponseFormat():
             "outputs": [
                 {
                     "simpleText": {
-                        "text": "안내가 필요한 항목을 선택해주세요."
+                        "text": "안내가 필요한 항목 선택해주세요."
                     }
                 }
             ], 

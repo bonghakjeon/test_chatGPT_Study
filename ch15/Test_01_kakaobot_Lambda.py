@@ -28,15 +28,28 @@ openai.api_key = os.environ['OPENAI_API']
 OPENAI_KEY = os.environ['OPENAI_API']
 # OPENAI_KEY = os.getenv("OPENAI_KEY")
 
-imagineBuilderList = ['/level1', '1. 제품 설치파일 문의', '2. 네트워크 라이선스', '3. 계정&제품배정 문의', 'AutoDesk 제품 버전 문의', '레빗 버전 문의', 'AutoDesk 제품 설치 언어', '/level5'] 
-infoIndex = 0   # '/level1' 인덱스 
-installerIndex = 1   # '1. 제품 설치파일 문의' 인덱스
-licenseIndex = 2   # '2. 네트워크 라이선스' 인덱스
-accountIndex = 3   # '3. 계정&제품배정 문의' 인덱스
-autoDeskVersionIndex = 4   # 'AutoDesk 제품 버전 문의' 인덱스
-revitVersionIndex = 5   # '레빗 버전 문의' 인덱스
-languageIndex = 6   # 'AutoDesk 제품 설치 언어' 인덱스 
-answerIndex = 7   # '/level5' 인덱스 
+imagineBuilderList = ['/level1', 'Autodesk 제품', '상상진화 BOX 제품', '계정&제품배정 문의', 'Autodesk 제품 설치 문의', '상상진화 BOX 제품 설치 문의', 'Autodesk 제품 버전 문의', '상상진화 BOX 제품 버전 문의', '1. 제품 설치파일 문의', '2. 네트워크 라이선스', '3. 계정&제품배정 문의', 'AutoDesk 제품 버전 문의', '레빗 버전 문의', 'AutoDesk 제품 설치 언어', '/level5'] 
+level1Index = 0     # '/level1' 인덱스 
+autodeskIndex = 1   # 'Autodesk 제품' 인덱스
+boxIndex = 2        # '상상진화 BOX 제품' 인덱스
+accountAndProductIndex = 3   # '계정&제품배정 문의' 인덱스
+
+autodeskInstallerIndex = 4   # 'Autodesk 제품 설치 문의' 인덱스
+boxInstallerIndex = 5        # '상상진화 BOX 제품 설치 문의' 인덱스 
+
+autodeskVersionIndex = 6   # 'Autodesk 제품 버전 문의' 인덱스
+boxVersionIndex = 7        # '상상진화 BOX 제품 버전 문의' 인덱스
+
+
+# installerIndex = 3   # '1. 제품 설치파일 문의' 인덱스
+# licenseIndex = 4   # '2. 네트워크 라이선스' 인덱스
+# accountIndex = 5   # '3. 계정&제품배정 문의' 인덱스
+# autodeskVersionIndex = 6   # 'Autodesk 제품 버전 문의' 인덱스
+# revitVersionIndex = 7   # '레빗 버전 문의' 인덱스
+# languageIndex = 8   # 'Autodesk 제품 설치 언어' 인덱스 
+# answerIndex = 9   # '/level5' 인덱스 
+
+# type = ''   # 상담 유형('1. Autodesk 제품', '2. 상상진화 BOX 제품', '3. 계정&제품배정 문의')
 
 
 # TODO : 파이썬 현재 실행 중인 함수 이름 가져오기 기능 구현 (2025.03.05 minjae)
@@ -102,7 +115,7 @@ def lambda_handler(event, context):
         response_queue = q.Queue()   #.put(), .get()
 
         request_respond = threading.Thread(target=responseOpenAI,
-                                            args=(kakaorequest, response_queue,filename))
+                                           args=(kakaorequest, response_queue,filename))
         request_respond.start()
 
     except Exception as e:   # 하위 코드 블록에서 예외가 발생해도 변수 e에다 넣고 아래 코드 실행됨
@@ -186,7 +199,7 @@ def responseOpenAI(request,response_queue,filename):
             raise Exception('[오류 테스트]\n오류 사유 : 테스트 오류\n문제 해결이 어려울시 상상플렉스 커뮤니티(https://www.ssflex.co.kr/community/open)나\n기술지원번호(02-3474-2263)으로 문의 부탁드립니다.')   # 예외를 발생시킴
 
 
-        elif imagineBuilderList[infoIndex] in request["userRequest"]["utterance"]:
+        elif imagineBuilderList[level1Index] in request["userRequest"]["utterance"]:
             dbReset(filename)   
             response_queue.put(kakao.level1textCardResponseFormat())
 
@@ -195,77 +208,121 @@ def responseOpenAI(request,response_queue,filename):
             with open(filename, 'w') as f:
                 f.write(save_log)
 
-        elif imagineBuilderList[installerIndex] in request["userRequest"]["utterance"]:
-            dbReset(filename)   
-            messageTextAutoDesk = imagineBuilderList[autoDeskVersionIndex]  
-            messageTextRevit = imagineBuilderList[revitVersionIndex]   
-            response_queue.put(kakao.level2InstallerquickRepliesResponseFormat(messageTextAutoDesk, messageTextRevit))
+        # elif imagineBuilderList[autodeskIndex] in request["userRequest"]["utterance"]:
+        elif imagineBuilderList[autodeskIndex] == request["userRequest"]["utterance"]:
+            dbReset(filename)
+            type = imagineBuilderList[autodeskIndex]
+            response_queue.put(kakao.level2textCardResponseFormat(type))
 
-            save_log = "level2"+ " " + "1. 제품 설치파일 문의"
-
-            with open(filename, 'w') as f:
-                f.write(save_log)
-
-        elif imagineBuilderList[licenseIndex] in request["userRequest"]["utterance"]:
-            dbReset(filename)   
-            response_queue.put(kakao.level2NetworkquickRepliesResponseFormat())
-
-            save_log = "level2"+ " " + "2. 네트워크 라이선스"
+            save_log = "level2"+ " " + "테스트"
 
             with open(filename, 'w') as f:
                 f.write(save_log)
 
-        elif imagineBuilderList[accountIndex] in request["userRequest"]["utterance"]:
+        # elif imagineBuilderList[boxIndex] in request["userRequest"]["utterance"]:
+        elif imagineBuilderList[boxIndex] == request["userRequest"]["utterance"]:
             dbReset(filename)  
-            response_queue.put(kakao.level2AccountquickRepliesResponseFormat())
+            type = imagineBuilderList[boxIndex]
+            response_queue.put(kakao.level2textCardResponseFormat(type))
 
-            save_log = "level2"+ " " + "3. 계정&제품배정 문의"
+            save_log = "level2"+ " " + "테스트"
 
             with open(filename, 'w') as f:
                 f.write(save_log)
 
-        elif imagineBuilderList[autoDeskVersionIndex] in request["userRequest"]["utterance"]:
+        # elif imagineBuilderList[autodeskInstallerIndex] in request["userRequest"]["utterance"]:
+        elif imagineBuilderList[autodeskInstallerIndex] == request["userRequest"]["utterance"]:
+            dbReset(filename)    
+            messageTextAutodesk = imagineBuilderList[autodeskVersionIndex]
+            response_queue.put(kakao.level3AutodeskquickRepliesResponseFormat(messageTextAutodesk))
+
+            save_log = "level3"+ " " + "Autodesk 제품 설치 문의"
+
+            with open(filename, 'w') as f:
+                f.write(save_log)
+
+        # elif imagineBuilderList[boxInstallerIndex] in request["userRequest"]["utterance"]:
+        elif imagineBuilderList[boxInstallerIndex] == request["userRequest"]["utterance"]:
             dbReset(filename)  
-            messageText = imagineBuilderList[languageIndex]  
-            response_queue.put(kakao.level3VersionquickRepliesResponseFormat(messageText))
+            messageTextBOX = imagineBuilderList[boxVersionIndex]    
+            response_queue.put(kakao.level3BOXquickRepliesResponseFormat(messageTextBOX))
 
-            # botLogger.debug("[테스트] 챗봇 사용자 입력 정보 - %s" %request["userRequest"])
-
-            save_log = "level3"+ " " + "AutoDesk 제품 버전 문의"
+            save_log = "level3"+ " " + "상상진화 BOX 제품 설치 문의"
 
             with open(filename, 'w') as f:
                 f.write(save_log)
 
-        elif imagineBuilderList[revitVersionIndex]  in request["userRequest"]["utterance"]:
-            dbReset(filename)   
-            messageText = '레빗 제품 설치 방법 안내'   
-            response_queue.put(kakao.level3VersionquickRepliesResponseFormat(messageText))
+        # elif imagineBuilderList[installerIndex] in request["userRequest"]["utterance"]:
+        #     dbReset(filename)   
+        #     messageTextAutoDesk = imagineBuilderList[autoDeskVersionIndex]  
+        #     messageTextRevit = imagineBuilderList[revitVersionIndex]   
+        #     response_queue.put(kakao.level3InstallerquickRepliesResponseFormat(messageTextAutoDesk, messageTextRevit))
 
-            # 텍스트 파일('/tmp/botlog.txt')에 임시로 저장함.
-            save_log = "level3"+ " " + "레빗 버전 문의"
+        #     save_log = "level3"+ " " + "1. 제품 설치파일 문의"
 
-            with open(filename, 'w') as f:
-                f.write(save_log)
+        #     with open(filename, 'w') as f:
+        #         f.write(save_log)
 
-        elif imagineBuilderList[languageIndex] in request["userRequest"]["utterance"]:
-            dbReset(filename)   
-            messageTextKor = '한국어 설치 방법'  
-            messageTextEng = '영어 설치 방법'   
-            response_queue.put(kakao.level4LanguagetextCardResponseFormat(messageTextKor, messageTextEng))
+        # elif imagineBuilderList[licenseIndex] in request["userRequest"]["utterance"]:
+        #     dbReset(filename)   
+        #     response_queue.put(kakao.level2NetworkquickRepliesResponseFormat())
+
+        #     save_log = "level3"+ " " + "2. 네트워크 라이선스"
+
+        #     with open(filename, 'w') as f:
+        #         f.write(save_log)
+
+        # elif imagineBuilderList[accountIndex] in request["userRequest"]["utterance"]:
+        #     dbReset(filename)  
+        #     response_queue.put(kakao.level2AccountquickRepliesResponseFormat())
+
+        #     save_log = "level3"+ " " + "3. 계정&제품배정 문의"
+
+        #     with open(filename, 'w') as f:
+        #         f.write(save_log)
+
+        # elif imagineBuilderList[autoDeskVersionIndex] in request["userRequest"]["utterance"]:
+        #     dbReset(filename)  
+        #     messageText = imagineBuilderList[languageIndex]  
+        #     response_queue.put(kakao.level3VersionquickRepliesResponseFormat(messageText))
+
+        #     # botLogger.debug("[테스트] 챗봇 사용자 입력 정보 - %s" %request["userRequest"])
+
+        #     save_log = "level4"+ " " + "AutoDesk 제품 버전 문의"
+
+        #     with open(filename, 'w') as f:
+        #         f.write(save_log)
+
+        # elif imagineBuilderList[revitVersionIndex]  in request["userRequest"]["utterance"]:
+        #     dbReset(filename)   
+        #     messageText = '레빗 제품 설치 방법 안내'   
+        #     response_queue.put(kakao.level3VersionquickRepliesResponseFormat(messageText))
+
+        #     # 텍스트 파일('/tmp/botlog.txt')에 임시로 저장함.
+        #     save_log = "level4"+ " " + "레빗 버전 문의"
+
+        #     with open(filename, 'w') as f:
+        #         f.write(save_log)
+
+        # elif imagineBuilderList[languageIndex] in request["userRequest"]["utterance"]:
+        #     dbReset(filename)   
+        #     messageTextKor = '한국어 설치 방법'  
+        #     messageTextEng = '영어 설치 방법'   
+        #     response_queue.put(kakao.level4LanguagetextCardResponseFormat(messageTextKor, messageTextEng))
             
-            save_log = "level4"+ " " + "AutoDesk 제품 설치 언어"
+        #     save_log = "level5"+ " " + "AutoDesk 제품 설치 언어"
 
-            with open(filename, 'w') as f:
-                f.write(save_log)
+        #     with open(filename, 'w') as f:
+        #         f.write(save_log)
 
-        elif imagineBuilderList[answerIndex] in request["userRequest"]["utterance"]:
-            dbReset(filename)   
-            response_queue.put(kakao.level5textCardResponseFormat())
+        # elif imagineBuilderList[answerIndex] in request["userRequest"]["utterance"]:
+        #     dbReset(filename)   
+        #     response_queue.put(kakao.level5textCardResponseFormat())
 
-            save_log = "level5"+ " " + "테스트"
+        #     save_log = "level6"+ " " + "테스트"
 
-            with open(filename, 'w') as f:
-                f.write(save_log)
+        #     with open(filename, 'w') as f:
+        #         f.write(save_log)
 
         else:
             base_response = {'version': '2.0', 'template': {'outputs': [], 'quickReplies': []}}
@@ -293,6 +350,7 @@ def imageResponseFormat(bot_response,prompt):
     'outputs': [{"simpleImage": {"imageUrl": bot_response,"altText":output_text}}], 'quickReplies': []}}
     return response  
 
+# 시간 5초 초과시 응답
 def timeover():
     response = {"version":"2.0","template":{
       "outputs":[
@@ -310,6 +368,7 @@ def timeover():
          }]}}
     return response   
 
+# ChatGPT 응답 
 def getTextFromGPT(prompt):  
     messages_prompt = [{"role": "system", "content": 'You are a thoughtful assistant. Respond to all input in 300 words and answer in korea'}]
     messages_prompt += [{"role": "user", "content": prompt}]
