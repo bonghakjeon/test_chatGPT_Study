@@ -14,8 +14,10 @@ import queue as q   # 자료구조 queue(deque 기반) 이용하기 위해 패�
 import os   # 답변 결과를 테스트 파일로 저장할 때 경로 생성해야 해서 패키지 "os" 불러오기
 from modules import kakao # 폴더 "modules" -> 카카오 API 전용 모듈 "kakao" 불러오기 
 from modules import logger # 폴더 "modules" -> 로그 설정 전용 모듈 "logger" 불러오기 
+from modules import openai_logger  # 폴더 "modules" -> OpenAI 리턴 값 로그 작성 모듈 "openai_logger" 불러오기
+from modules import chatbot_logger  # 폴더 "modules" -> 카카오 챗봇 로그 작성 모듈 "chatbot_logger" 불러오기
 
-botLogger=logger.configureLogger()
+bot_logger=logger.configureLogger()
 
 # OpenAI API KEY
 # 테스트용 카카오톡 챗봇 채팅방에서 
@@ -29,11 +31,11 @@ OPENAI_KEY = os.environ['OPENAI_API']
 # OPENAI_KEY = os.getenv("OPENAI_KEY")
 
 # (주)상상진화 각 레벨(level)별 처리할 업무 프로세스 리스트 
-imagineBuilderList = [ '/level1', '1. Autodesk 제품', '2. 상상진화 BOX 제품', '3. 계정&제품배정 문의', '1. Autodesk 제품 설치 문의', '더보기', '2. 상상진화 BOX 제품 설치 문의'  ]
-level1Index = 0      # '/level1' 인덱스
-autodeskIndex = 1    # '1. Autodesk 제품' 인덱스 
-boxIndex = 2         # '2. 상상진화 BOX 제품' 인덱스
-accountIndex = 3     # '3. 계정&제품배정 문의' 인덱스
+imagineBuilderList = [ '/level1', '1. Autodesk 제품', '2. 상상진화 BOX 제품', '3. 계정&제품배정 문의', '1. Autodesk 제품 설치 문의', '더보기', '2. 상상진화 BOX 제품 설치 문의' ]
+level1Index = 0             # '/level1' 인덱스
+autodeskIndex = 1           # '1. Autodesk 제품' 인덱스 
+boxIndex = 2                # '2. 상상진화 BOX 제품' 인덱스
+accountIndex = 3            # '3. 계정&제품배정 문의' 인덱스
 autodeskInstIndex = 4       # '1. Autodesk 제품 설치 문의' 인덱스
 autodeskSeeMoreIndex = 5    # '더보기' 인덱스
 boxInstIndex = 6            # '2. 상상진화 BOX 제품 설치 문의' 인덱스
@@ -41,19 +43,77 @@ boxInstIndex = 6            # '2. 상상진화 BOX 제품 설치 문의' 인덱�
 level1ButtonList = [ '1. Autodesk 제품', '2. 상상진화 BOX 제품', '3. 계정&제품배정 문의' ]   # level1 - '/level1' 버튼 리스트 (텍스트 + 메세지) 
 level2ButtonList = [ '설치 문의' ]   # level2 - 서브 카테고리 버튼 리스트 (텍스트 + 메세지)
 
-# level3 - '1. Autodesk 제품 설치 문의' 버튼 리스트 (텍스트 + 메세지)
-autodeskInstButtonList = [ '1. 오토캐드', '2. 레빗', '3. 나비스웍스 매니지', '4. 나비스웍스 시뮬레이트', '5. Civil 3D', '6. 어드밴스트 스틸', '7. Inventor', '8. 3ds Max', '9. Maya', '더보기' ]
-# level3 - '더보기' 버튼 텍스트 리스트
-autodeskSeeMoreButtonList = [ '10. Fusion', '11. InfraWorks', '12. Twinmotion', '13. DWGTrueView', '14. 나비스웍스 변환기' ]
-is_autodeskSeeMore = False    # level3 - '더보기' 버튼 클릭 여부 
-autodeskInstVersion = '1. Autodesk 제품 버전' # '1. Autodesk 제품 버전' 버튼 메시지 
+
+# region 1. Autodesk 제품 설치 문의
+
+# level3 - 1. Autodesk 제품 설치 문의 버튼 리스트 (텍스트 + 메세지)
+autodeskInstButtonList = [ '1. 오토캐드', 
+                           '2. 레빗', 
+                           '3. 나비스웍스 매니지', 
+                           '4. 나비스웍스 시뮬레이트', 
+                           '5. Civil 3D', 
+                           '6. 어드밴스트 스틸', 
+                           '7. Inventor', 
+                           '8. 3ds Max', 
+                           '9. Maya', 
+                           '더보기' ]
+# level3 - 더보기 버튼 텍스트 리스트
+autodeskSeeMoreButtonList = [ '10. Fusion', 
+                              '11. InfraWorks', 
+                              '12. Twinmotion',  
+                              '13. DWGTrueView',  
+                              '14. 나비스웍스 변환기' ]
+# is_autodeskSeeMore = False    # level3 - 더보기 버튼 클릭 여부 
+
+# 공통 level4, level5
+softwareInstMethod = '설치 방법'
+
+# level4 - 1. Autodesk 제품 버전 Language Pack
+ver = '버전'
+langPack = 'Language Pack'
+autodeskInstLangPackVerList = [ '1. 오토캐드', 
+                                '2. 레빗', 
+                                '3. 나비스웍스 매니지', 
+                                '4. 나비스웍스 시뮬레이트', 
+                                '5. Civil 3D', 
+                                '6. 어드밴스트 스틸', 
+                                '7. Inventor', 
+                                '8. 3ds Max', 
+                               '11. InfraWorks' ]
+
+autodeskInstLangPackVerButtonList = [ ('2026', ver, langPack), 
+                                      ('2025', ver, langPack), 
+                                      ('2024', ver, langPack), 
+                                      ('2023', ver, langPack) ]
+
+# level4 - 1. Autodesk 제품 버전
+autodeskInstVerList = [ '9. Maya', '12. Twinmotion', '14. 나비스웍스 변환기' ]
+
+autodeskInstVerButtonList = [ ('2026', ver, softwareInstMethod), 
+                              ('2025', ver, softwareInstMethod), 
+                              ('2024', ver, softwareInstMethod), 
+                              ('2023', ver, softwareInstMethod) ]
+
+# level4 - 1. Autodesk 제품 설치 방법 (버전 X)
+autodeskInstList = [ '10. Fusion', '13. DWGTrueView' ]
+
+# endregion 1. Autodesk 제품 설치 문의
+
+# region 2. 상상진화 BOX 제품 설치 문의
 
 # level3 - 2. 상상진화 BOX 제품 설치 문의
 boxInstButtonList = [ '1. Revit BOX', '2. CAD BOX', '3. Energy BOX' ]
-boxInstVersion = '2. 상상진화 BOX 제품 버전'   # '2. 상상진화 BOX 제품 버전' 버튼 메시지
+boxInstVer = '2. 상상진화 BOX 제품 버전'   # '2. 상상진화 BOX 제품 버전' 버튼 메시지
+
+# endregion 2. 상상진화 BOX 제품 설치 문의
+
+# region 3. 계정&제품배정 문의
 
 # level3 - 3. 계정&제품배정 문의
 accountButtonList = [ '1. 오토데스크 계정 생성', '2. 계정 비밀번호 분실', '3. 사용가능 제품확인', '4. 신규인원 제품배정', '5. 기존인원 제품제거', '6. 사용자 그룹관리 안내', '7. 만료일 계약내역 확인', '8. 관리자 역할 재지정', '9. 사용량 보고서 확인', '10. 기타 문의' ]
+
+# endregion 3. 계정&제품배정 문의
+
 
 ###### 메인 함수 단계 #######
 
@@ -80,10 +140,13 @@ def lambda_handler(event, context):
         if not os.path.exists(filename):
             dbReset(filename)
         else:
-            print("File Exists")   # print 함수 호출하여 지금 현재 파일이 있다고 메시지 "File Exists" 출력 
+            # print("File Exists")   # print 함수 호출하여 지금 현재 파일이 있다고 메시지 "File Exists" 출력 
+            # chatbot_logger.info("File Exists")   # chatbot_logger.info 함수 호출하여 지금 현재 파일이 있다고 메시지 "File Exists" 로그 기록 
+            chatbot_logger.log_write(chatbot_logger.info, "파일 존재 여부", "File Exists")
 
         # 테스트 로그 기록 
-        botLogger.info("[테스트] 사용자 입력 채팅 정보 - %s" %event['body'])
+        # chatbot_logger.info("[테스트] 사용자 입력 채팅 정보 - %s" %event['body'])
+        chatbot_logger.log_write(chatbot_logger.info, "[테스트] 사용자 입력 채팅 정보", event['body'])
 
         response_queue = q.Queue()   #.put(), .get()
 
@@ -95,7 +158,8 @@ def lambda_handler(event, context):
         # pass
         # 테스트 오류 로그 기록  
         errorMessage = str(e)  # str() 함수 사용해서 Exception 클래스 객체 e를 문자열로 변환 및 오류 메시지 변수 errorMessage에 할당 (문자열로 변환 안할시 카카오 챗봇에서 스킬서버 오류 출력되면서 챗봇이 답변도 안하고 장시간 멈춤 상태 발생.)
-        botLogger.error('[테스트] 오류 - %s' %errorMessage)
+        # chatbot_logger.error('[테스트] 오류 - %s' %errorMessage)
+        chatbot_logger.log_write(chatbot_logger.error, "[테스트] 오류", errorMessage)
     finally:   # 예외 발생 여부와 상관없이 항상 마지막에 실행할 코드
         while(time.time() - start_time < 3.5):
             if not response_queue.empty():
@@ -109,7 +173,8 @@ def lambda_handler(event, context):
 
         # 테스트 로그 기록
         responseMessage = json.dumps(response)
-        botLogger.info("[테스트] 챗봇 답변 채팅 정보 - %s" %responseMessage)
+        # chatbot_logger.info("[테스트] 챗봇 답변 채팅 정보 - %s" %responseMessage)
+        chatbot_logger.log_write(chatbot_logger.info, "[테스트] 챗봇 답변 채팅 정보", responseMessage)
 
         # 카카오톡 서버로 json 형태의 데이터(response 포함) 리턴
         return {
@@ -133,7 +198,9 @@ def responseChatbot(request,response_queue,filename):
                     response_queue.put(imageResponseFormat(bot_res,prompt))
                 else:
                     bot_res = last_update[4:]
-                    print(bot_res)
+
+                    # TODO : 아래 주석친 OpenAI 로그 기록 코드 필요시 사용 예정 (2025.03.27 minjae)
+                    # openai_logger.log_write(openai_logger.info, "시간 5초 초과 후 ChatGPT 텍스트 답변", bot_res)
                     response_queue.put(textResponseFormat(bot_res))
                 dbReset(filename)   
 
@@ -151,8 +218,8 @@ def responseChatbot(request,response_queue,filename):
             prompt = request["userRequest"]["utterance"].replace("/ask", "")
             bot_res = getTextFromGPT(prompt)
             response_queue.put(textResponseFormat(bot_res))
-            print(bot_res)
 
+            openai_logger.log_write(openai_logger.info, "ChatGPT 텍스트 답변", bot_res)
             save_log = f"ask {str(bot_res)}" 
             dbSave(filename, save_log)
 
@@ -174,7 +241,8 @@ def responseChatbot(request,response_queue,filename):
             response_queue.put(kakao.level1_textCardResponseFormat(level1ButtonList))
 
             save_log = "level1 - 상담시간 안내 테스트"
-            botLogger.info(save_log)
+            # chatbot_logger.info(save_log)
+            chatbot_logger.log_write(chatbot_logger.info, "", save_log)
             dbSave(filename, save_log)
 
         # level2 - 1. Autodesk 제품 상담 유형
@@ -184,7 +252,8 @@ def responseChatbot(request,response_queue,filename):
             response_queue.put(kakao.level2_textCardResponseFormat(type, level2ButtonList))
 
             save_log = f"level2 - {type} 상담 유형 테스트"
-            botLogger.info(save_log)
+            # chatbot_logger.info(save_log)
+            chatbot_logger.log_write(chatbot_logger.info, "", save_log)
             dbSave(filename, save_log)
 
         # level2 - 2. 상상진화 BOX 제품 상담 유형
@@ -194,46 +263,101 @@ def responseChatbot(request,response_queue,filename):
             response_queue.put(kakao.level2_textCardResponseFormat(type, level2ButtonList))
 
             save_log = f"level2 - {type} 상담 유형 테스트"
-            botLogger.info(save_log)
+            # chatbot_logger.info(save_log)
+            chatbot_logger.log_write(chatbot_logger.info, "", save_log)
             dbSave(filename, save_log)
 
         # level3 - 1. Autodesk 제품 설치 문의
         elif imagineBuilderList[autodeskInstIndex] == request["userRequest"]["utterance"]:
             dbReset(filename)  
-            is_autodeskSeeMore = False    # level3 - '더보기' 버튼 클릭 안 함.
-            response_queue.put(kakao.level3_autodesk_quickRepliesResponseFormat(is_autodeskSeeMore, autodeskInstVersion, autodeskInstButtonList))
+            response_queue.put(kakao.level3_autodesk_quickRepliesResponseFormat(softwareInstMethod, autodeskInstButtonList))
 
             save_log = "level3 - 1. Autodesk 제품 설치 문의 테스트"
-            botLogger.info(save_log)
+            # chatbot_logger.info(save_log)
+            chatbot_logger.log_write(chatbot_logger.info, "", save_log)
             dbSave(filename, save_log)
 
         # level3 - 더보기 1. Autodesk 제품 설치 문의
         elif imagineBuilderList[autodeskSeeMoreIndex] == request["userRequest"]["utterance"]:
             dbReset(filename)  
-            is_autodeskSeeMore = True    # level3 - '더보기' 버튼 클릭함.
-            response_queue.put(kakao.level3_autodesk_quickRepliesResponseFormat(is_autodeskSeeMore, autodeskInstVersion, autodeskSeeMoreButtonList))
+            response_queue.put(kakao.level3_autodesk_quickRepliesResponseFormat(softwareInstMethod, autodeskSeeMoreButtonList))
 
             save_log = "level3 - 더보기 1. Autodesk 제품 설치 문의 테스트"
-            botLogger.info(save_log)
+            # chatbot_logger.info(save_log)
+            chatbot_logger.log_write(chatbot_logger.info, "", save_log)
             dbSave(filename, save_log)
 
         # level3 - 2. 상상진화 BOX 제품 설치 문의
         elif imagineBuilderList[boxInstIndex] == request["userRequest"]["utterance"]:
             dbReset(filename)    
-            response_queue.put(kakao.level3_box_textCardResponseFormat(boxInstVersion, boxInstButtonList))
+            response_queue.put(kakao.level3_box_textCardResponseFormat(boxInstVer, boxInstButtonList))
 
             save_log = "level3 - 2. 상상진화 BOX 제품 설치 문의 테스트"
-            botLogger.info(save_log)
+            # chatbot_logger.info(save_log)
+            chatbot_logger.log_write(chatbot_logger.info, "", save_log)
             dbSave(filename, save_log)
 
         # level3 - 3. 계정&제품배정 문의
         elif imagineBuilderList[accountIndex] == request["userRequest"]["utterance"]:
             dbReset(filename)    
-            response_queue.put(kakao.level3_account_textCardResponseFormat(accountButtonList))
+            response_queue.put(kakao.level3_account_quickRepliesResponseFormat(accountButtonList))
 
             save_log = "level3 - 3. 계정&제품배정 문의 테스트"
-            botLogger.info(save_log)
+            # chatbot_logger.info(save_log)
+            chatbot_logger.log_write(chatbot_logger.info, "", save_log)
             dbSave(filename, save_log)
+
+        # level4 - 1. Autodesk 제품 버전 Language Pack
+        # TODO : 파이썬 in 연산자 사용하여 리스트 객체 "autodeskInstLangPackVerList" 안에 사용자가 클릭한 버튼 텍스트 메시지 (예) 1. 오토캐드 
+        #        존재하는 경우 아래 elif 절 로직 실행할 수 있도록 구현 (2025.03.28 minjae) 
+        # 참고 URL - https://hun931018.tistory.com/55
+        # 참고 2 URL - https://miki3079.tistory.com/40
+        # 참고 3 URL - https://cigiko.cafe24.com/python-%EB%A6%AC%EC%8A%A4%ED%8A%B8%EC%9D%98-%EA%B8%B0%EC%B4%88-%EC%97%B0%EC%82%B0%EB%93%A4/
+        # 리스트 객체 "autodeskInstLangPackVerList" 내부에 사용자가 클릭한 버튼 텍스트 메시지 "request["userRequest"]["utterance"]" 값 존재하는 경우
+        elif request["userRequest"]["utterance"] in autodeskInstLangPackVerList:
+            dbReset(filename)    
+            autodeskInstProduct = request["userRequest"]["utterance"]
+            response_queue.put(kakao.level4_autodeskInstLangPackVer_textCardResponseFormat(autodeskInstProduct, autodeskInstLangPackVerButtonList))
+
+            save_log = "level4 - 1. Autodesk 제품 버전 Language Pack 테스트"
+            # chatbot_logger.info(save_log)
+            chatbot_logger.log_write(chatbot_logger.info, "", save_log)
+            dbSave(filename, save_log)
+
+        # level4 - 1. Autodesk 제품 버전
+        # TODO : 파이썬 in 연산자 사용하여 리스트 객체 "autodeskInstVerList" 안에 사용자가 클릭한 버튼 텍스트 메시지 (예) 12. Twinmotion
+        #        존재하는 경우 아래 elif 절 로직 실행할 수 있도록 구현 (2025.03.28 minjae) 
+        # 참고 URL - https://hun931018.tistory.com/55
+        # 참고 2 URL - https://miki3079.tistory.com/40
+        # 참고 3 URL - https://cigiko.cafe24.com/python-%EB%A6%AC%EC%8A%A4%ED%8A%B8%EC%9D%98-%EA%B8%B0%EC%B4%88-%EC%97%B0%EC%82%B0%EB%93%A4/
+        # 리스트 객체 "autodeskInstVerList" 내부에 사용자가 클릭한 버튼 텍스트 메시지 "request["userRequest"]["utterance"]" 값 존재하는 경우
+        elif request["userRequest"]["utterance"] in autodeskInstVerList:
+            dbReset(filename)    
+            autodeskInstProduct = request["userRequest"]["utterance"]
+            response_queue.put(kakao.level4_autodeskInstVer_textCardResponseFormat(autodeskInstProduct, autodeskInstVerButtonList))
+
+            save_log = "level4 - 1. Autodesk 제품 버전 테스트"
+            # chatbot_logger.info(save_log)
+            chatbot_logger.log_write(chatbot_logger.info, "", save_log)
+            dbSave(filename, save_log)
+
+        # level4 - 1. Autodesk 제품 버전 X
+        # TODO : 파이썬 in 연산자 사용하여 리스트 객체 "autodeskInstList" 안에 사용자가 클릭한 버튼 텍스트 메시지 (예) '10. Fusion'
+        #        존재하는 경우 아래 elif 절 로직 실행할 수 있도록 구현 (2025.03.28 minjae) 
+        # 참고 URL - https://hun931018.tistory.com/55
+        # 참고 2 URL - https://miki3079.tistory.com/40
+        # 참고 3 URL - https://cigiko.cafe24.com/python-%EB%A6%AC%EC%8A%A4%ED%8A%B8%EC%9D%98-%EA%B8%B0%EC%B4%88-%EC%97%B0%EC%82%B0%EB%93%A4/
+        # 리스트 객체 "autodeskInstList" 내부에 사용자가 클릭한 버튼 텍스트 메시지 "request["userRequest"]["utterance"]" 값 존재하는 경우
+        # elif request["userRequest"]["utterance"] in autodeskInstList:
+        #     dbReset(filename)    
+        #     autodeskInstProduct = request["userRequest"]["utterance"]
+        #     message = f'{autodeskInstProduct} {softwareInstMethod}'
+        #     response_queue.put(kakao.simple_textResponseFormat(message))
+
+        #     save_log = "level4 - 1. Autodesk 제품 버전 X 테스트"
+        #     # chatbot_logger.info(save_log)
+        #     chatbot_logger.log_write(chatbot_logger.info, "", save_log)
+        #     dbSave(filename, save_log)
 
         # elif imagineBuilderList[boxInstallerIndex] == request["userRequest"]["utterance"]:
         #     dbReset(filename)  
@@ -252,7 +376,8 @@ def responseChatbot(request,response_queue,filename):
     except Exception as e:   # 하위 코드 블록에서 예외가 발생해도 변수 e에다 넣고 아래 코드 실행됨
         # 테스트 오류 로그 기록  
         errorMessage = str(e)  # str() 함수 사용해서 Exception 클래스 객체 e를 문자열로 변환 및 오류 메시지 변수 errorMessage에 할당 (문자열로 변환 안할시 카카오 챗봇에서 스킬서버 오류 출력되면서 챗봇이 답변도 안하고 장시간 멈춤 상태 발생.)
-        botLogger.error('[테스트] 오류 - %s' %errorMessage)
+        # chatbot_logger.error('[테스트] 오류 - %s' %errorMessage)
+        chatbot_logger.log_write(chatbot_logger.error, "[테스트] 오류", errorMessage)
         response_queue.put(kakao.error_textResponseFormat(errorMessage))
         # 오류 로그 기록 
         raise    # raise로 함수 responseOpenAI의 현재 예외를 다시 발생시켜서 함수 responseOpenAI 호출한 상위 코드 블록으로 넘김

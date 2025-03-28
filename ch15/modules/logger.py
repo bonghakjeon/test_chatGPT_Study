@@ -82,37 +82,42 @@ def configureLogger():
     # logger = logging.getLogger(__name__)
     # logger = logging.getLogger("Assitant")
     logger = logging.getLogger()
-    openai_logger = logging.getLogger("openai")
 
-    for handler in logger.handlers:
-        logger.removeHandler(handler)
+    # for handler in logger.handlers:
+    #     logger.removeHandler(handler)
+
+    # chatbot_logger = logging.getLogger("chatbot")
+    openai_logger = logging.getLogger("openai")
 
     # 2. formatter 생성 (로그 작성/출력/저장에 사용할 날짜 + 로그 메시지)
     # 로그 기록 포맷(format) 예시 - [2025-03-06 10:53:33]
     # formatter = logging.Formatter('[%(asctime)s] %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
     # formatter = logging.Formatter('[%(asctime)s] %(filename)s %(funcName)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
     # formatter = logging.Formatter('[%(asctime)s] [%(pathname)s] %(funcName)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
-    formatter = logging.Formatter('[%(levelname)s] [%(asctime)s] [%(filename)s | %(funcName)s - L%(lineno)d ] : %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    # formatter = logging.Formatter('[%(levelname)s] [%(asctime)s] [%(filename)s | %(funcName)s - L%(lineno)d ] : %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
     # 3. handler 생성(설정) (streamHandler : 콘솔 출력용 // fileHandler : 파일 기록용)
     # streamHandler = logging.StreamHandler()
-    streamHandler = logging.StreamHandler(sys.stdout)
-    fileHandler = logging.FileHandler("/tmp/botlog.txt")      # 로그를 기록할 파일 이름(경로) "/tmp/botlog.txt" 지정 (파일 이름은 다른 것으로 변경해도 된다.)
+    # streamHandler = logging.StreamHandler(sys.stdout)
+    # fileHandler = logging.FileHandler("/tmp/botlog.txt")      # 로그를 기록할 파일 이름(경로) "/tmp/botlog.txt" 지정 (파일 이름은 다른 것으로 변경해도 된다.)
     # fileHandler = logging.FileHandler("botlog.txt")         # 로그를 기록할 파일 이름(경로) "botlog.txt" 지정 (파일 이름은 다른 것으로 변경해도 된다.)
     
 
     # 4. logger instance에 formatter 설정(할당) (각각의 Handler에 formatter 설정 적용)
-    streamHandler.setFormatter(formatter)
-    fileHandler.setFormatter(formatter)
+    # streamHandler.setFormatter(formatter)
+    # fileHandler.setFormatter(formatter)
 
     # 5. logger instance(logger)에 handler 추가 (addHandler) (입력받는 log에 handler 사용)
-    logger.addHandler(streamHandler)
-    logger.addHandler(fileHandler)
+    # logger.addHandler(streamHandler)
+    # logger.addHandler(fileHandler)
+
+    # chatbot_logger.addHandler(streamHandler)
+    # chatbot_logger.addHandler(fileHandler)
 
     # 6. 기록할 로그 레벨(log level) 지정하기 - DEBUG 로그(level=logging.DEBUG)는 로그 레벨(log level) 중 가장 낮은 레벨(level)이다.
-    logger.setLevel(level=logging.DEBUG)    # INFO 레벨로 지정하면, INFO 레벨보다 낮은 DEBUG 로그는 무시함.
-                                            # Python의 기본 logging 시스템의 레벨은 WARNING으로 설정되어 있음.
-                                            # 따라서 특별한 설정을 하지 않으면, WARNING 레벨 이상만 기록됨. (WARNING 레벨보다 낮은 로그들은 무시하고 콘솔창 또는 파일에 기록되지 않음.)
+    # logger.setLevel(level=logging.DEBUG)    # INFO 레벨로 지정하면, INFO 레벨보다 낮은 DEBUG 로그는 무시함.
+    #                                         # Python의 기본 logging 시스템의 레벨은 WARNING으로 설정되어 있음.
+    #                                         # 따라서 특별한 설정을 하지 않으면, WARNING 레벨 이상만 기록됨. (WARNING 레벨보다 낮은 로그들은 무시하고 콘솔창 또는 파일에 기록되지 않음.)
 
     # TODO : openai api 사용하여 호출 후 아래와 같은 오류(message='Request to OpenAI API') 또는 [DEBUG] 로그 기록이 카카오 챗봇 답변으로 출력시 
     #        해당 로그 기록이 챗봇 답변으로 출력 안 되게 하기 위해 
@@ -133,10 +138,9 @@ def configureLogger():
     # logging.getLogger("openai").setLevel(level=logging.WARNING)
     openai_logger.setLevel(level=logging.WARNING)
     
-    logger.info("로그 초기 설정 완료")
-
-    # 설정된 log setting 반환 - setting 완료된(설정 완료된) logger instance "logger" 반환
-    return logger
+    # logger.info("로그 초기 설정 완료")
+ 
+    return logger    # 설정된 log setting 반환 - setting 완료된(설정 완료된) logger instance "logger" 반환
 
 # TODO : 아래 주석친 테스트 코드 필요시 참고 (2025.03.06 minjae)
 # 로그 초기 설정
