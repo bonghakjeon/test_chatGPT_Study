@@ -12,6 +12,9 @@ import threading  # 프로그램 안에서 동시에 작업하는 멀티스레�
 import time   # ChatGPT 답변 시간 계산하기 위해 패키지 "time" 불러오기
 import queue as q   # 자료구조 queue(deque 기반) 이용하기 위해 패키지 "queue" 불러오기
 import os   # 답변 결과를 테스트 파일로 저장할 때 경로 생성해야 해서 패키지 "os" 불러오기
+
+from commons import autodesk_helper  # 폴더 "commons" -> 1. Autodesk 제품 전용 도움말 텍스트 "autodesk_helper" 불러오기
+from commons import chatbot_helper # 폴더 "commons" -> 카카오 챗봇 전용 도움말 텍스트 "chatbot_helper" 불러오기
 from modules import kakao # 폴더 "modules" -> 카카오 API 전용 모듈 "kakao" 불러오기 
 from modules import logger # 폴더 "modules" -> 로그 설정 전용 모듈 "logger" 불러오기 
 from modules import openai_logger  # 폴더 "modules" -> OpenAI 리턴 값 로그 작성 모듈 "openai_logger" 불러오기
@@ -43,59 +46,61 @@ boxInstIndex = 6            # '2. 상상진화 BOX 제품 설치 문의' 인덱�
 level1ButtonList = [ '1. Autodesk 제품', '2. 상상진화 BOX 제품', '3. 계정&제품배정 문의' ]   # level1 - '/level1' 버튼 리스트 (텍스트 + 메세지) 
 level2ButtonList = [ '설치 문의' ]   # level2 - 서브 카테고리 버튼 리스트 (텍스트 + 메세지)
 
-
 # region 1. Autodesk 제품 설치 문의
 
 # level3 - 1. Autodesk 제품 설치 문의 버튼 리스트 (텍스트 + 메세지)
-autodeskInstButtonList = [ '1. 오토캐드', 
-                           '2. 레빗', 
-                           '3. 나비스웍스 매니지', 
-                           '4. 나비스웍스 시뮬레이트', 
-                           '5. Civil 3D', 
-                           '6. 어드밴스트 스틸', 
-                           '7. Inventor', 
-                           '8. 3ds Max', 
-                           '9. Maya', 
+autodeskInstButtonList = [ autodesk_helper._autoCAD, 
+                           autodesk_helper._revit, 
+                           autodesk_helper._navisworks_Manage, 
+                           autodesk_helper._navisworks_Simulate, 
+                           autodesk_helper._civil_3D, 
+                           autodesk_helper._advance_Steel, 
+                           autodesk_helper._inventor, 
+                           autodesk_helper._3ds_Max, 
+                           autodesk_helper._maya, 
                            '더보기' ]
 # level3 - 더보기 버튼 텍스트 리스트
-autodeskSeeMoreButtonList = [ '10. Fusion', 
-                              '11. InfraWorks', 
-                              '12. Twinmotion',  
-                              '13. DWGTrueView',  
-                              '14. 나비스웍스 변환기' ]
+autodeskSeeMoreButtonList = [ autodesk_helper._fusion, 
+                              autodesk_helper._infraWorks, 
+                              autodesk_helper._twinmotion,  
+                              autodesk_helper._dwgTrueView,  
+                              autodesk_helper._navisworks_Converter ]
 # is_autodeskSeeMore = False    # level3 - 더보기 버튼 클릭 여부 
 
-# 공통 level4, level5
-softwareInstMethod = '설치 방법'
-
 # level4 - 1. Autodesk 제품 버전 Language Pack
-ver = '버전'
-langPack = 'Language Pack'
-autodeskInstLangPackVerList = [ '1. 오토캐드', 
-                                '2. 레빗', 
-                                '3. 나비스웍스 매니지', 
-                                '4. 나비스웍스 시뮬레이트', 
-                                '5. Civil 3D', 
-                                '6. 어드밴스트 스틸', 
-                                '7. Inventor', 
-                                '8. 3ds Max', 
-                               '11. InfraWorks' ]
+autodeskInstLangPackVerList = [ autodesk_helper._autoCAD, 
+                                autodesk_helper._revit, 
+                                autodesk_helper._navisworks_Manage, 
+                                autodesk_helper._navisworks_Simulate, 
+                                autodesk_helper._civil_3D, 
+                                autodesk_helper._advance_Steel, 
+                                autodesk_helper._inventor, 
+                                autodesk_helper._3ds_Max, 
+                                autodesk_helper._infraWorks ]
 
-autodeskInstLangPackVerButtonList = [ ('2026', ver, langPack), 
-                                      ('2025', ver, langPack), 
-                                      ('2024', ver, langPack), 
-                                      ('2023', ver, langPack) ]
+autodeskInstLangPackVerButtonList = [ (chatbot_helper._2026, chatbot_helper._ver, autodesk_helper._langPack), 
+                                      (chatbot_helper._2025, chatbot_helper._ver, autodesk_helper._langPack), 
+                                      (chatbot_helper._2024, chatbot_helper._ver, autodesk_helper._langPack), 
+                                      (chatbot_helper._2023, chatbot_helper._ver, autodesk_helper._langPack) ]
 
 # level4 - 1. Autodesk 제품 버전
-autodeskInstVerList = [ '9. Maya', '12. Twinmotion', '14. 나비스웍스 변환기' ]
+autodeskInstVerList = [ autodesk_helper._maya, 
+                        autodesk_helper._twinmotion, 
+                        autodesk_helper._navisworks_Converter ]
 
-autodeskInstVerButtonList = [ ('2026', ver, softwareInstMethod), 
-                              ('2025', ver, softwareInstMethod), 
-                              ('2024', ver, softwareInstMethod), 
-                              ('2023', ver, softwareInstMethod) ]
+autodeskInstVerButtonList = [ (chatbot_helper._2026, chatbot_helper._ver), 
+                              (chatbot_helper._2025, chatbot_helper._ver), 
+                              (chatbot_helper._2024, chatbot_helper._ver), 
+                              (chatbot_helper._2023, chatbot_helper._ver) ]
 
 # level4 - 1. Autodesk 제품 설치 방법 (버전 X)
-autodeskInstList = [ '10. Fusion', '13. DWGTrueView' ]
+autodeskInstList = [ autodesk_helper._fusion, 
+                     autodesk_helper._dwgTrueView ]
+
+
+# level5 - 1. Autodesk 제품 설치 언어 
+autodeskInstLangButtonList = [ autodesk_helper._kor, 
+                               autodesk_helper._eng ]
 
 # endregion 1. Autodesk 제품 설치 문의
 
@@ -270,7 +275,7 @@ def responseChatbot(request,response_queue,filename):
         # level3 - 1. Autodesk 제품 설치 문의
         elif imagineBuilderList[autodeskInstIndex] == request["userRequest"]["utterance"]:
             dbReset(filename)  
-            response_queue.put(kakao.level3_autodesk_quickRepliesResponseFormat(softwareInstMethod, autodeskInstButtonList))
+            response_queue.put(kakao.level3_autodesk_quickRepliesResponseFormat(autodeskInstButtonList))
 
             save_log = "level3 - 1. Autodesk 제품 설치 문의 테스트"
             # chatbot_logger.info(save_log)
@@ -280,7 +285,7 @@ def responseChatbot(request,response_queue,filename):
         # level3 - 더보기 1. Autodesk 제품 설치 문의
         elif imagineBuilderList[autodeskSeeMoreIndex] == request["userRequest"]["utterance"]:
             dbReset(filename)  
-            response_queue.put(kakao.level3_autodesk_quickRepliesResponseFormat(softwareInstMethod, autodeskSeeMoreButtonList))
+            response_queue.put(kakao.level3_autodesk_quickRepliesResponseFormat(autodeskSeeMoreButtonList))
 
             save_log = "level3 - 더보기 1. Autodesk 제품 설치 문의 테스트"
             # chatbot_logger.info(save_log)
@@ -316,8 +321,8 @@ def responseChatbot(request,response_queue,filename):
         # 리스트 객체 "autodeskInstLangPackVerList" 내부에 사용자가 클릭한 버튼 텍스트 메시지 "request["userRequest"]["utterance"]" 값 존재하는 경우
         elif request["userRequest"]["utterance"] in autodeskInstLangPackVerList:
             dbReset(filename)    
-            autodeskInstProduct = request["userRequest"]["utterance"]
-            response_queue.put(kakao.level4_autodeskInstLangPackVer_textCardResponseFormat(autodeskInstProduct, autodeskInstLangPackVerButtonList))
+            userRequest_Msg = request["userRequest"]["utterance"]
+            response_queue.put(kakao.level4_autodeskInstLangPackVer_textCardResponseFormat(userRequest_Msg, autodeskInstLangPackVerButtonList))
 
             save_log = "level4 - 1. Autodesk 제품 버전 Language Pack 테스트"
             # chatbot_logger.info(save_log)
@@ -333,25 +338,36 @@ def responseChatbot(request,response_queue,filename):
         # 리스트 객체 "autodeskInstVerList" 내부에 사용자가 클릭한 버튼 텍스트 메시지 "request["userRequest"]["utterance"]" 값 존재하는 경우
         elif request["userRequest"]["utterance"] in autodeskInstVerList:
             dbReset(filename)    
-            autodeskInstProduct = request["userRequest"]["utterance"]
-            response_queue.put(kakao.level4_autodeskInstVer_textCardResponseFormat(autodeskInstProduct, autodeskInstVerButtonList))
+            userRequest_Msg = request["userRequest"]["utterance"]
+            response_queue.put(kakao.level4_autodeskInstVer_textCardResponseFormat(userRequest_Msg, autodeskInstVerButtonList))
 
             save_log = "level4 - 1. Autodesk 제품 버전 테스트"
             # chatbot_logger.info(save_log)
             chatbot_logger.log_write(chatbot_logger.info, "", save_log)
             dbSave(filename, save_log)
 
+        # level5 - 1. Autodesk 제품 설치 언어 
+        # 파이썬 in 연산자 사용하여 사용자가 클릭한 버튼 텍스트 메시지 "request["userRequest"]["utterance"]" 문자열 안에 "autodesk_helper._langPack"이 포함되어 있고 
+        # 파이썬 not in 연산자 사용하여 사용자가 클릭한 버튼 텍스트 메시지 "request["userRequest"]["utterance"]" 문자열 안에 "chatbot_helper._softwareInstMethod"이 포함되지 않은 경우 
+        elif autodesk_helper._langPack in request["userRequest"]["utterance"] and chatbot_helper._softwareInstMethod not in request["userRequest"]["utterance"]:
+            dbReset(filename)    
+            userRequest_Msg = request["userRequest"]["utterance"]
+            response_queue.put(kakao.level5_autodeskInstLang_textCardResponseFormat(userRequest_Msg, autodeskInstLangButtonList))
+
+            save_log = "level5 - 1. Autodesk 제품 설치 언어 테스트"
+            # chatbot_logger.info(save_log)
+            chatbot_logger.log_write(chatbot_logger.info, "", save_log)
+            dbSave(filename, save_log)
+
+
         # level4 - 1. Autodesk 제품 버전 X
         # TODO : 파이썬 in 연산자 사용하여 리스트 객체 "autodeskInstList" 안에 사용자가 클릭한 버튼 텍스트 메시지 (예) '10. Fusion'
         #        존재하는 경우 아래 elif 절 로직 실행할 수 있도록 구현 (2025.03.28 minjae) 
-        # 참고 URL - https://hun931018.tistory.com/55
-        # 참고 2 URL - https://miki3079.tistory.com/40
-        # 참고 3 URL - https://cigiko.cafe24.com/python-%EB%A6%AC%EC%8A%A4%ED%8A%B8%EC%9D%98-%EA%B8%B0%EC%B4%88-%EC%97%B0%EC%82%B0%EB%93%A4/
         # 리스트 객체 "autodeskInstList" 내부에 사용자가 클릭한 버튼 텍스트 메시지 "request["userRequest"]["utterance"]" 값 존재하는 경우
         # elif request["userRequest"]["utterance"] in autodeskInstList:
         #     dbReset(filename)    
-        #     autodeskInstProduct = request["userRequest"]["utterance"]
-        #     message = f'{autodeskInstProduct} {softwareInstMethod}'
+        #     userRequest_Msg = request["userRequest"]["utterance"]
+        #     message = f'{userRequest_Msg} {chatbot_helper._softwareInstMethod}'
         #     response_queue.put(kakao.simple_textResponseFormat(message))
 
         #     save_log = "level4 - 1. Autodesk 제품 버전 X 테스트"
