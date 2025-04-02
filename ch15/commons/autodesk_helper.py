@@ -1,5 +1,5 @@
 # level3 - 1. Autodesk 제품 설치 문의 버튼 리스트 (텍스트 + 메세지)
-brandName = 'Autodesk -'
+_brandName = 'Autodesk -'
 _autoCAD = '1. 오토캐드'
 _revit = '2. 레빗'
 _navisworks_Manage = '3. 나비스웍스 매니지'

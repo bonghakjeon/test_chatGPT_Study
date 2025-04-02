@@ -4,6 +4,7 @@
 # 메인 함수 "lambda_handler" -> 답변/사진 요청 및 응답 확인 함수 "responseOpenAI"에서 사용할 수 있도록 정리 
 
 from commons import autodesk_helper  # 폴더 "commons" -> 1. Autodesk 제품 전용 도움말 텍스트 "autodesk_helper" 불러오기
+from commons import box_helper       # 폴더 "commons" -> 2. 상상진화 BOX 제품 전용 도움말 텍스트 "box_helper" 불러오기
 from commons import chatbot_helper   # 폴더 "commons" -> 카카오 챗봇 전용 도움말 텍스트 "chatbot_helper" 불러오기
 
 # 오류 메세지 전송 (카카오톡 서버로 텍스트 전송)
@@ -86,14 +87,14 @@ def level1_textCardResponseFormat(level1ButtonList):
 
 # level2 텍스트 카드 (카카오톡 서버로 텍스트 전송)
 # 상담유형 안내
-def level2_textCardResponseFormat(type, level2ButtonList):
+def level2_textCardResponseFormat(userRequest_Msg, level2ButtonList):
     level2Buttons = []
     # 상담유형 안내 버튼 텍스트 및 메세지 추가 
     for level2Button in level2ButtonList:
         level2Buttons.append({
             "action": "message",
             "label": level2Button,
-            "messageText": f"{type} {level2Button}"
+            "messageText": f"{userRequest_Msg} {level2Button}"
         })
         
     response = {
@@ -103,7 +104,7 @@ def level2_textCardResponseFormat(type, level2ButtonList):
                 {
                     "textCard": {
                         "title": "상담 유형",
-                        "description": "안내가 필요한 항목 선택해주세요.",
+                        "description": chatbot_helper._selectInfo,
                         "buttons" : level2Buttons
                     }
                 }
@@ -126,8 +127,8 @@ def level3_autodesk_quickRepliesResponseFormat(autodeskInstButtonList):
     for autodeskInstButton in autodeskInstButtonList:
         # TODO : 파이썬 삼항 연산자 사용하여 버튼 텍스트 메시지 변수 messageText에 값 할당 기능 구현 (2025.03.28 minjae)
         # 참고 URL - https://wikidocs.net/20701
-        # 파이썬 삼항 연산자 사용하여 버튼이 "10. Fusion", "13. DWGTrueView"일 경우 값 f"{chatbot_helper._softwareInstMethod}" 할당
-        messageText = f"{autodesk_helper.brandName} {autodeskInstButton} {chatbot_helper._softwareInstMethod}" if autodesk_helper._fusion == autodeskInstButton or autodesk_helper._dwgTrueView == autodeskInstButton else autodeskInstButton
+        # 파이썬 삼항 연산자 사용하여 버튼이 "10. Fusion", "13. DWGTrueView"일 경우 안내할 버전이 없으므로 값 f"{autodesk_helper._brandName} {autodeskInstButton} {chatbot_helper._softwareInstMethod}" 할당
+        messageText = f"{autodesk_helper._brandName} {autodeskInstButton} {chatbot_helper._softwareInstMethod}" if autodesk_helper._fusion == autodeskInstButton or autodesk_helper._dwgTrueView == autodeskInstButton else autodeskInstButton
         autodeskQuickReplies.append({
             "action": "message",
             "label": autodeskInstButton,
@@ -140,7 +141,7 @@ def level3_autodesk_quickRepliesResponseFormat(autodeskInstButtonList):
             "outputs": [
                 {
                     "simpleText": {
-                        "text": "안내가 필요한 항목 선택해주세요."
+                        "text": chatbot_helper._selectInfo
                     }
                 }
             ], 
@@ -155,14 +156,18 @@ def level3_autodesk_quickRepliesResponseFormat(autodeskInstButtonList):
 
 # level3 텍스트 카드 (카카오톡 서버로 텍스트 전송)
 # 2. 상상진화 BOX 제품 설치 문의
-def level3_box_textCardResponseFormat(boxInstVersion, boxInstButtonList):
+def level3_box_textCardResponseFormat(boxInstButtonList):
     boxInstButtons = []
     # 2. 상상진화 BOX 제품 설치 문의 3가지 버튼 텍스트 및 메세지 추가 
     for boxInstButton in boxInstButtonList:
+        # TODO : 파이썬 삼항 연산자 사용하여 버튼 텍스트 메시지 변수 messageText에 값 할당 기능 구현 (2025.03.28 minjae)
+        # 참고 URL - https://wikidocs.net/20701
+        # 파이썬 삼항 연산자 사용하여 버튼이 '2. CAD BOX', '3. Energy BOX'일 경우 안내할 버전이 없으므로 값 f"{box_helper._brandName} {boxInstButton} {chatbot_helper._softwareInstMethod}" 할당
+        messageText = f"{box_helper._brandName} {boxInstButton} {chatbot_helper._softwareInstMethod}" if box_helper._autoCADBOX == boxInstButton or box_helper._energyBOX == boxInstButton else boxInstButton
         boxInstButtons.append({
             "action": "message",
             "label": boxInstButton,
-            "messageText": boxInstVersion
+            "messageText": messageText
         })
 
     response = {
@@ -172,7 +177,7 @@ def level3_box_textCardResponseFormat(boxInstVersion, boxInstButtonList):
                 {
                     "textCard": {
                         "title": "",
-                        "description": "안내가 필요한 항목 선택해주세요.",
+                        "description": chatbot_helper._selectInfo,
                         "buttons" : boxInstButtons
                     }
                 }
@@ -206,7 +211,7 @@ def level3_account_quickRepliesResponseFormat(accountButtonList):
             "outputs": [
                 {
                     "simpleText": {
-                        "text": "안내가 필요한 항목 선택해주세요."
+                        "text": chatbot_helper._selectInfo
                     }
                 }
             ], 
@@ -229,7 +234,7 @@ def level4_autodeskInstLangPackVer_textCardResponseFormat(userRequest_Msg, autod
         autodeskInstLangPackVerButtons.append({
             "action": "message",
             "label": autodeskInstLangPackVerButton,
-            "messageText": f"{autodesk_helper.brandName} {userRequest_Msg} {autodeskInstLangPackVerButton} {ver} {langPack}"
+            "messageText": f"{autodesk_helper._brandName} {userRequest_Msg} {autodeskInstLangPackVerButton} {ver} {langPack}"
         })
 
     response = {
@@ -239,7 +244,7 @@ def level4_autodeskInstLangPackVer_textCardResponseFormat(userRequest_Msg, autod
                 {
                     "textCard": {
                         "title": "",
-                        "description": "버전을 선택해주세요.",
+                        "description": chatbot_helper._selectVersion,
                         "buttons" : autodeskInstLangPackVerButtons
                     }
                 }
@@ -263,7 +268,7 @@ def level4_autodeskInstVer_textCardResponseFormat(userRequest_Msg, autodeskInstV
         autodeskInstVerButtons.append({
             "action": "message",
             "label": autodeskInstVerButton,
-            "messageText": f"{autodesk_helper.brandName} {userRequest_Msg} {autodeskInstVerButton} {ver} {chatbot_helper._softwareInstMethod}"
+            "messageText": f"{autodesk_helper._brandName} {userRequest_Msg} {autodeskInstVerButton} {ver} {chatbot_helper._softwareInstMethod}"
         })
 
     response = {
@@ -273,7 +278,7 @@ def level4_autodeskInstVer_textCardResponseFormat(userRequest_Msg, autodeskInstV
                 {
                     "textCard": {
                         "title": "",
-                        "description": "버전을 선택해주세요.",
+                        "description": chatbot_helper._selectVersion,
                         "buttons" : autodeskInstVerButtons
                     }
                 }
@@ -286,6 +291,37 @@ def level4_autodeskInstVer_textCardResponseFormat(userRequest_Msg, autodeskInstV
     # 함수 len 사용하여 testButtons 배열 안에 존재하는 요소의 갯수가 0보다 큰경우
     # ----- if len(testButtons) > 0:
     #     response["template"]["buttons"] = testButtons
+    return response
+
+# level4 바로가기 그룹 전송 (카카오톡 서버로 텍스트 전송)
+# level4 - 2. 상상진화 BOX 제품 버전 (1. Revit BOX만 해당)
+def level4_boxInstVer_quickRepliesResponseFormat(userRequest_Msg, boxInstVerButtonList):
+    boxInstVerQuickReplies = []
+    # 2. 상상진화 BOX 제품 버전 (1. Revit BOX만 해당) 6가지 버튼 텍스트 및 메세지 추가 
+    for (boxInstVerButton, ver) in boxInstVerButtonList:
+        boxInstVerQuickReplies.append({
+            "action": "message",
+            "label": boxInstVerButton,
+            "messageText": f"{box_helper._brandName} {userRequest_Msg} {boxInstVerButton} {ver} {chatbot_helper._softwareInstMethod}"
+        })
+
+    response = {
+        "version": "2.0", 
+        "template": {
+            "outputs": [
+                {
+                    "simpleText": {
+                        "text": chatbot_helper._selectVersion
+                    }
+                }
+            ], 
+            "quickReplies": boxInstVerQuickReplies
+        }
+    }
+    # TODO : 함수 level4_boxInstVer_quickRepliesResponseFormat 로직 수정 예정 (2025.03.21 minjae)
+    # 함수 len 사용하여 testQuick 배열 안에 존재하는 요소의 갯수가 0보다 큰경우
+    # ----- if len(testQuick) > 0:
+    #     response["template"]["quickReplies"] = testQuick
     return response
 
 # level5 텍스트 카드 (카카오톡 서버로 텍스트 전송)
@@ -307,7 +343,7 @@ def level5_autodeskInstLang_textCardResponseFormat(userRequest_Msg, autodeskInst
                 {
                     "textCard": {
                         "title": "",
-                        "description": "설치 언어를 선택해주세요.",
+                        "description": chatbot_helper._selectLang,
                         "buttons" : autodeskInstLangButtons
                     }
                 }
@@ -320,92 +356,6 @@ def level5_autodeskInstLang_textCardResponseFormat(userRequest_Msg, autodeskInst
     # 함수 len 사용하여 testButtons 배열 안에 존재하는 요소의 갯수가 0보다 큰경우
     # ----- if len(testButtons) > 0:
     #     response["template"]["buttons"] = testButtons
-    return response
-
-
-
-# level2 바로가기 그룹 전송 (카카오톡 서버로 텍스트 전송)
-# 2. 네트워크 라이선스
-def level2NetworkquickRepliesResponseFormat():
-    # TODO : 함수 level2NetworkquickRepliesResponseFormat 로직 수정 예정 (2025.03.05 minjae)
-    # TODO : 바로 아래 소스코드는 파이썬 스크립트 파일 "D:\minjae\test_BotProject\05.카카오톡\04-kakao-money.py" -> 함수 "get_exchange_from_won"의 로직을 참고 하여 구현함 (2025.03.04 minjae)
-    # ----- testQuick = []
-    # ----- for test in testList:
-    #     testQuick.append({
-    #         "action": "message",
-    #         "label": f"{test}",
-    #         "messageText": f"[구현 예정!] {test}"
-    #     })
-
-    response = {
-        "version": "2.0", 
-        "template": {
-            "outputs": [
-                {
-                    "simpleText": {
-                        "text": "안내가 필요한 항목 선택해주세요."
-                    }
-                }
-            ], 
-            "quickReplies": [
-                {
-                    "action": "message",
-                    "label": "1. 상상정보통 다운로드",
-                    "messageText": "[구현 예정!] 1. 상상정보통 다운로드"
-                },
-                {
-                    "action": "message",
-                    "label": "2. 체크아웃 시간 초과",
-                    "messageText": "[구현 예정!] 2. 체크아웃 시간 초과"
-                },
-                {
-                    "action": "message",
-                    "label": "3. -4,132,0 오류",
-                    "messageText": "[구현 예정!] 3. -4,132,0 오류"
-                },
-                {
-                    "action": "message",
-                    "label": "4. 0,0,0 오류",
-                    "messageText": "[구현 예정!] 4. 0,0,0 오류"
-                },
-                {
-                    "action": "message",
-                    "label": "5. -15,570,0오류",
-                    "messageText": "[구현 예정!] 5. -15,570,0오류"
-                },
-                {
-                    "action": "message",
-                    "label": "6. 라이센싱 에러 조치",
-                    "messageText": "[구현 예정!] 6. 라이센싱 에러 조치"
-                },
-                {
-                    "action": "message",
-                    "label": "7. 라이선스 매니저 오류",
-                    "messageText": "[구현 예정!] 7. 라이선스 매니저 오류"
-                },
-                {
-                    "action": "message",
-                    "label": "8. FlexNet 창 발생",
-                    "messageText": "[구현 예정!] 8. FlexNet 창 발생"
-                },
-                {
-                    "action": "message",
-                    "label": "9. 라이선스 유형 변경",
-                    "messageText": "[구현 예정!] 9. 라이선스 유형 변경"
-                },
-                {
-                    "action": "message",
-                    "label": "10. 기타 문의",
-                    "messageText": "[구현 예정!] 10. 기타 문의"
-                }
-            ]
-        }
-    }
-
-    # TODO : 함수 level2NetworkquickRepliesResponseFormat 로직 수정 예정 (2025.03.05 minjae)
-    # 함수 len 사용하여 testQuick 배열 안에 존재하는 요소의 갯수가 0보다 큰경우
-    # ----- if len(testQuick) > 0:
-    #     response["template"]["quickReplies"] = testQuick
     return response
 
 # level2 바로가기 그룹 전송 (카카오톡 서버로 텍스트 전송)
@@ -427,7 +377,7 @@ def level2AccountquickRepliesResponseFormat():
             "outputs": [
                 {
                     "simpleText": {
-                        "text": "안내가 필요한 항목 선택해주세요."
+                        "text": chatbot_helper._selectInfo
                     }
                 }
             ], 
@@ -510,7 +460,7 @@ def level3VersionquickRepliesResponseFormat(messageText):
             "outputs": [
                 {
                     "simpleText": {
-                        "text": "버전을 선택해주세요."
+                        "text": chatbot_helper._selectVersion
                     }
                 }
             ], 

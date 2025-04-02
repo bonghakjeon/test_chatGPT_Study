@@ -6,19 +6,21 @@
 # 아마존 웹서비스(AWS) 활용할 때에는 FastAPI 개발자 로컬 웹서버를 따로 생성할 필요가 없으니까
 # 패키지 "from fastapi import Request, FastAPI"를 불러올 필요가 없다.
 
-import json     # 카카오톡 서버로부터 받은 json 데이터 처리하기 위해 패키지 json 불러오기 
-import openai   # OPENAI 패키지 openai 불러오기 (ChatGPT, DALLE.2 사용)
-import threading  # 프로그램 안에서 동시에 작업하는 멀티스레드 구현하기 위해 패키지 "threading" 불러오기
-import time   # ChatGPT 답변 시간 계산하기 위해 패키지 "time" 불러오기
+import json         # 카카오톡 서버로부터 받은 json 데이터 처리하기 위해 패키지 json 불러오기 
+import openai       # OPENAI 패키지 openai 불러오기 (ChatGPT, DALLE.2 사용)
+import threading    # 프로그램 안에서 동시에 작업하는 멀티스레드 구현하기 위해 패키지 "threading" 불러오기
+import time         # ChatGPT 답변 시간 계산하기 위해 패키지 "time" 불러오기
 import queue as q   # 자료구조 queue(deque 기반) 이용하기 위해 패키지 "queue" 불러오기
-import os   # 답변 결과를 테스트 파일로 저장할 때 경로 생성해야 해서 패키지 "os" 불러오기
+import os           # 답변 결과를 테스트 파일로 저장할 때 경로 생성해야 해서 패키지 "os" 불러오기
 
 from commons import autodesk_helper  # 폴더 "commons" -> 1. Autodesk 제품 전용 도움말 텍스트 "autodesk_helper" 불러오기
-from commons import chatbot_helper # 폴더 "commons" -> 카카오 챗봇 전용 도움말 텍스트 "chatbot_helper" 불러오기
-from modules import kakao # 폴더 "modules" -> 카카오 API 전용 모듈 "kakao" 불러오기 
-from modules import logger # 폴더 "modules" -> 로그 설정 전용 모듈 "logger" 불러오기 
-from modules import openai_logger  # 폴더 "modules" -> OpenAI 리턴 값 로그 작성 모듈 "openai_logger" 불러오기
-from modules import chatbot_logger  # 폴더 "modules" -> 카카오 챗봇 로그 작성 모듈 "chatbot_logger" 불러오기
+from commons import box_helper       # 폴더 "commons" -> 2. 상상진화 BOX 제품 전용 도움말 텍스트 "box_helper" 불러오기
+from commons import chatbot_helper   # 폴더 "commons" -> 카카오 챗봇 전용 도움말 텍스트 "chatbot_helper" 불러오기
+
+from modules import kakao            # 폴더 "modules" -> 카카오 API 전용 모듈 "kakao" 불러오기 
+from modules import logger           # 폴더 "modules" -> 로그 설정 전용 모듈 "logger" 불러오기 
+from modules import openai_logger    # 폴더 "modules" -> OpenAI 리턴 값 로그 작성 모듈 "openai_logger" 불러오기
+from modules import chatbot_logger   # 폴더 "modules" -> 카카오 챗봇 로그 작성 모듈 "chatbot_logger" 불러오기
 
 bot_logger=logger.configureLogger()
 
@@ -33,18 +35,13 @@ openai.api_key = os.environ['OPENAI_API']
 OPENAI_KEY = os.environ['OPENAI_API'] 
 # OPENAI_KEY = os.getenv("OPENAI_KEY")
 
-# (주)상상진화 각 레벨(level)별 처리할 업무 프로세스 리스트 
-imagineBuilderList = [ '/level1', '1. Autodesk 제품', '2. 상상진화 BOX 제품', '3. 계정&제품배정 문의', '1. Autodesk 제품 설치 문의', '더보기', '2. 상상진화 BOX 제품 설치 문의' ]
-level1Index = 0             # '/level1' 인덱스
-autodeskIndex = 1           # '1. Autodesk 제품' 인덱스 
-boxIndex = 2                # '2. 상상진화 BOX 제품' 인덱스
-accountIndex = 3            # '3. 계정&제품배정 문의' 인덱스
-autodeskInstIndex = 4       # '1. Autodesk 제품 설치 문의' 인덱스
-autodeskSeeMoreIndex = 5    # '더보기' 인덱스
-boxInstIndex = 6            # '2. 상상진화 BOX 제품 설치 문의' 인덱스
+# level1 - '/level1' 버튼 리스트 (텍스트 + 메세지) 
+level1ButtonList = [ chatbot_helper._autodeskProduct, 
+                     chatbot_helper._boxProduct, 
+                     chatbot_helper._askAccount ]   
 
-level1ButtonList = [ '1. Autodesk 제품', '2. 상상진화 BOX 제품', '3. 계정&제품배정 문의' ]   # level1 - '/level1' 버튼 리스트 (텍스트 + 메세지) 
-level2ButtonList = [ '설치 문의' ]   # level2 - 서브 카테고리 버튼 리스트 (텍스트 + 메세지)
+# level2 - 서브 카테고리 버튼 리스트 (텍스트 + 메세지)
+subCatButtonList = [ chatbot_helper._askInst, ]
 
 # region 1. Autodesk 제품 설치 문의
 
@@ -58,14 +55,13 @@ autodeskInstButtonList = [ autodesk_helper._autoCAD,
                            autodesk_helper._inventor, 
                            autodesk_helper._3ds_Max, 
                            autodesk_helper._maya, 
-                           '더보기' ]
+                           chatbot_helper._seeMore ]
 # level3 - 더보기 버튼 텍스트 리스트
 autodeskSeeMoreButtonList = [ autodesk_helper._fusion, 
                               autodesk_helper._infraWorks, 
                               autodesk_helper._twinmotion,  
                               autodesk_helper._dwgTrueView,  
                               autodesk_helper._navisworks_Converter ]
-# is_autodeskSeeMore = False    # level3 - 더보기 버튼 클릭 여부 
 
 # level4 - 1. Autodesk 제품 버전 Language Pack
 autodeskInstLangPackVerList = [ autodesk_helper._autoCAD, 
@@ -106,9 +102,22 @@ autodeskInstLangButtonList = [ autodesk_helper._kor,
 
 # region 2. 상상진화 BOX 제품 설치 문의
 
-# level3 - 2. 상상진화 BOX 제품 설치 문의
-boxInstButtonList = [ '1. Revit BOX', '2. CAD BOX', '3. Energy BOX' ]
-boxInstVer = '2. 상상진화 BOX 제품 버전'   # '2. 상상진화 BOX 제품 버전' 버튼 메시지
+# level3 - 2. 상상진화 BOX 제품 설치 문의 버튼 리스트 (텍스트 + 메세지)
+boxInstButtonList = [ box_helper._revitBOX, 
+                      box_helper._autoCADBOX, 
+                      box_helper._energyBOX ]
+
+# level4 - 2. 상상진화 BOX 제품 버전 (1. Revit BOX만 해당)
+boxInstVerButtonList = [ (chatbot_helper._2026, chatbot_helper._ver), 
+                         (chatbot_helper._2025, chatbot_helper._ver), 
+                         (chatbot_helper._2024, chatbot_helper._ver), 
+                         (chatbot_helper._2023, chatbot_helper._ver), 
+                         (chatbot_helper._2022, chatbot_helper._ver), 
+                         (chatbot_helper._2021, chatbot_helper._ver) ]
+
+# level4 - 2. 상상진화 BOX 설치 방법 (버전 X)
+boxInstList = [ box_helper._autoCADBOX,
+                box_helper._energyBOX ]
 
 # endregion 2. 상상진화 BOX 제품 설치 문의
 
@@ -146,12 +155,12 @@ def lambda_handler(event, context):
             dbReset(filename)
         else:
             # print("File Exists")   # print 함수 호출하여 지금 현재 파일이 있다고 메시지 "File Exists" 출력 
-            # chatbot_logger.info("File Exists")   # chatbot_logger.info 함수 호출하여 지금 현재 파일이 있다고 메시지 "File Exists" 로그 기록 
-            chatbot_logger.log_write(chatbot_logger.info, "파일 존재 여부", "File Exists")
+            # chatbot_logger._info("File Exists")   # chatbot_logger._info 함수 호출하여 지금 현재 파일이 있다고 메시지 "File Exists" 로그 기록 
+            chatbot_logger.log_write(chatbot_logger._info, "파일 존재 여부", "File Exists")
 
         # 테스트 로그 기록 
-        # chatbot_logger.info("[테스트] 사용자 입력 채팅 정보 - %s" %event['body'])
-        chatbot_logger.log_write(chatbot_logger.info, "[테스트] 사용자 입력 채팅 정보", event['body'])
+        # chatbot_logger._info("[테스트] 사용자 입력 채팅 정보 - %s" %event['body'])
+        chatbot_logger.log_write(chatbot_logger._info, "[테스트] 사용자 입력 채팅 정보", event['body'])
 
         response_queue = q.Queue()   #.put(), .get()
 
@@ -163,8 +172,8 @@ def lambda_handler(event, context):
         # pass
         # 테스트 오류 로그 기록  
         errorMessage = str(e)  # str() 함수 사용해서 Exception 클래스 객체 e를 문자열로 변환 및 오류 메시지 변수 errorMessage에 할당 (문자열로 변환 안할시 카카오 챗봇에서 스킬서버 오류 출력되면서 챗봇이 답변도 안하고 장시간 멈춤 상태 발생.)
-        # chatbot_logger.error('[테스트] 오류 - %s' %errorMessage)
-        chatbot_logger.log_write(chatbot_logger.error, "[테스트] 오류", errorMessage)
+        # chatbot_logger._error('[테스트] 오류 - %s' %errorMessage)
+        chatbot_logger.log_write(chatbot_logger._error, "[테스트] 오류", errorMessage)
     finally:   # 예외 발생 여부와 상관없이 항상 마지막에 실행할 코드
         while(time.time() - start_time < 3.5):
             if not response_queue.empty():
@@ -178,8 +187,8 @@ def lambda_handler(event, context):
 
         # 테스트 로그 기록
         responseMessage = json.dumps(response)
-        # chatbot_logger.info("[테스트] 챗봇 답변 채팅 정보 - %s" %responseMessage)
-        chatbot_logger.log_write(chatbot_logger.info, "[테스트] 챗봇 답변 채팅 정보", responseMessage)
+        # chatbot_logger._info("[테스트] 챗봇 답변 채팅 정보 - %s" %responseMessage)
+        chatbot_logger.log_write(chatbot_logger._info, "[테스트] 챗봇 답변 채팅 정보", responseMessage)
 
         # 카카오톡 서버로 json 형태의 데이터(response 포함) 리턴
         return {
@@ -205,7 +214,7 @@ def responseChatbot(request,response_queue,filename):
                     bot_res = last_update[4:]
 
                     # TODO : 아래 주석친 OpenAI 로그 기록 코드 필요시 사용 예정 (2025.03.27 minjae)
-                    # openai_logger.log_write(openai_logger.info, "시간 5초 초과 후 ChatGPT 텍스트 답변", bot_res)
+                    # openai_logger.log_write(openai_logger._info, "시간 5초 초과 후 ChatGPT 텍스트 답변", bot_res)
                     response_queue.put(textResponseFormat(bot_res))
                 dbReset(filename)   
 
@@ -224,7 +233,7 @@ def responseChatbot(request,response_queue,filename):
             bot_res = getTextFromGPT(prompt)
             response_queue.put(textResponseFormat(bot_res))
 
-            openai_logger.log_write(openai_logger.info, "ChatGPT 텍스트 답변", bot_res)
+            openai_logger.log_write(openai_logger._info, "ChatGPT 텍스트 답변", bot_res)
             save_log = f"ask {str(bot_res)}" 
             dbSave(filename, save_log)
 
@@ -238,79 +247,95 @@ def responseChatbot(request,response_queue,filename):
                             "오류 사유 : 테스트 오류\n"+
                             "문제 해결이 어려울시\n"+ 
                             "상상플렉스 커뮤니티(https://www.ssflex.co.kr/community/open)\n"+
-                            "혹은 기술지원번호(02-3474-2263)으로 문의 부탁드립니다.")   # 예외를 발생시킴
+                            "혹은 기술지원번호(02-3474-2263)로 문의 부탁드립니다.")   # 예외를 발생시킴
 
         # level1 - 상담시간 안내
-        elif imagineBuilderList[level1Index] in request["userRequest"]["utterance"]:
+        elif chatbot_helper._level1 in request["userRequest"]["utterance"]:
             dbReset(filename)   
             response_queue.put(kakao.level1_textCardResponseFormat(level1ButtonList))
 
             save_log = "level1 - 상담시간 안내 테스트"
-            # chatbot_logger.info(save_log)
-            chatbot_logger.log_write(chatbot_logger.info, "", save_log)
+            # chatbot_logger._info(save_log)
+            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
             dbSave(filename, save_log)
 
         # level2 - 1. Autodesk 제품 상담 유형
-        elif imagineBuilderList[autodeskIndex] == request["userRequest"]["utterance"]:
+        elif chatbot_helper._autodeskProduct == request["userRequest"]["utterance"]:
             dbReset(filename)
-            type = imagineBuilderList[autodeskIndex]
-            response_queue.put(kakao.level2_textCardResponseFormat(type, level2ButtonList))
+            userRequest_Msg = request["userRequest"]["utterance"]
+            response_queue.put(kakao.level2_textCardResponseFormat(userRequest_Msg, subCatButtonList))
 
-            save_log = f"level2 - {type} 상담 유형 테스트"
-            # chatbot_logger.info(save_log)
-            chatbot_logger.log_write(chatbot_logger.info, "", save_log)
+            save_log = f"level2 - {userRequest_Msg} 상담 유형 테스트"
+            # chatbot_logger._info(save_log)
+            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
             dbSave(filename, save_log)
 
         # level2 - 2. 상상진화 BOX 제품 상담 유형
-        elif imagineBuilderList[boxIndex] == request["userRequest"]["utterance"]:
+        elif chatbot_helper._boxProduct == request["userRequest"]["utterance"]:
             dbReset(filename)
-            type = imagineBuilderList[boxIndex]
-            response_queue.put(kakao.level2_textCardResponseFormat(type, level2ButtonList))
+            userRequest_Msg = request["userRequest"]["utterance"]
+            response_queue.put(kakao.level2_textCardResponseFormat(userRequest_Msg, subCatButtonList))
 
-            save_log = f"level2 - {type} 상담 유형 테스트"
-            # chatbot_logger.info(save_log)
-            chatbot_logger.log_write(chatbot_logger.info, "", save_log)
+            save_log = f"level2 - {userRequest_Msg} 상담 유형 테스트"
+            # chatbot_logger._info(save_log)
+            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
             dbSave(filename, save_log)
 
         # level3 - 1. Autodesk 제품 설치 문의
-        elif imagineBuilderList[autodeskInstIndex] == request["userRequest"]["utterance"]:
+        elif chatbot_helper._askInst_autodeskProduct == request["userRequest"]["utterance"]:
             dbReset(filename)  
             response_queue.put(kakao.level3_autodesk_quickRepliesResponseFormat(autodeskInstButtonList))
 
             save_log = "level3 - 1. Autodesk 제품 설치 문의 테스트"
-            # chatbot_logger.info(save_log)
-            chatbot_logger.log_write(chatbot_logger.info, "", save_log)
+            # chatbot_logger._info(save_log)
+            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
             dbSave(filename, save_log)
 
         # level3 - 더보기 1. Autodesk 제품 설치 문의
-        elif imagineBuilderList[autodeskSeeMoreIndex] == request["userRequest"]["utterance"]:
+        elif chatbot_helper._seeMore == request["userRequest"]["utterance"]:
             dbReset(filename)  
             response_queue.put(kakao.level3_autodesk_quickRepliesResponseFormat(autodeskSeeMoreButtonList))
 
             save_log = "level3 - 더보기 1. Autodesk 제품 설치 문의 테스트"
-            # chatbot_logger.info(save_log)
-            chatbot_logger.log_write(chatbot_logger.info, "", save_log)
+            # chatbot_logger._info(save_log)
+            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
             dbSave(filename, save_log)
 
         # level3 - 2. 상상진화 BOX 제품 설치 문의
-        elif imagineBuilderList[boxInstIndex] == request["userRequest"]["utterance"]:
+        elif chatbot_helper._askInst_boxProduct == request["userRequest"]["utterance"]:
             dbReset(filename)    
-            response_queue.put(kakao.level3_box_textCardResponseFormat(boxInstVer, boxInstButtonList))
+            response_queue.put(kakao.level3_box_textCardResponseFormat(boxInstButtonList))
 
             save_log = "level3 - 2. 상상진화 BOX 제품 설치 문의 테스트"
-            # chatbot_logger.info(save_log)
-            chatbot_logger.log_write(chatbot_logger.info, "", save_log)
+            # chatbot_logger._info(save_log)
+            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
             dbSave(filename, save_log)
 
         # level3 - 3. 계정&제품배정 문의
-        elif imagineBuilderList[accountIndex] == request["userRequest"]["utterance"]:
+        elif chatbot_helper._askAccount == request["userRequest"]["utterance"]:
             dbReset(filename)    
             response_queue.put(kakao.level3_account_quickRepliesResponseFormat(accountButtonList))
 
             save_log = "level3 - 3. 계정&제품배정 문의 테스트"
-            # chatbot_logger.info(save_log)
-            chatbot_logger.log_write(chatbot_logger.info, "", save_log)
+            # chatbot_logger._info(save_log)
+            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
             dbSave(filename, save_log)
+
+        # 1. Autodesk 제품 또는 2. 상상진화 BOX 제품 버전 2026 이상 또는 아직 준비되지 못한 버전
+        elif chatbot_helper._2026 in request["userRequest"]["utterance"]: 
+            dbReset(filename)    
+
+            save_log = "1. Autodesk 제품 또는 2. 상상진화 BOX 제품 버전 2026 이상 또는 아직 준비되지 못한 버전 테스트"
+            # chatbot_logger._info(save_log)
+            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
+            dbSave(filename, save_log)
+
+            raise Exception("[테스트] [오류 안내]\n"+
+                            "사유 : 제품없음.\n"+
+                            "해당 제품군은 아직 준비 중입니다.\n"+
+                            "추가 문의 필요시\n"+
+                            "상상플렉스 커뮤니티(https://www.ssflex.co.kr/community/open)\n"+
+                            "혹은 기술지원번호(02-3474-2263)로 문의 부탁드립니다.")   # 예외를 발생시킴
 
         # level4 - 1. Autodesk 제품 버전 Language Pack
         # TODO : 파이썬 in 연산자 사용하여 리스트 객체 "autodeskInstLangPackVerList" 안에 사용자가 클릭한 버튼 텍스트 메시지 (예) 1. 오토캐드 
@@ -325,8 +350,8 @@ def responseChatbot(request,response_queue,filename):
             response_queue.put(kakao.level4_autodeskInstLangPackVer_textCardResponseFormat(userRequest_Msg, autodeskInstLangPackVerButtonList))
 
             save_log = "level4 - 1. Autodesk 제품 버전 Language Pack 테스트"
-            # chatbot_logger.info(save_log)
-            chatbot_logger.log_write(chatbot_logger.info, "", save_log)
+            # chatbot_logger._info(save_log)
+            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
             dbSave(filename, save_log)
 
         # level4 - 1. Autodesk 제품 버전
@@ -342,8 +367,19 @@ def responseChatbot(request,response_queue,filename):
             response_queue.put(kakao.level4_autodeskInstVer_textCardResponseFormat(userRequest_Msg, autodeskInstVerButtonList))
 
             save_log = "level4 - 1. Autodesk 제품 버전 테스트"
-            # chatbot_logger.info(save_log)
-            chatbot_logger.log_write(chatbot_logger.info, "", save_log)
+            # chatbot_logger._info(save_log)
+            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
+            dbSave(filename, save_log)
+
+        # level4 - 2. 상상진화 BOX 제품 버전 (1. Revit BOX 만 해당)
+        elif box_helper._revitBOX == request["userRequest"]["utterance"]:
+            dbReset(filename)    
+            userRequest_Msg = request["userRequest"]["utterance"]
+            response_queue.put(kakao.level4_boxInstVer_quickRepliesResponseFormat(userRequest_Msg, boxInstVerButtonList))
+
+            save_log = "level4 - 2. 상상진화 BOX 제품 버전 (1. Revit BOX 만 해당) 테스트"
+            # chatbot_logger._info(save_log)
+            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
             dbSave(filename, save_log)
 
         # level5 - 1. Autodesk 제품 설치 언어 
@@ -355,10 +391,9 @@ def responseChatbot(request,response_queue,filename):
             response_queue.put(kakao.level5_autodeskInstLang_textCardResponseFormat(userRequest_Msg, autodeskInstLangButtonList))
 
             save_log = "level5 - 1. Autodesk 제품 설치 언어 테스트"
-            # chatbot_logger.info(save_log)
-            chatbot_logger.log_write(chatbot_logger.info, "", save_log)
+            # chatbot_logger._info(save_log)
+            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
             dbSave(filename, save_log)
-
 
         # level4 - 1. Autodesk 제품 버전 X
         # TODO : 파이썬 in 연산자 사용하여 리스트 객체 "autodeskInstList" 안에 사용자가 클릭한 버튼 텍스트 메시지 (예) '10. Fusion'
@@ -371,19 +406,9 @@ def responseChatbot(request,response_queue,filename):
         #     response_queue.put(kakao.simple_textResponseFormat(message))
 
         #     save_log = "level4 - 1. Autodesk 제품 버전 X 테스트"
-        #     # chatbot_logger.info(save_log)
-        #     chatbot_logger.log_write(chatbot_logger.info, "", save_log)
+        #     # chatbot_logger._info(save_log)
+        #     chatbot_logger.log_write(chatbot_logger._info, "", save_log)
         #     dbSave(filename, save_log)
-
-        # elif imagineBuilderList[boxInstallerIndex] == request["userRequest"]["utterance"]:
-        #     dbReset(filename)  
-        #     messageTextBOX = imagineBuilderList[boxVersionIndex]    
-        #     response_queue.put(kakao.level3BOXquickRepliesResponseFormat(messageTextBOX))
-
-        #     save_log = "level3"+ " " + "상상진화 BOX 제품 설치 문의"
-
-        #     with open(filename, 'w') as f:
-        #         f.write(save_log)
 
         else:
             base_response = {'version': '2.0', 'template': {'outputs': [], 'quickReplies': []}}
@@ -392,8 +417,8 @@ def responseChatbot(request,response_queue,filename):
     except Exception as e:   # 하위 코드 블록에서 예외가 발생해도 변수 e에다 넣고 아래 코드 실행됨
         # 테스트 오류 로그 기록  
         errorMessage = str(e)  # str() 함수 사용해서 Exception 클래스 객체 e를 문자열로 변환 및 오류 메시지 변수 errorMessage에 할당 (문자열로 변환 안할시 카카오 챗봇에서 스킬서버 오류 출력되면서 챗봇이 답변도 안하고 장시간 멈춤 상태 발생.)
-        # chatbot_logger.error('[테스트] 오류 - %s' %errorMessage)
-        chatbot_logger.log_write(chatbot_logger.error, "[테스트] 오류", errorMessage)
+        # chatbot_logger._error('[테스트] 오류 - %s' %errorMessage)
+        chatbot_logger.log_write(chatbot_logger._error, "[테스트] 오류", errorMessage)
         response_queue.put(kakao.error_textResponseFormat(errorMessage))
         # 오류 로그 기록 
         raise    # raise로 함수 responseOpenAI의 현재 예외를 다시 발생시켜서 함수 responseOpenAI 호출한 상위 코드 블록으로 넘김

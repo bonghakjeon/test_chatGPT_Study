@@ -12,13 +12,12 @@ import inspect
 import os   # 함수 log_write 호출한 상위 파일 이름 구해야 해서 패키지 "os" 불러오기
 from datetime import datetime
 
-
 # 로그 레벨 작성
-debug = 'debug'
-info = 'info'
-warning = 'warning'
-error = 'error'
-crictical = 'crictical'
+_debug = 'debug'
+_info = 'info'
+_warning = 'warning'
+_error = 'error'
+_crictical = 'crictical'
 
 # 아마존 웹서비스(AWS) 람다 함수(Lambda Funtion) 카카오 챗봇 로그 작성 
 def log_write(log_type, content, bot_res):
