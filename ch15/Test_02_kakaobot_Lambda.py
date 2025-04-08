@@ -22,7 +22,8 @@ from modules import logger           # 폴더 "modules" -> 로그 설정 전용 
 from modules import openai_logger    # 폴더 "modules" -> OpenAI 리턴 값 로그 작성 모듈 "openai_logger" 불러오기
 from modules import chatbot_logger   # 폴더 "modules" -> 카카오 챗봇 로그 작성 모듈 "chatbot_logger" 불러오기
 
-bot_logger=logger.configureLogger()
+openaiObjName = 'openai'  # OpenAI Logger 객체 이름 'openai'
+bot_logger=logger.configureLogger(openaiObjName)
 
 # OpenAI API KEY
 # 테스트용 카카오톡 챗봇 채팅방에서 
@@ -45,44 +46,42 @@ subCatButtonList = [ chatbot_helper._askInst, ]
 
 # region 1. Autodesk 제품 설치 문의
 
-# level3 - 1. Autodesk 제품 설치 문의 버튼 리스트 (텍스트 + 메세지)
-autodeskInstButtonList = [ autodesk_helper._autoCAD, 
-                           autodesk_helper._revit, 
-                           autodesk_helper._navisworks_Manage, 
-                           autodesk_helper._navisworks_Simulate, 
-                           autodesk_helper._civil_3D, 
-                           autodesk_helper._advance_Steel, 
-                           autodesk_helper._inventor, 
-                           autodesk_helper._3ds_Max, 
-                           autodesk_helper._maya, 
-                           chatbot_helper._seeMore ]
-# level3 - 더보기 버튼 텍스트 리스트
-autodeskSeeMoreButtonList = [ autodesk_helper._fusion, 
-                              autodesk_helper._infraWorks, 
-                              autodesk_helper._twinmotion,  
-                              autodesk_helper._dwgTrueView,  
-                              autodesk_helper._navisworks_Converter ]
+# level3 - 1. Autodesk 제품 설치 문의 버튼 리스트 - label(텍스트) + 메세지(텍스트)
+autodeskInstButtonList = [ (autodesk_helper._autoCAD, autodesk_helper._autoCAD_Msg), 
+                           (autodesk_helper._revit, autodesk_helper._revit_Msg), 
+                           (autodesk_helper._navisworks_Manage, autodesk_helper._navisworks_Manage_Msg), 
+                           (autodesk_helper._navisworks_Simulate, autodesk_helper._navisworks_Simulate_Msg), 
+                           (autodesk_helper._civil_3D, autodesk_helper._civil_3D_Msg), 
+                           (autodesk_helper._advance_Steel, autodesk_helper._advance_Steel_Msg), 
+                           (autodesk_helper._inventor, autodesk_helper._inventor_Msg), 
+                           (autodesk_helper._3ds_Max, autodesk_helper._3ds_Max_Msg), 
+                           (autodesk_helper._maya, autodesk_helper._maya_Msg), 
+                           (chatbot_helper._seeMore, chatbot_helper._seeMore) ]
+# level3 - 더보기 버튼 텍스트 리스트  - label(텍스트) + 메세지(텍스트)
+autodeskSeeMoreButtonList = [ (autodesk_helper._fusion, autodesk_helper._fusion_Msg), 
+                              (autodesk_helper._infraWorks, autodesk_helper._infraWorks_Msg), 
+                              (autodesk_helper._twinmotion, autodesk_helper._twinmotion_Msg),  
+                              (autodesk_helper._dwgTrueView, autodesk_helper._dwgTrueView_Msg),  
+                              (autodesk_helper._navisworks_Converter, autodesk_helper._navisworks_Converter_Msg) ]
 
-# level4 - 1. Autodesk 제품 버전 Language Pack
-autodeskInstLangPackVerList = [ autodesk_helper._autoCAD, 
-                                autodesk_helper._revit, 
-                                autodesk_helper._navisworks_Manage, 
-                                autodesk_helper._navisworks_Simulate, 
-                                autodesk_helper._civil_3D, 
-                                autodesk_helper._advance_Steel, 
-                                autodesk_helper._inventor, 
-                                autodesk_helper._3ds_Max, 
-                                autodesk_helper._infraWorks ]
+# level4 - 1. Autodesk 제품 버전 Language Pack 메세지(텍스트) 리스트 
+autodeskInstLangPackVerMsgList = [ autodesk_helper._autoCAD_Msg, 
+                                   autodesk_helper._revit_Msg, 
+                                   autodesk_helper._navisworks_Manage_Msg, 
+                                   autodesk_helper._navisworks_Simulate_Msg, 
+                                   autodesk_helper._civil_3D_Msg, 
+                                   autodesk_helper._advance_Steel_Msg, 
+                                   autodesk_helper._inventor_Msg, 
+                                   autodesk_helper._3ds_Max_Msg, 
+                                   autodesk_helper._infraWorks_Msg ]
 
 autodeskInstLangPackVerButtonList = [ (chatbot_helper._2026, chatbot_helper._ver, autodesk_helper._langPack), 
                                       (chatbot_helper._2025, chatbot_helper._ver, autodesk_helper._langPack), 
                                       (chatbot_helper._2024, chatbot_helper._ver, autodesk_helper._langPack), 
                                       (chatbot_helper._2023, chatbot_helper._ver, autodesk_helper._langPack) ]
 
-# level4 - 1. Autodesk 제품 버전
-autodeskInstVerList = [ autodesk_helper._maya, 
-                        autodesk_helper._twinmotion, 
-                        autodesk_helper._navisworks_Converter ]
+# level4 - 1. Autodesk 제품 버전 메세지(텍스트) 리스트 
+autodeskInstVerMsgList = [ autodesk_helper._maya_Msg, autodesk_helper._twinmotion_Msg, autodesk_helper._navisworks_Converter_Msg ]
 
 autodeskInstVerButtonList = [ (chatbot_helper._2026, chatbot_helper._ver), 
                               (chatbot_helper._2025, chatbot_helper._ver), 
@@ -90,22 +89,20 @@ autodeskInstVerButtonList = [ (chatbot_helper._2026, chatbot_helper._ver),
                               (chatbot_helper._2023, chatbot_helper._ver) ]
 
 # level4 - 1. Autodesk 제품 설치 방법 (버전 X)
-autodeskInstList = [ autodesk_helper._fusion, 
-                     autodesk_helper._dwgTrueView ]
+# autodeskInstMsgList = [ autodesk_helper._fusion_Msg, autodesk_helper._dwgTrueView_Msg ]
 
 
 # level5 - 1. Autodesk 제품 설치 언어 
-autodeskInstLangButtonList = [ autodesk_helper._kor, 
-                               autodesk_helper._eng ]
+autodeskInstLangButtonList = [ autodesk_helper._kor, autodesk_helper._eng ]
 
 # endregion 1. Autodesk 제품 설치 문의
 
 # region 2. 상상진화 BOX 제품 설치 문의
 
 # level3 - 2. 상상진화 BOX 제품 설치 문의 버튼 리스트 (텍스트 + 메세지)
-boxInstButtonList = [ box_helper._revitBOX, 
-                      box_helper._autoCADBOX, 
-                      box_helper._energyBOX ]
+boxInstButtonList = [ (box_helper._revitBOX, box_helper._revitBOX_Msg), 
+                      (box_helper._autoCADBOX, box_helper._autoCADBOX_Msg), 
+                      (box_helper._energyBOX, box_helper._energyBOX_Msg) ]
 
 # level4 - 2. 상상진화 BOX 제품 버전 (1. Revit BOX만 해당)
 boxInstVerButtonList = [ (chatbot_helper._2026, chatbot_helper._ver), 
@@ -115,9 +112,12 @@ boxInstVerButtonList = [ (chatbot_helper._2026, chatbot_helper._ver),
                          (chatbot_helper._2022, chatbot_helper._ver), 
                          (chatbot_helper._2021, chatbot_helper._ver) ]
 
+# level4 - 2. 상상진화 BOX 제품 버전 메세지(텍스트) 리스트 
+# TODO : 2. 상상진화 BOX 제품 버전 대상에 1. Revit BOX만 포함되어 있지만 추후 필요시 버전 대상 제품 추가 예정 (2025.04.08 minjae)
+boxInstVerMsgList = [ box_helper._revitBOX_Msg, ]
+
 # level4 - 2. 상상진화 BOX 설치 방법 (버전 X)
-boxInstList = [ box_helper._autoCADBOX,
-                box_helper._energyBOX ]
+# boxInstMsgList = [ box_helper._autoCADBOX_Msg, box_helper._energyBOX_Msg ]
 
 # endregion 2. 상상진화 BOX 제품 설치 문의
 
@@ -335,19 +335,19 @@ def responseChatbot(request,response_queue,filename):
                             "해당 제품군은 아직 준비 중입니다.\n"+
                             "추가 문의 필요시\n"+
                             "상상플렉스 커뮤니티(https://www.ssflex.co.kr/community/open)\n"+
-                            "혹은 기술지원번호(02-3474-2263)로 문의 부탁드립니다.")   # 예외를 발생시킴
+                            "문의 부탁드립니다.")   # 예외를 발생시킴
 
         # level4 - 1. Autodesk 제품 버전 Language Pack
-        # TODO : 파이썬 in 연산자 사용하여 리스트 객체 "autodeskInstLangPackVerList" 안에 사용자가 클릭한 버튼 텍스트 메시지 (예) 1. 오토캐드 
+        # TODO : 파이썬 in 연산자 사용하여 리스트 객체 "autodeskInstLangPackVerMsgList" 안에 사용자가 클릭한 버튼 텍스트 메시지 (예) 오토캐드 
         #        존재하는 경우 아래 elif 절 로직 실행할 수 있도록 구현 (2025.03.28 minjae) 
         # 참고 URL - https://hun931018.tistory.com/55
         # 참고 2 URL - https://miki3079.tistory.com/40
         # 참고 3 URL - https://cigiko.cafe24.com/python-%EB%A6%AC%EC%8A%A4%ED%8A%B8%EC%9D%98-%EA%B8%B0%EC%B4%88-%EC%97%B0%EC%82%B0%EB%93%A4/
-        # 리스트 객체 "autodeskInstLangPackVerList" 내부에 사용자가 클릭한 버튼 텍스트 메시지 "request["userRequest"]["utterance"]" 값 존재하는 경우
-        elif request["userRequest"]["utterance"] in autodeskInstLangPackVerList:
+        # 리스트 객체 "autodeskInstLangPackVerMsgList" 내부에 사용자가 클릭한 버튼 텍스트 메시지 "request["userRequest"]["utterance"]" 값 존재하는 경우
+        elif request["userRequest"]["utterance"] in autodeskInstLangPackVerMsgList:
             dbReset(filename)    
             userRequest_Msg = request["userRequest"]["utterance"]
-            response_queue.put(kakao.level4_autodeskInstLangPackVer_textCardResponseFormat(userRequest_Msg, autodeskInstLangPackVerButtonList))
+            response_queue.put(kakao.level4_autodeskInstLangPackVer_quickRepliesResponseFormat(userRequest_Msg, autodeskInstLangPackVerButtonList))
 
             save_log = "level4 - 1. Autodesk 제품 버전 Language Pack 테스트"
             # chatbot_logger._info(save_log)
@@ -355,24 +355,25 @@ def responseChatbot(request,response_queue,filename):
             dbSave(filename, save_log)
 
         # level4 - 1. Autodesk 제품 버전
-        # TODO : 파이썬 in 연산자 사용하여 리스트 객체 "autodeskInstVerList" 안에 사용자가 클릭한 버튼 텍스트 메시지 (예) 12. Twinmotion
+        # TODO : 파이썬 in 연산자 사용하여 리스트 객체 "autodeskInstVerMsgList" 안에 사용자가 클릭한 버튼 텍스트 메시지 (예) 12. Twinmotion
         #        존재하는 경우 아래 elif 절 로직 실행할 수 있도록 구현 (2025.03.28 minjae) 
         # 참고 URL - https://hun931018.tistory.com/55
         # 참고 2 URL - https://miki3079.tistory.com/40
         # 참고 3 URL - https://cigiko.cafe24.com/python-%EB%A6%AC%EC%8A%A4%ED%8A%B8%EC%9D%98-%EA%B8%B0%EC%B4%88-%EC%97%B0%EC%82%B0%EB%93%A4/
-        # 리스트 객체 "autodeskInstVerList" 내부에 사용자가 클릭한 버튼 텍스트 메시지 "request["userRequest"]["utterance"]" 값 존재하는 경우
-        elif request["userRequest"]["utterance"] in autodeskInstVerList:
+        # 리스트 객체 "autodeskInstVerMsgList" 내부에 사용자가 클릭한 버튼 텍스트 메시지 "request["userRequest"]["utterance"]" 값 존재하는 경우
+        elif request["userRequest"]["utterance"] in autodeskInstVerMsgList:
             dbReset(filename)    
             userRequest_Msg = request["userRequest"]["utterance"]
-            response_queue.put(kakao.level4_autodeskInstVer_textCardResponseFormat(userRequest_Msg, autodeskInstVerButtonList))
+            response_queue.put(kakao.level4_autodeskInstVer_quickRepliesResponseFormat(userRequest_Msg, autodeskInstVerButtonList))
 
             save_log = "level4 - 1. Autodesk 제품 버전 테스트"
             # chatbot_logger._info(save_log)
             chatbot_logger.log_write(chatbot_logger._info, "", save_log)
             dbSave(filename, save_log)
 
-        # level4 - 2. 상상진화 BOX 제품 버전 (1. Revit BOX 만 해당)
-        elif box_helper._revitBOX == request["userRequest"]["utterance"]:
+        # level4 - 2. 상상진화 BOX 제품 버전 
+        # TODO : 2. 상상진화 BOX 제품 버전 대상에 1. Revit BOX만 포함되어 있지만 추후 필요시 버전 대상 제품 추가 예정 (2025.04.08 minjae)
+        elif request["userRequest"]["utterance"] in boxInstVerMsgList:
             dbReset(filename)    
             userRequest_Msg = request["userRequest"]["utterance"]
             response_queue.put(kakao.level4_boxInstVer_quickRepliesResponseFormat(userRequest_Msg, boxInstVerButtonList))
@@ -396,10 +397,10 @@ def responseChatbot(request,response_queue,filename):
             dbSave(filename, save_log)
 
         # level4 - 1. Autodesk 제품 버전 X
-        # TODO : 파이썬 in 연산자 사용하여 리스트 객체 "autodeskInstList" 안에 사용자가 클릭한 버튼 텍스트 메시지 (예) '10. Fusion'
+        # TODO : 파이썬 in 연산자 사용하여 리스트 객체 "autodeskInstMsgList" 안에 사용자가 클릭한 버튼 텍스트 메시지 (예) 'Fusion'
         #        존재하는 경우 아래 elif 절 로직 실행할 수 있도록 구현 (2025.03.28 minjae) 
-        # 리스트 객체 "autodeskInstList" 내부에 사용자가 클릭한 버튼 텍스트 메시지 "request["userRequest"]["utterance"]" 값 존재하는 경우
-        # elif request["userRequest"]["utterance"] in autodeskInstList:
+        # 리스트 객체 "autodeskInstMsgList" 내부에 사용자가 클릭한 버튼 텍스트 메시지 "request["userRequest"]["utterance"]" 값 존재하는 경우
+        # elif request["userRequest"]["utterance"] in autodeskInstMsgList:
         #     dbReset(filename)    
         #     userRequest_Msg = request["userRequest"]["utterance"]
         #     message = f'{userRequest_Msg} {chatbot_helper._softwareInstMethod}'
