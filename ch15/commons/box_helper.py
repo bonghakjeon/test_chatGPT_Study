@@ -1,5 +1,5 @@
 # level3 - 2. 상상진화 BOX 제품 설치 문의 버튼 리스트 - label(텍스트) + 메세지(텍스트)
-_brandName = 'BOX -'
+_commandType = 'BOX -'
 
 # label(텍스트)
 _revitBOX = '1. Revit BOX'

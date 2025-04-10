@@ -1,5 +1,5 @@
 # 공통 - 메세지(텍스트)
-_brandName = 'Autodesk -'
+_commandType = 'Autodesk -'
 
 # level3 - 1. Autodesk 제품 설치 문의 버튼 리스트 - label(텍스트) + 메세지(텍스트)
 # label(텍스트)

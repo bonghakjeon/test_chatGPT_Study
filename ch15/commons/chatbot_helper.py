@@ -26,6 +26,9 @@ _2022 = '2022'
 _2021 = '2021'
 
 # 폴더 "modules" -> 카카오 API 전용 모듈 "kakao"
+_level1Title = '[상담시간 안내]'
+_level1Description = '▶ 기술지원문의\n월~금요일: 오전 9시 ~ 오후 6시\n주말, 공휴일: 휴무'
+_level2Title = '상담 유형'
 _selectInfo = '안내가 필요한 항목 선택해주세요.'
 _selectVersion = '버전을 선택해주세요.'
 _selectLang = '설치 언어를 선택해주세요.'

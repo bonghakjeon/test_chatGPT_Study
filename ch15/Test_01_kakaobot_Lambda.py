@@ -13,6 +13,7 @@ import time   # ChatGPT 답변 시간 계산하기 위해 패키지 "time" 불�
 import queue as q   # 자료구조 queue(deque 기반) 이용하기 위해 패키지 "queue" 불러오기
 import os   # 답변 결과를 테스트 파일로 저장할 때 경로 생성해야 해서 패키지 "os" 불러오기
 from modules import kakao # 폴더 "modules" -> 카카오 API 전용 모듈 "kakao" 불러오기 
+from modules import test_kakao # 폴더 "modules" -> 테스트용 카카오 API 전용 모듈 "kakao" 불러오기 
 from modules import logger # 폴더 "modules" -> 로그 설정 전용 모듈 "logger" 불러오기 
 
 botLogger=logger.configureLogger()
@@ -274,7 +275,7 @@ def responseOpenAI(request,response_queue,filename):
 
         # elif imagineBuilderList[accountIndex] in request["userRequest"]["utterance"]:
         #     dbReset(filename)  
-        #     response_queue.put(kakao.level2AccountquickRepliesResponseFormat())
+        #     response_queue.put(test_kakao.level2AccountquickRepliesResponseFormat())
 
         #     save_log = "level3"+ " " + "3. 계정&제품배정 문의"
 
@@ -284,7 +285,7 @@ def responseOpenAI(request,response_queue,filename):
         # elif imagineBuilderList[autoDeskVersionIndex] in request["userRequest"]["utterance"]:
         #     dbReset(filename)  
         #     messageText = imagineBuilderList[languageIndex]  
-        #     response_queue.put(kakao.level3VersionquickRepliesResponseFormat(messageText))
+        #     response_queue.put(test_kakao.level3VersionquickRepliesResponseFormat(messageText))
 
         #     # botLogger.debug("[테스트] 챗봇 사용자 입력 정보 - %s" %request["userRequest"])
 
@@ -296,7 +297,7 @@ def responseOpenAI(request,response_queue,filename):
         # elif imagineBuilderList[revitVersionIndex]  in request["userRequest"]["utterance"]:
         #     dbReset(filename)   
         #     messageText = '레빗 제품 설치 방법 안내'   
-        #     response_queue.put(kakao.level3VersionquickRepliesResponseFormat(messageText))
+        #     response_queue.put(test_kakao.level3VersionquickRepliesResponseFormat(messageText))
 
         #     # 텍스트 파일('/tmp/botlog.txt')에 임시로 저장함.
         #     save_log = "level4"+ " " + "레빗 버전 문의"

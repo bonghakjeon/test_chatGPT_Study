@@ -15,11 +15,12 @@ import os           # 답변 결과를 테스트 파일로 저장할 때 경로 
 
 from commons import autodesk_helper  # 폴더 "commons" -> 1. Autodesk 제품 전용 도움말 텍스트 "autodesk_helper" 불러오기
 from commons import box_helper       # 폴더 "commons" -> 2. 상상진화 BOX 제품 전용 도움말 텍스트 "box_helper" 불러오기
+from commons import account_helper   # 폴더 "commons" -> 3. 계정&제품배정 문의 전용 도움말 텍스트 "account_helper" 불러오기
 from commons import chatbot_helper   # 폴더 "commons" -> 카카오 챗봇 전용 도움말 텍스트 "chatbot_helper" 불러오기
 
 from modules import kakao            # 폴더 "modules" -> 카카오 API 전용 모듈 "kakao" 불러오기 
 from modules import logger           # 폴더 "modules" -> 로그 설정 전용 모듈 "logger" 불러오기 
-from modules import openai_logger    # 폴더 "modules" -> OpenAI 리턴 값 로그 작성 모듈 "openai_logger" 불러오기
+from modules import openAI_logger    # 폴더 "modules" -> OpenAI 리턴 값 로그 작성 모듈 "openAI_logger" 불러오기
 from modules import chatbot_logger   # 폴더 "modules" -> 카카오 챗봇 로그 작성 모듈 "chatbot_logger" 불러오기
 
 openaiObjName = 'openai'  # OpenAI Logger 객체 이름 'openai'
@@ -43,8 +44,6 @@ level1ButtonList = [ chatbot_helper._autodeskProduct,
 
 # level2 - 서브 카테고리 버튼 리스트 (텍스트 + 메세지)
 subCatButtonList = [ chatbot_helper._askInst, ]
-
-# region 1. Autodesk 제품 설치 문의
 
 # level3 - 1. Autodesk 제품 설치 문의 버튼 리스트 - label(텍스트) + 메세지(텍스트)
 autodeskInstButtonList = [ (autodesk_helper._autoCAD, autodesk_helper._autoCAD_Msg), 
@@ -95,10 +94,6 @@ autodeskInstVerButtonList = [ (chatbot_helper._2026, chatbot_helper._ver),
 # level5 - 1. Autodesk 제품 설치 언어 
 autodeskInstLangButtonList = [ autodesk_helper._kor, autodesk_helper._eng ]
 
-# endregion 1. Autodesk 제품 설치 문의
-
-# region 2. 상상진화 BOX 제품 설치 문의
-
 # level3 - 2. 상상진화 BOX 제품 설치 문의 버튼 리스트 (텍스트 + 메세지)
 boxInstButtonList = [ (box_helper._revitBOX, box_helper._revitBOX_Msg), 
                       (box_helper._autoCADBOX, box_helper._autoCADBOX_Msg), 
@@ -119,15 +114,17 @@ boxInstVerMsgList = [ box_helper._revitBOX_Msg, ]
 # level4 - 2. 상상진화 BOX 설치 방법 (버전 X)
 # boxInstMsgList = [ box_helper._autoCADBOX_Msg, box_helper._energyBOX_Msg ]
 
-# endregion 2. 상상진화 BOX 제품 설치 문의
-
-# region 3. 계정&제품배정 문의
-
-# level3 - 3. 계정&제품배정 문의
-accountButtonList = [ '1. 오토데스크 계정 생성', '2. 계정 비밀번호 분실', '3. 사용가능 제품확인', '4. 신규인원 제품배정', '5. 기존인원 제품제거', '6. 사용자 그룹관리 안내', '7. 만료일 계약내역 확인', '8. 관리자 역할 재지정', '9. 사용량 보고서 확인', '10. 기타 문의' ]
-
-# endregion 3. 계정&제품배정 문의
-
+# level3 - 3. 계정&제품배정 문의 버튼 리스트 - label(텍스트) + 메세지(텍스트)
+accountButtonList = [ (account_helper._accountCreation, account_helper._accountCreation_Msg), 
+                      (account_helper._forgetPassword, account_helper._forgetPassword_Msg), 
+                      (account_helper._availableProduct, account_helper._availableProduct_Msg), 
+                      (account_helper._newMember_assignProduct, account_helper._newMember_assignProduct_Msg), 
+                      (account_helper._currentMember_removeProduct, account_helper._currentMember_removeProduct_Msg), 
+                      (account_helper._manageUserGroup, account_helper._manageUserGroup_Msg), 
+                      (account_helper._expirationDate_contractDetail, account_helper._expirationDate_contractDetail_Msg), 
+                      (account_helper._redesignateManager, account_helper._redesignateManager_Msg), 
+                      (account_helper._usageReport, account_helper._usageReport_Msg), 
+                      (account_helper._anyQuestion, account_helper._anyQuestion_Msg) ]
 
 ###### 메인 함수 단계 #######
 
@@ -214,7 +211,7 @@ def responseChatbot(request,response_queue,filename):
                     bot_res = last_update[4:]
 
                     # TODO : 아래 주석친 OpenAI 로그 기록 코드 필요시 사용 예정 (2025.03.27 minjae)
-                    # openai_logger.log_write(openai_logger._info, "시간 5초 초과 후 ChatGPT 텍스트 답변", bot_res)
+                    # openAI_logger.log_write(openAI_logger._info, "시간 5초 초과 후 ChatGPT 텍스트 답변", bot_res)
                     response_queue.put(textResponseFormat(bot_res))
                 dbReset(filename)   
 
@@ -233,7 +230,7 @@ def responseChatbot(request,response_queue,filename):
             bot_res = getTextFromGPT(prompt)
             response_queue.put(textResponseFormat(bot_res))
 
-            openai_logger.log_write(openai_logger._info, "ChatGPT 텍스트 답변", bot_res)
+            openAI_logger.log_write(openAI_logger._info, "ChatGPT 텍스트 답변", bot_res)
             save_log = f"ask {str(bot_res)}" 
             dbSave(filename, save_log)
 
@@ -246,8 +243,9 @@ def responseChatbot(request,response_queue,filename):
             raise Exception("[테스트] [오류 안내]\n"+
                             "오류 사유 : 테스트 오류\n"+
                             "문제 해결이 어려울시\n"+ 
-                            "상상플렉스 커뮤니티(https://www.ssflex.co.kr/community/open)\n"+
-                            "혹은 기술지원번호(02-3474-2263)로 문의 부탁드립니다.")   # 예외를 발생시킴
+                            "상상플렉스 커뮤니티\n"+
+                            "(https://www.ssflex.co.kr/community/open)\n"+
+                            "문의 부탁드립니다.")   # 예외를 발생시킴
 
         # level1 - 상담시간 안내
         elif chatbot_helper._level1 in request["userRequest"]["utterance"]:
@@ -281,12 +279,24 @@ def responseChatbot(request,response_queue,filename):
             chatbot_logger.log_write(chatbot_logger._info, "", save_log)
             dbSave(filename, save_log)
 
+        # level2 - 3. 계정&제품배정 문의
+        elif chatbot_helper._askAccount == request["userRequest"]["utterance"]:
+            dbReset(filename)    
+            userRequest_Msg = request["userRequest"]["utterance"]
+            response_queue.put(kakao.level2_account_quickRepliesResponseFormat(accountButtonList))
+
+            save_log = f"level2 - {userRequest_Msg} 테스트"
+            # chatbot_logger._info(save_log)
+            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
+            dbSave(filename, save_log)
+
         # level3 - 1. Autodesk 제품 설치 문의
         elif chatbot_helper._askInst_autodeskProduct == request["userRequest"]["utterance"]:
             dbReset(filename)  
+            userRequest_Msg = request["userRequest"]["utterance"]
             response_queue.put(kakao.level3_autodesk_quickRepliesResponseFormat(autodeskInstButtonList))
 
-            save_log = "level3 - 1. Autodesk 제품 설치 문의 테스트"
+            save_log = f"level3 - {userRequest_Msg} 테스트"
             # chatbot_logger._info(save_log)
             chatbot_logger.log_write(chatbot_logger._info, "", save_log)
             dbSave(filename, save_log)
@@ -294,9 +304,10 @@ def responseChatbot(request,response_queue,filename):
         # level3 - 더보기 1. Autodesk 제품 설치 문의
         elif chatbot_helper._seeMore == request["userRequest"]["utterance"]:
             dbReset(filename)  
+            userRequest_Msg = request["userRequest"]["utterance"]
             response_queue.put(kakao.level3_autodesk_quickRepliesResponseFormat(autodeskSeeMoreButtonList))
 
-            save_log = "level3 - 더보기 1. Autodesk 제품 설치 문의 테스트"
+            save_log = f"level3 - {userRequest_Msg} {chatbot_helper._askInst_autodeskProduct} 테스트"
             # chatbot_logger._info(save_log)
             chatbot_logger.log_write(chatbot_logger._info, "", save_log)
             dbSave(filename, save_log)
@@ -304,19 +315,10 @@ def responseChatbot(request,response_queue,filename):
         # level3 - 2. 상상진화 BOX 제품 설치 문의
         elif chatbot_helper._askInst_boxProduct == request["userRequest"]["utterance"]:
             dbReset(filename)    
+            userRequest_Msg = request["userRequest"]["utterance"]
             response_queue.put(kakao.level3_box_textCardResponseFormat(boxInstButtonList))
 
-            save_log = "level3 - 2. 상상진화 BOX 제품 설치 문의 테스트"
-            # chatbot_logger._info(save_log)
-            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
-            dbSave(filename, save_log)
-
-        # level3 - 3. 계정&제품배정 문의
-        elif chatbot_helper._askAccount == request["userRequest"]["utterance"]:
-            dbReset(filename)    
-            response_queue.put(kakao.level3_account_quickRepliesResponseFormat(accountButtonList))
-
-            save_log = "level3 - 3. 계정&제품배정 문의 테스트"
+            save_log = f"level3 - {userRequest_Msg} 테스트"
             # chatbot_logger._info(save_log)
             chatbot_logger.log_write(chatbot_logger._info, "", save_log)
             dbSave(filename, save_log)
@@ -334,7 +336,8 @@ def responseChatbot(request,response_queue,filename):
                             "사유 : 제품없음.\n"+
                             "해당 제품군은 아직 준비 중입니다.\n"+
                             "추가 문의 필요시\n"+
-                            "상상플렉스 커뮤니티(https://www.ssflex.co.kr/community/open)\n"+
+                            "상상플렉스 커뮤니티\n"
+                            "(https://www.ssflex.co.kr/community/open)\n"+
                             "문의 부탁드립니다.")   # 예외를 발생시킴
 
         # level4 - 1. Autodesk 제품 버전 Language Pack
@@ -349,7 +352,7 @@ def responseChatbot(request,response_queue,filename):
             userRequest_Msg = request["userRequest"]["utterance"]
             response_queue.put(kakao.level4_autodeskInstLangPackVer_quickRepliesResponseFormat(userRequest_Msg, autodeskInstLangPackVerButtonList))
 
-            save_log = "level4 - 1. Autodesk 제품 버전 Language Pack 테스트"
+            save_log = f"level4 - {userRequest_Msg} 테스트"
             # chatbot_logger._info(save_log)
             chatbot_logger.log_write(chatbot_logger._info, "", save_log)
             dbSave(filename, save_log)
@@ -366,7 +369,7 @@ def responseChatbot(request,response_queue,filename):
             userRequest_Msg = request["userRequest"]["utterance"]
             response_queue.put(kakao.level4_autodeskInstVer_quickRepliesResponseFormat(userRequest_Msg, autodeskInstVerButtonList))
 
-            save_log = "level4 - 1. Autodesk 제품 버전 테스트"
+            save_log = f"level4 - {userRequest_Msg} 테스트"
             # chatbot_logger._info(save_log)
             chatbot_logger.log_write(chatbot_logger._info, "", save_log)
             dbSave(filename, save_log)
@@ -378,7 +381,7 @@ def responseChatbot(request,response_queue,filename):
             userRequest_Msg = request["userRequest"]["utterance"]
             response_queue.put(kakao.level4_boxInstVer_quickRepliesResponseFormat(userRequest_Msg, boxInstVerButtonList))
 
-            save_log = "level4 - 2. 상상진화 BOX 제품 버전 (1. Revit BOX 만 해당) 테스트"
+            save_log = f"level4 - {userRequest_Msg} 테스트"
             # chatbot_logger._info(save_log)
             chatbot_logger.log_write(chatbot_logger._info, "", save_log)
             dbSave(filename, save_log)
@@ -391,10 +394,61 @@ def responseChatbot(request,response_queue,filename):
             userRequest_Msg = request["userRequest"]["utterance"]
             response_queue.put(kakao.level5_autodeskInstLang_textCardResponseFormat(userRequest_Msg, autodeskInstLangButtonList))
 
-            save_log = "level5 - 1. Autodesk 제품 설치 언어 테스트"
+            save_log = f"level5 - {userRequest_Msg} 테스트"
             # chatbot_logger._info(save_log)
             chatbot_logger.log_write(chatbot_logger._info, "", save_log)
             dbSave(filename, save_log)
+
+        # [OpenAI] level6 - 1. Autodesk 제품 설치 방법
+        elif autodesk_helper._commandType in request["userRequest"]["utterance"] and chatbot_helper._softwareInstMethod in request["userRequest"]["utterance"]: 
+            dbReset(filename)    
+            userRequest_Msg = request["userRequest"]["utterance"]
+            response_queue.put(kakao.simple_textResponseFormat("[구현 예정!] " + userRequest_Msg))
+
+            # TODO : 아래 주석친 OpenAI 관련 기능 추후 구현 예정 (2025.04.10 minjae) 
+            # result_Msg = openAI.(userRequest_Msg)
+            # response_queue.put(kakao.simple_textResponseFormat(result_Msg))
+
+            save_log = f"level6 - {userRequest_Msg} 테스트"
+            # chatbot_logger._info(save_log)
+            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
+            dbSave(filename, save_log)   
+
+        # [OpenAI] level6 - 2. 상상진화 BOX 제품 설치 방법
+        elif box_helper._commandType in request["userRequest"]["utterance"] and chatbot_helper._softwareInstMethod in request["userRequest"]["utterance"]: 
+            dbReset(filename)    
+            userRequest_Msg = request["userRequest"]["utterance"]
+            response_queue.put(kakao.simple_textResponseFormat("[구현 예정!] " + userRequest_Msg))
+
+            # TODO : 아래 주석친 OpenAI 관련 기능 추후 구현 예정 (2025.04.10 minjae)
+            # result_Msg = openAI.(userRequest_Msg)
+            # response_queue.put(kakao.simple_textResponseFormat(result_Msg))
+
+            save_log = f"level6 - {userRequest_Msg} 테스트"
+            # chatbot_logger._info(save_log)
+            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
+            dbSave(filename, save_log) 
+
+        # [OpenAI] level3 - 3. 계정&제품배정 문의
+        elif account_helper._commandType in request["userRequest"]["utterance"]: 
+            dbReset(filename)    
+            userRequest_Msg = request["userRequest"]["utterance"]
+
+            # '기타 문의'일 경우 
+            if account_helper._anyQuestion_Msg in request["userRequest"]["utterance"]:
+                result_Msg = account_helper._anyQuestion_result_Msg
+                response_queue.put(kakao.simple_textResponseFormat(result_Msg))
+            # '기타 문의' 제외한 다른 문의일 경우
+            else:
+                response_queue.put(kakao.simple_textResponseFormat("[구현 예정!] " + userRequest_Msg))
+                # TODO : 아래 주석친 OpenAI 관련 기능 추후 구현 예정 (2025.04.10 minjae)
+                # result_Msg = openAI.(userRequest_Msg)
+                # response_queue.put(kakao.simple_textResponseFormat(result_Msg))
+
+            save_log = f"level3 - {userRequest_Msg} 테스트"
+            # chatbot_logger._info(save_log)
+            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
+            dbSave(filename, save_log) 
 
         # level4 - 1. Autodesk 제품 버전 X
         # TODO : 파이썬 in 연산자 사용하여 리스트 객체 "autodeskInstMsgList" 안에 사용자가 클릭한 버튼 텍스트 메시지 (예) 'Fusion'
