@@ -1,0 +1,37 @@
+[2025-03-06 10:47:41] ==========PROGRAM START==========
+[2025-03-06 10:47:41] ==========PROGRAM FINISH==========
+[2025-03-06 10:53:33] ==========PROGRAM START==========
+[2025-03-06 10:53:33] ==========PROGRAM FINISH==========
+[2025-03-06 11:25:32] ==========PROGRAM START==========
+[2025-03-06 11:25:32] ==========TEST INFO==========
+[2025-03-06 11:25:32] ==========TEST WARNING==========
+[2025-03-06 11:25:32] ==========PROGRAM FINISH==========
+[2025-03-06 11:26:15] ==========TEST WARNING==========
+[2025-03-06 11:30:36] ==========TEST WARNING==========
+[2025-03-06 11:30:36] ==========TEST ERROR==========
+[2025-03-06 11:30:36] ==========TEST CRITICAL==========
+[2025-03-06 11:42:18] testLogger.py ==========PROGRAM START==========
+[2025-03-06 11:42:18] testLogger.py ==========TEST INFO==========
+[2025-03-06 11:42:18] testLogger.py ==========TEST WARNING==========
+[2025-03-06 11:42:18] testLogger.py ==========TEST ERROR==========
+[2025-03-06 11:42:18] testLogger.py ==========TEST CRITICAL==========
+[2025-03-06 11:42:18] testLogger.py ==========PROGRAM FINISH==========
+[2025-03-06 11:43:50] testLogger.py <module> ==========PROGRAM START==========
+[2025-03-06 11:43:50] testLogger.py <module> ==========TEST INFO==========
+[2025-03-06 11:43:50] testLogger.py <module> ==========TEST WARNING==========
+[2025-03-06 11:43:50] testLogger.py <module> ==========TEST ERROR==========
+[2025-03-06 11:43:50] testLogger.py <module> ==========TEST CRITICAL==========
+[2025-03-06 11:43:50] testLogger.py <module> ==========PROGRAM FINISH==========
+[2025-03-06 11:45:09] testLogger.py <module> ==========PROGRAM START==========
+[2025-03-06 11:45:09] testLogger.py <module> ==========TEST INFO==========
+[2025-03-06 11:45:09] testLogger.py <module> ==========TEST WARNING==========
+[2025-03-06 11:45:09] testLogger.py <module> ==========TEST ERROR==========
+[2025-03-06 11:45:09] testLogger.py <module> ==========TEST CRITICAL==========
+[2025-03-06 11:45:09] testLogger.py <module> ==========PROGRAM FINISH==========
+[2025-03-06 11:46:40] testLogger.py test ==========TEST INFO==========
+[2025-03-06 11:46:40] testLogger.py test ==========TEST WARNING==========
+[2025-03-06 11:46:40] testLogger.py test ==========TEST ERROR==========
+[2025-03-06 11:46:40] testLogger.py test ==========TEST CRITICAL==========
+[2025-03-06 11:51:00] testLogger.py <module> ==========PROGRAM START==========
+[2025-03-06 11:51:05] testLogger.py <module> 5th number has been passed!!
+[2025-03-06 11:51:09] testLogger.py <module> ==========PROGRAM FINISH==========

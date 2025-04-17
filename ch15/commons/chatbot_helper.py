@@ -1,4 +1,7 @@
 # 공통 
+# OpenAI Logger 객체 이름 'openai'
+openai_objname = 'openai'  
+
 # (주)상상진화 각 레벨(level)별 처리할 업무 프로세스
 _level1 = '/level1'
 _autodeskProduct = '1. Autodesk 제품'

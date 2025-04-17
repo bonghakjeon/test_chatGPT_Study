@@ -45,3 +45,12 @@ _langPack = 'Language Pack'
 # level5 - 1. Autodesk 제품 설치 언어
 _kor = '한국어'
 _eng = 'English'
+
+# 파이썬 절대 경로와 상대 경로
+# 참고 URL - https://wikidocs.net/153154
+
+# PDF 파일 경로 
+_autoCAD_2024_Kor_PDF_Filepath = './src/pdf/B-01-31-00 (AutoCAD 2024 Korean Installation Guide).pdf'
+
+# TEXT 파일 경로 
+_autoCAD_2024_Kor_TEXT_Filepath = './src/text/B-01-31-00 (AutoCAD 2024 Korean Installation Guide).txt'

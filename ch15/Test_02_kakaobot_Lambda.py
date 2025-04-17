@@ -20,22 +20,25 @@ from commons import chatbot_helper   # 폴더 "commons" -> 카카오 챗봇 전�
 
 from modules import kakao            # 폴더 "modules" -> 카카오 API 전용 모듈 "kakao" 불러오기 
 from modules import logger           # 폴더 "modules" -> 로그 설정 전용 모듈 "logger" 불러오기 
+from modules import openAI           # 폴더 "modules" -> OpenAI 전용 모듈 "openAI" 불러오기 
 from modules import openAI_logger    # 폴더 "modules" -> OpenAI 리턴 값 로그 작성 모듈 "openAI_logger" 불러오기
 from modules import chatbot_logger   # 폴더 "modules" -> 카카오 챗봇 로그 작성 모듈 "chatbot_logger" 불러오기
+from modules import pdf              # 폴더 "modules" -> PDF 전용 모듈 "pdf" 불러오기
+from modules import text             # 폴더 "modules" -> TEXT 전용 모듈 "text" 불러오기
 
-openaiObjName = 'openai'  # OpenAI Logger 객체 이름 'openai'
-bot_logger=logger.configureLogger(openaiObjName)
+# 로그 초기 설정 
+bot_logger = logger.configureLogger(chatbot_helper.openai_objname)
 
-# OpenAI API KEY
-# 테스트용 카카오톡 챗봇 채팅방에서 
-# ChatGPT와 통신하기 위해 OpenAI API 키 입력
-# 아마존 웹서비스(AWS) 함수 lambda_handler -> 환경변수로 저장한 OpenAI API 키 'OPENAI_API' 불러오기
-openai.api_key = os.environ['OPENAI_API']
-# 비쥬얼스튜디오코드(VSCode) cmd 터미널창에 
-# 아래처럼 최신 버전 OpenAI 라이브러리 "openai" 설치 및 함수 "getTextFromGPTNew" 구현 및 사용하기
-# pip install openai
-OPENAI_KEY = os.environ['OPENAI_API'] 
-# OPENAI_KEY = os.getenv("OPENAI_KEY")
+# PDF 파일(Autodesk, Box, Account)에 작성된 청크(chunk) 단위 텍스트 가져오기 
+# autodesk_chunks = pdf.getChunksFromPDF(autodesk_helper._autoCAD_2024_Kor_PDF_Filepath) 
+# box_chunks = pdf.getChunksFromPDF(box_helper._revitBOX_2024_Kor_PDF_Filepath)
+# account_chunks = pdf.getChunksFromPDF(account_helper._change_account_password_PDF_Filepath) 
+
+# TEXT 파일(Autodesk, Box, Account)에 작성된 모든 텍스트 가져오기 
+autodesk_response = text.getResponseFromText(autodesk_helper._autoCAD_2024_Kor_TEXT_Filepath) 
+box_response = text.getResponseFromText(box_helper._revitBOX_2024_Kor_TEXT_Filepath)
+account_response = text.getResponseFromText(account_helper._change_account_password_TEXT_Filepath) 
+
 
 # level1 - '/level1' 버튼 리스트 (텍스트 + 메세지) 
 level1ButtonList = [ chatbot_helper._autodeskProduct, 
@@ -206,20 +209,20 @@ def responseChatbot(request,response_queue,filename):
                 kind = last_update.split()[0]  
                 if kind == "img":
                     bot_res, prompt = last_update.split()[1],last_update.split()[2]
-                    response_queue.put(imageResponseFormat(bot_res,prompt))
+                    response_queue.put(kakao.image_ResponseFormat(bot_res,prompt))
                 else:
                     bot_res = last_update[4:]
 
                     # TODO : 아래 주석친 OpenAI 로그 기록 코드 필요시 사용 예정 (2025.03.27 minjae)
                     # openAI_logger.log_write(openAI_logger._info, "시간 5초 초과 후 ChatGPT 텍스트 답변", bot_res)
-                    response_queue.put(textResponseFormat(bot_res))
+                    response_queue.put(kakao.simple_textResponseFormat(bot_res))
                 dbReset(filename)   
 
         elif '/img' in request["userRequest"]["utterance"]:
             dbReset(filename)   
             prompt = request["userRequest"]["utterance"].replace("/img", "")
-            bot_res = getImageURLFromDALLE(prompt)
-            response_queue.put(imageResponseFormat(bot_res,prompt))
+            bot_res = openAI.getImageURLFromDALLE(prompt)
+            response_queue.put(kakao.image_ResponseFormat(bot_res,prompt))
 
             save_log = f"img {str(bot_res)} {str(prompt)}"
             dbSave(filename, save_log)
@@ -227,8 +230,8 @@ def responseChatbot(request,response_queue,filename):
         elif '/ask' in request["userRequest"]["utterance"]:
             dbReset(filename)  
             prompt = request["userRequest"]["utterance"].replace("/ask", "")
-            bot_res = getTextFromGPT(prompt)
-            response_queue.put(textResponseFormat(bot_res))
+            bot_res = openAI.getMessageFromGPT(prompt)
+            response_queue.put(kakao.simple_textResponseFormat(bot_res))
 
             openAI_logger.log_write(openAI_logger._info, "ChatGPT 텍스트 답변", bot_res)
             save_log = f"ask {str(bot_res)}" 
@@ -246,6 +249,48 @@ def responseChatbot(request,response_queue,filename):
                             "상상플렉스 커뮤니티\n"+
                             "(https://www.ssflex.co.kr/community/open)\n"+
                             "문의 부탁드립니다.")   # 예외를 발생시킴
+        
+        # [OpenAI] API 테스트 기능 
+        # elif '/openai' in request["userRequest"]["utterance"]:
+        #     dbReset(filename)
+        #     prompt = request["userRequest"]["utterance"].replace("/openai", "")  
+
+        #     if autodesk_helper._commandType in prompt:   # Autodesk 제품 설치 방법 
+        #         # chunks = autodesk_chunks 
+        #         response = autodesk_response
+        #     elif box_helper._commandType in prompt:      # 상상진화 BOX 제품 설치 방법 
+        #         # chunks = box_chunks
+        #         response = box_response
+        #     elif account_helper._commandType in prompt:  # 계정&제품배정 문의
+        #         # chunks = account_chunks
+        #         response = account_response
+
+        #     # 함수 len 사용하여 리스트 객체 chunks 안에 존재하는 요소의 갯수가 0보다 큰 경우
+        #     # 함수 len 사용하여 문자열 response 길이가 0보다 큰 경우
+        #     # if len(chunks) > 0:
+        #     if len(response) > 0:
+        #         # bot_res = openAI.getMessageFromChunks(chunks, prompt)
+        #         bot_res = response
+        #         response_queue.put(kakao.simple_textResponseFormat(bot_res))
+        #         openAI_logger.log_write(openAI_logger._info, "", bot_res)
+
+        #         save_log = f"openai {str(bot_res)}" 
+        #         dbSave(filename, save_log)
+            
+        #     else:
+        #         bot_res = ''
+        #         openAI_logger.log_write(openAI_logger._error, "", bot_res)
+
+        #         save_log = f"openai {str(bot_res)}" 
+        #         dbSave(filename, save_log)
+        
+        #         raise Exception("[오류 안내]\n"+
+        #                         # "사유 : PDF 파일 기반 텍스트(chunk) 존재 안 함.\n"+
+        #                         "사유 : TEXT 파일 존재 안 함.\n"+
+        #                         "추가 문의 필요시\n"+
+        #                         "상상플렉스 커뮤니티\n"+
+        #                         "(https://www.ssflex.co.kr/community/open)\n"+
+        #                         "문의 부탁드립니다.")   # 예외를 발생시킴       
 
         # level1 - 상담시간 안내
         elif chatbot_helper._level1 in request["userRequest"]["utterance"]:
@@ -403,7 +448,10 @@ def responseChatbot(request,response_queue,filename):
         elif autodesk_helper._commandType in request["userRequest"]["utterance"] and chatbot_helper._softwareInstMethod in request["userRequest"]["utterance"]: 
             dbReset(filename)    
             userRequest_Msg = request["userRequest"]["utterance"]
-            response_queue.put(kakao.simple_textResponseFormat("[구현 예정!] " + userRequest_Msg))
+            if autodesk_helper._autoCAD_Msg in userRequest_Msg and chatbot_helper._2024 in userRequest_Msg and autodesk_helper._kor in userRequest_Msg: 
+                response_queue.put(kakao.simple_textResponseFormat(autodesk_response))
+            else:
+                response_queue.put(kakao.simple_textResponseFormat("[구현 예정!] " + userRequest_Msg))
 
             # TODO : 아래 주석친 OpenAI 관련 기능 추후 구현 예정 (2025.04.10 minjae) 
             # result_Msg = openAI.(userRequest_Msg)
@@ -418,7 +466,10 @@ def responseChatbot(request,response_queue,filename):
         elif box_helper._commandType in request["userRequest"]["utterance"] and chatbot_helper._softwareInstMethod in request["userRequest"]["utterance"]: 
             dbReset(filename)    
             userRequest_Msg = request["userRequest"]["utterance"]
-            response_queue.put(kakao.simple_textResponseFormat("[구현 예정!] " + userRequest_Msg))
+            if box_helper._revitBOX_Msg in userRequest_Msg and chatbot_helper._2024 in userRequest_Msg:
+                response_queue.put(kakao.simple_textResponseFormat(box_response))
+            else:
+                response_queue.put(kakao.simple_textResponseFormat("[구현 예정!] " + userRequest_Msg))
 
             # TODO : 아래 주석친 OpenAI 관련 기능 추후 구현 예정 (2025.04.10 minjae)
             # result_Msg = openAI.(userRequest_Msg)
@@ -435,10 +486,12 @@ def responseChatbot(request,response_queue,filename):
             userRequest_Msg = request["userRequest"]["utterance"]
 
             # '기타 문의'일 경우 
-            if account_helper._anyQuestion_Msg in request["userRequest"]["utterance"]:
-                result_Msg = account_helper._anyQuestion_result_Msg
-                response_queue.put(kakao.simple_textResponseFormat(result_Msg))
-            # '기타 문의' 제외한 다른 문의일 경우
+            if account_helper._anyQuestion_Msg in userRequest_Msg:
+                response_queue.put(kakao.simple_textResponseFormat(account_helper._anyQuestion_response))
+            # '계정 비밀번호 분실'일 경우 
+            elif account_helper._forgetPassword_Msg in userRequest_Msg:
+                response_queue.put(kakao.simple_textResponseFormat(account_response))
+            # '기타 문의', '계정 비밀번호 분실' 제외한 다른 문의일 경우
             else:
                 response_queue.put(kakao.simple_textResponseFormat("[구현 예정!] " + userRequest_Msg))
                 # TODO : 아래 주석친 OpenAI 관련 기능 추후 구현 예정 (2025.04.10 minjae)
@@ -495,35 +548,6 @@ def timeover():
             "messageText":"생각 다 끝났나요?"
          }]}}
     return response   
-
-# 메세지 전송 (카카오톡 서버로 텍스트 전송)
-def textResponseFormat(bot_response):
-    response = {'version': '2.0', 'template': {
-    'outputs': [{"simpleText": {"text": bot_response}}], 'quickReplies': []}}
-    return response   
-
-# 그림 전송 (카카오톡 서버로 그림 전송)
-def imageResponseFormat(bot_response, prompt):
-    output_text = prompt+"내용에 관한 이미지 입니다"
-    response = {'version': '2.0', 'template': {
-    'outputs': [{"simpleImage": {"imageUrl": bot_response,"altText": output_text}}], 'quickReplies': []}}
-    return response  
-
-# ChatGPT 텍스트 응답 
-def getTextFromGPT(prompt):  
-    messages_prompt = [{"role": "system", "content": 'You are a thoughtful assistant. Respond to all input in 300 words and answer in korea'}]
-    messages_prompt += [{"role": "user", "content": prompt}]
-
-    response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=messages_prompt)
-
-    message = response["choices"][0]["message"]["content"]
-    return message   
-
-# DALLE2 이미지 응답
-def getImageURLFromDALLE(prompt):
-    response = openai.Image.create(prompt=prompt,n=1,size="512x512")
-    image_url = response['data'][0]['url']
-    return image_url  
 
 # 아마존 웹서비스(AWS) 람다 함수(Lambda Function) -> 텍스트 파일("/tmp/botlog.txt")에 적힌 로그(텍스트) 초기화  
 def dbReset(filename):

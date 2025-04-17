@@ -27,19 +27,19 @@ def log_write(log_type, content, bot_res):
     current_time = datetime.now()
     formatted_current_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
 
-    # 현재 함수 openai_log_write 호출하는 상위 파일명 가져오기 
+    # 현재 함수 log_write 호출하는 상위 파일명 가져오기 
     # 참고 URL - https://docs.python.org/ko/3.8/library/inspect.html
 	# 참고 2 URL - https://louky0714.tistory.com/144
     # 참고 3 URL - https://wikidocs.net/3717
     current_filepath = inspect.currentframe().f_back.f_code.co_filename
     current_filename = os.path.basename(current_filepath)
 
-    # 현재 함수 openai_log_write 호출하는 상위 함수명 가져오기
+    # 현재 함수 log_write 호출하는 상위 함수명 가져오기
     # 참고 URL - https://docs.python.org/ko/3.8/library/inspect.html
     # 참고 2 URL - https://louky0714.tistory.com/144    
     current_function_name = inspect.currentframe().f_back.f_code.co_name
 
-    # 현재 함수 openai_log_write 호출하는 상위 파일 라인번호(라인위치) 가져오기 
+    # 현재 함수 log_write 호출하는 상위 파일 라인번호(라인위치) 가져오기 
     # 참고 URL - https://docs.python.org/ko/3.8/library/inspect.html
     current_lineno = inspect.currentframe().f_back.f_lineno
 

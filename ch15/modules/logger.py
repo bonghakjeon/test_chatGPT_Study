@@ -73,7 +73,7 @@ import openai    # OPENAI 패키지 openai 불러오기 (ChatGPT, DALLE.2 사용
 # 참고 2 URL - https://stackoverflow.com/questions/37703609/using-python-logging-with-aws-lambda
 
 # 로그 초기 설정
-def configureLogger(openaiObjName):
+def configureLogger(openai_objname):
     # 1. logger instance 설정 - logger의 이름(__name__)을 명시해서 logger instance 설정하기 
     # TODO : 아래 주석친 코드 처럼 함수 logging.getLogger 안에 인자값으로 __name__ 작성시 
     #        아마존 웹서비스(AWS) 람다 함수 (Lambda Function) -> CloudWatch -> Live Tail에서 
@@ -88,7 +88,7 @@ def configureLogger(openaiObjName):
 
     # chatbot_logger = logging.getLogger("chatbot")
     # openai_logger = logging.getLogger("openai")
-    openai_logger = logging.getLogger(openaiObjName)
+    openai_logger = logging.getLogger(openai_objname)
 
     # 2. formatter 생성 (로그 작성/출력/저장에 사용할 날짜 + 로그 메시지)
     # 로그 기록 포맷(format) 예시 - [2025-03-06 10:53:33]

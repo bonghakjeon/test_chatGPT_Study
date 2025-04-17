@@ -1,0 +1,3 @@
+[2025-03-06 13:40:06] testLogger.py <module> ==========PROGRAM START==========
+[2025-03-06 13:40:11] testLogger.py <module> 5th number has been passed!!
+[2025-03-06 13:40:15] testLogger.py <module> ==========PROGRAM FINISH==========

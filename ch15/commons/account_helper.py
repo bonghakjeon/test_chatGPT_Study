@@ -26,4 +26,13 @@ _usageReport_Msg = '사용량 보고서 확인'
 _anyQuestion_Msg = '기타 문의'
 
 # '기타 문의' 답변 메세지(텍스트)
-_anyQuestion_result_Msg = '[기타 문의 안내]\n상상플렉스 커뮤니티\n(https://www.ssflex.co.kr/community/open)\n문의 부탁드립니다.'
+_anyQuestion_response = '[기타 문의 안내]\n상상플렉스 커뮤니티\n(https://www.ssflex.co.kr/community/open)\n문의 부탁드립니다.'
+
+# 파이썬 절대 경로와 상대 경로
+# 참고 URL - https://wikidocs.net/153154
+
+# PDF 파일 경로 
+_change_account_password_PDF_Filepath = './src/pdf/D-02-00-00 (Change Autodesk Account Password).pdf'
+
+# TEXT 파일 경로 
+_change_account_password_TEXT_Filepath = './src/text/D-02-00-00 (Change Autodesk Account Password).txt'

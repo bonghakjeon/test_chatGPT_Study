@@ -8,27 +8,11 @@ from commons import box_helper       # 폴더 "commons" -> 2. 상상진화 BOX �
 from commons import account_helper   # 폴더 "commons" -> 3. 계정&제품배정 문의 전용 도움말 텍스트 "account_helper" 불러오기
 from commons import chatbot_helper   # 폴더 "commons" -> 카카오 챗봇 전용 도움말 텍스트 "chatbot_helper" 불러오기
 
-# 오류 메세지 전송 (카카오톡 서버로 텍스트 전송)
-# 오류 발생시 카카오톡 서버로 오류 메시지 전송 전용 JSON 형태(Format)의 데이터로 전달하기 위한 함수
-# 카카오톡 채팅방에 보낼 메시지를 매개변수 errorMessage에 input으로 받기(인자로 전달)
-def error_textResponseFormat(errorMessage):
-    # 카카오톡 채팅방에 보낼 메시지가 저장된 매개변수 errorMessage를
-    # 아래 json 형태(Format)에서 항목 'outputs' -> 항목 "simpleText" -> "text"안에 매개변수 errorMessage을 넣어서
-    # 변수 response에 저장하기 
-    response = {
-        'version': '2.0', 
-        'template': {
-            'outputs': [
-                {
-                    "simpleText": {
-                        "text": errorMessage
-                    }
-                }
-            ], 
-            'quickReplies': []
-        }
-    }
-    return response   # 카카오톡 서버로 답변 전송하기 위해 답변 전송 전용 JSON 형태(Format)의 데이터가 저장된 변수 response 리턴  
+# 메세지 전송 (카카오톡 서버로 텍스트 전송)
+# def textResponseFormat(bot_response):
+#     response = {'version': '2.0', 'template': {
+#     'outputs': [{"simpleText": {"text": bot_response}}], 'quickReplies': []}}
+#     return response   
 
 # 텍스트 메세지 전송 (카카오톡 서버로 텍스트 전송)
 # 카카오톡 채팅방에 보낼 메시지를 매개변수 message에 input으로 받기(인자로 전달)
@@ -49,7 +33,37 @@ def simple_textResponseFormat(message):
             'quickReplies': []
         }
     }
-    return response   # 카카오톡 서버로 답변 전송하기 위해 답변 전송 전용 JSON 형태(Format)의 데이터가 저장된 변수 response 리턴  
+    return response   # 카카오톡 서버로 답변 전송하기 위해 답변 전송 전용 JSON 형태(Format)의 데이터가 저장된 변수 response 리턴 
+
+# 그림 전송 (카카오톡 서버로 그림 전송)
+# def imageResponseFormat(bot_response, prompt):
+def image_ResponseFormat(bot_response, prompt):
+    output_text = prompt+"내용에 관한 이미지 입니다"
+    response = {'version': '2.0', 'template': {
+    'outputs': [{"simpleImage": {"imageUrl": bot_response,"altText": output_text}}], 'quickReplies': []}}
+    return response   
+
+# 오류 메세지 전송 (카카오톡 서버로 텍스트 전송)
+# 오류 발생시 카카오톡 서버로 오류 메시지 전송 전용 JSON 형태(Format)의 데이터로 전달하기 위한 함수
+# 카카오톡 채팅방에 보낼 메시지를 매개변수 errorMessage에 input으로 받기(인자로 전달)
+def error_textResponseFormat(errorMessage):
+    # 카카오톡 채팅방에 보낼 메시지가 저장된 매개변수 errorMessage를
+    # 아래 json 형태(Format)에서 항목 'outputs' -> 항목 "simpleText" -> "text"안에 매개변수 errorMessage을 넣어서
+    # 변수 response에 저장하기 
+    response = {
+        'version': '2.0', 
+        'template': {
+            'outputs': [
+                {
+                    "simpleText": {
+                        "text": errorMessage
+                    }
+                }
+            ], 
+            'quickReplies': []
+        }
+    }
+    return response   # 카카오톡 서버로 답변 전송하기 위해 답변 전송 전용 JSON 형태(Format)의 데이터가 저장된 변수 response 리턴    
 
 # level1 텍스트 카드 (카카오톡 서버로 텍스트 전송)
 # 상담시간 안내
