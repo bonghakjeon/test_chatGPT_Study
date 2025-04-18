@@ -50,7 +50,7 @@ _eng = 'English'
 # 참고 URL - https://wikidocs.net/153154
 
 # PDF 파일 경로 
-_autoCAD_2024_Kor_PDF_Filepath = './src/pdf/B-01-31-00 (AutoCAD 2024 Korean Installation Guide).pdf'
+_autoCAD_2024_kor_PDF_Filepath = './src/pdf/B-01-31-00 (AutoCAD 2024 Korean Installation Guide).pdf'
 
 # TEXT 파일 경로 
-_autoCAD_2024_Kor_TEXT_Filepath = './src/text/B-01-31-00 (AutoCAD 2024 Korean Installation Guide).txt'
+_autoCAD_2024_kor_TEXT_Filepath = './src/text/B-01-31-00 (AutoCAD 2024 Korean Installation Guide).txt'

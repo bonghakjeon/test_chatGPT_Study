@@ -39,8 +39,19 @@ def simple_textResponseFormat(message):
 # def imageResponseFormat(bot_response, prompt):
 def image_ResponseFormat(bot_response, prompt):
     output_text = prompt+"내용에 관한 이미지 입니다"
-    response = {'version': '2.0', 'template': {
-    'outputs': [{"simpleImage": {"imageUrl": bot_response,"altText": output_text}}], 'quickReplies': []}}
+    response = {
+        'version': '2.0', 
+        'template': {
+            'outputs': [
+                {
+                    "simpleImage": {
+                        "imageUrl": bot_response,
+                        "altText": output_text
+                    }
+                }], 
+                'quickReplies': []
+        }
+    }
     return response   
 
 # 오류 메세지 전송 (카카오톡 서버로 텍스트 전송)
@@ -67,14 +78,14 @@ def error_textResponseFormat(errorMessage):
 
 # level1 텍스트 카드 (카카오톡 서버로 텍스트 전송)
 # 상담시간 안내
-def level1_textCardResponseFormat(level1ButtonList):
-    level1Buttons = []
+def level1_consult_textCardResponseFormat(consultBtnList):
+    consultButtons = []
     # 상담시간 안내 3가지 버튼 텍스트 및 메세지 추가 
-    for level1Label in level1ButtonList:
-        level1Buttons.append({
+    for consultLabel in consultBtnList:
+        consultButtons.append({
             "action": "message",
-            "label": level1Label,
-            "messageText": level1Label
+            "label": consultLabel,
+            "messageText": consultLabel
         })
         
     response = {
@@ -83,9 +94,9 @@ def level1_textCardResponseFormat(level1ButtonList):
             "outputs": [
                 {
                     "textCard": {
-                        "title": chatbot_helper._level1Title,
-                        "description": chatbot_helper._level1Description,
-                        "buttons": level1Buttons
+                        "title": chatbot_helper._consultTitle,
+                        "description": chatbot_helper._consultDescription,
+                        "buttons": consultButtons
                     }
                 }
             ],
@@ -102,14 +113,14 @@ def level1_textCardResponseFormat(level1ButtonList):
 
 # level2 텍스트 카드 (카카오톡 서버로 텍스트 전송)
 # 상담유형 안내
-def level2_textCardResponseFormat(userRequest_Msg, level2ButtonList):
-    level2Buttons = []
+def level2_textCardResponseFormat(userRequest_Msg, level2BtnList):
+    subCatButtons = []
     # 상담유형 안내 버튼 텍스트 및 메세지 추가 
-    for level2Label in level2ButtonList:
-        level2Buttons.append({
+    for subCatLabel in level2BtnList:
+        subCatButtons.append({
             "action": "message",
-            "label": level2Label,
-            "messageText": f"{userRequest_Msg} {level2Label}"
+            "label": subCatLabel,
+            "messageText": f"{userRequest_Msg} {subCatLabel}"
         })
         
     response = {
@@ -118,9 +129,9 @@ def level2_textCardResponseFormat(userRequest_Msg, level2ButtonList):
             "outputs": [
                 {
                     "textCard": {
-                        "title": chatbot_helper._level2Title,
+                        "title": chatbot_helper._subCatTitle,
                         "description": chatbot_helper._selectInfo,
-                        "buttons" : level2Buttons
+                        "buttons" : subCatButtons
                     }
                 }
             ],
@@ -136,10 +147,10 @@ def level2_textCardResponseFormat(userRequest_Msg, level2ButtonList):
 
 # level2 바로가기 그룹 전송 (카카오톡 서버로 텍스트 전송)
 # 3. 계정&제품배정 문의
-def level2_account_quickRepliesResponseFormat(accountButtonList):
+def level2_account_quickRepliesResponseFormat(accountBtnList):
     accountQuickReplies = []
     # 3. 계정&제품배정 문의 10가지 버튼 텍스트 및 메세지 추가 
-    for (accountLabel, accountMsg) in accountButtonList:
+    for (accountLabel, accountMsg) in accountBtnList:
         messageText = f"{account_helper._commandType} {accountMsg}"
         accountQuickReplies.append({
             "action": "message",
@@ -168,10 +179,10 @@ def level2_account_quickRepliesResponseFormat(accountButtonList):
 
 # level3 바로가기 그룹 전송 (카카오톡 서버로 텍스트 전송)
 # 1. Autodesk 제품 설치 문의
-def level3_autodesk_quickRepliesResponseFormat(autodeskInstButtonList):
+def level3_autodesk_quickRepliesResponseFormat(autodeskInstBtnList):
     autodeskQuickReplies = []
     # 1. Autodesk 제품 설치 문의 버튼 텍스트 및 메세지 추가 
-    for (autodeskInstLabel, autodeskInstMsg) in autodeskInstButtonList:
+    for (autodeskInstLabel, autodeskInstMsg) in autodeskInstBtnList:
         # TODO : 파이썬 삼항 연산자 사용하여 버튼 텍스트 메시지 변수 messageText에 값 할당 기능 구현 (2025.03.28 minjae)
         # 참고 URL - https://wikidocs.net/20701
         # 파이썬 삼항 연산자 사용하여 버튼이 "Fusion", "DWGTrueView"일 경우 안내할 버전이 없으므로 값 f"{autodesk_helper._commandType} {autodeskInstMsg} {chatbot_helper._softwareInstMethod}" 할당
@@ -203,10 +214,10 @@ def level3_autodesk_quickRepliesResponseFormat(autodeskInstButtonList):
 
 # level3 텍스트 카드 (카카오톡 서버로 텍스트 전송)
 # 2. 상상진화 BOX 제품 설치 문의
-def level3_box_textCardResponseFormat(boxInstButtonList):
+def level3_box_textCardResponseFormat(boxInstBtnList):
     boxInstButtons = []
     # 2. 상상진화 BOX 제품 설치 문의 3가지 버튼 텍스트 및 메세지 추가 
-    for (boxInstLabel, boxInstMsg) in boxInstButtonList:
+    for (boxInstLabel, boxInstMsg) in boxInstBtnList:
         # TODO : 파이썬 삼항 연산자 사용하여 버튼 텍스트 메시지 변수 messageText에 값 할당 기능 구현 (2025.03.28 minjae)
         # 참고 URL - https://wikidocs.net/20701
         # 파이썬 삼항 연산자 사용하여 버튼이 'CAD BOX', 'Energy BOX'일 경우 안내할 버전이 없으므로 값 f"{box_helper._commandType} {boxInstMsg} {chatbot_helper._softwareInstMethod}" 할당
@@ -242,10 +253,10 @@ def level3_box_textCardResponseFormat(boxInstButtonList):
 
 # level4 바로가기 그룹 전송 (카카오톡 서버로 텍스트 전송)
 # level4 - 1. Autodesk 제품 버전 Language Pack 
-def level4_autodeskInstLangPackVer_quickRepliesResponseFormat(userRequest_Msg, autodeskInstLangPackVerButtonList):
+def level4_autodeskInstLangPackVer_quickRepliesResponseFormat(userRequest_Msg, autodeskInstLangPackVerBtnList):
     autodeskInstLangPackVerQuickReplies = []
     # level4 - 1. Autodesk 제품 버전 Language Pack 버튼 텍스트 및 메세지 추가 
-    for (autodeskInstLangPackVerLabel, ver, langPack) in autodeskInstLangPackVerButtonList:
+    for (autodeskInstLangPackVerLabel, ver, langPack) in autodeskInstLangPackVerBtnList:
         autodeskInstLangPackVerQuickReplies.append({
             "action": "message",
             "label": autodeskInstLangPackVerLabel,
@@ -274,10 +285,10 @@ def level4_autodeskInstLangPackVer_quickRepliesResponseFormat(userRequest_Msg, a
 
 # level4 바로가기 그룹 전송 (카카오톡 서버로 텍스트 전송)
 # level4 - 1. Autodesk 제품 버전 
-def level4_autodeskInstVer_quickRepliesResponseFormat(userRequest_Msg, autodeskInstVerButtonList):
+def level4_autodeskInstVer_quickRepliesResponseFormat(userRequest_Msg, autodeskInstVerBtnList):
     autodeskInstVerQuickReplies = []
     # level4 - 1. Autodesk 제품 버전 (Language Pack X) 버튼 텍스트 및 메세지 추가 
-    for (autodeskInstVerLabel, ver) in autodeskInstVerButtonList:
+    for (autodeskInstVerLabel, ver) in autodeskInstVerBtnList:
         autodeskInstVerQuickReplies.append({
             "action": "message",
             "label": autodeskInstVerLabel,
@@ -306,10 +317,10 @@ def level4_autodeskInstVer_quickRepliesResponseFormat(userRequest_Msg, autodeskI
 
 # level4 바로가기 그룹 전송 (카카오톡 서버로 텍스트 전송)
 # level4 - 2. 상상진화 BOX 제품 버전 (1. Revit BOX만 해당)
-def level4_boxInstVer_quickRepliesResponseFormat(userRequest_Msg, boxInstVerButtonList):
+def level4_boxInstVer_quickRepliesResponseFormat(userRequest_Msg, boxInstVerBtnList):
     boxInstVerQuickReplies = []
     # 2. 상상진화 BOX 제품 버전 (1. Revit BOX만 해당) 6가지 버튼 텍스트 및 메세지 추가 
-    for (boxInstVerLabel, ver) in boxInstVerButtonList:
+    for (boxInstVerLabel, ver) in boxInstVerBtnList:
         boxInstVerQuickReplies.append({
             "action": "message",
             "label": boxInstVerLabel,
@@ -337,10 +348,10 @@ def level4_boxInstVer_quickRepliesResponseFormat(userRequest_Msg, boxInstVerButt
 
 # level5 텍스트 카드 (카카오톡 서버로 텍스트 전송)
 # level5 - 1. Autodesk 제품 설치 언어
-def level5_autodeskInstLang_textCardResponseFormat(userRequest_Msg, autodeskInstLangButtonList):
+def level5_autodeskInstLang_textCardResponseFormat(userRequest_Msg, autodeskInstLangBtnList):
     autodeskInstLangButtons = []
     # level5 - 1. Autodesk 제품 설치 언어 버튼 텍스트 및 메세지 추가 
-    for autodeskInstLangLabel in autodeskInstLangButtonList:
+    for autodeskInstLangLabel in autodeskInstLangBtnList:
         autodeskInstLangButtons.append({
             "action": "message",
             "label": autodeskInstLangLabel,

@@ -12,12 +12,14 @@ def getResponseFromText(filepath):
         # TEXT 파일에 작성된 모든 텍스트 가져오기
         # with 문 사용해서 TEXT 파일 자동으로 열고(open) 닫기(close)
         # 참고 URL - https://wikidocs.net/26
-        with open(filepath, "r") as file:
+        with open(filepath, 'r') as file:
             response = file.read()
-            chatbot_logger.log_write(chatbot_logger._info, "TEXT 파일에 작성된 모든 텍스트", response)
+            filename = os.path.basename(filepath)   # 텍스트 파일 이름 가져오기 
+            # chatbot_logger.log_write(chatbot_logger._info, f'TEXT 파일({filename}) 작성된 텍스트', response)
+            chatbot_logger.log_write(chatbot_logger._info, f'{filename} 작성된 텍스트 가져오기', 'OK!')
     # 해당 경로에 PDF 파일 존재 안 하는 경우
     else: 
         response = ''
-        chatbot_logger.log_write(chatbot_logger._info, "TEXT 파일 존재 안 함.", response)
+        chatbot_logger.log_write(chatbot_logger._info, f'{filename} 존재 안 함.', response)
 
     return response

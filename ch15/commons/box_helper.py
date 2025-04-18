@@ -15,7 +15,7 @@ _energyBOX_Msg = 'Energy BOX'
 # 참고 URL - https://wikidocs.net/153154
 
 # PDF 파일 경로 
-_revitBOX_2024_Kor_PDF_Filepath = './src/pdf/C-01-30-00 (RevitBOX 2024 Installation Guide).pdf'
+_revitBOX_2024_PDF_Filepath = './src/pdf/C-01-30-00 (RevitBOX 2024 Installation Guide).pdf'
 
 # TEXT 파일 경로 
-_revitBOX_2024_Kor_TEXT_Filepath = './src/text/C-01-30-00 (RevitBOX 2024 Installation Guide).txt'
+_revitBOX_2024_TEXT_Filepath = './src/text/C-01-30-00 (RevitBOX 2024 Installation Guide).txt'

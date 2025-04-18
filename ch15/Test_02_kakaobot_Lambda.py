@@ -26,6 +26,16 @@ from modules import chatbot_logger   # 폴더 "modules" -> 카카오 챗봇 로�
 from modules import pdf              # 폴더 "modules" -> PDF 전용 모듈 "pdf" 불러오기
 from modules import text             # 폴더 "modules" -> TEXT 전용 모듈 "text" 불러오기
 
+from enum import Enum   # Enum 열거형 구조체 사용하기 위해 패키지 "enum" 불러오기 
+
+# 데이터 유효성 검사 
+# Enum 열거형 구조체 클래스 
+# 참고 URL - https://wikidocs.net/105486
+# 참고 2 URL - https://docs.python.org/ko/3.9/library/enum.html#functional-api
+class EnumValidator(Enum):
+    NONE = 0        # 데이터 존재 안 함.
+    EXISTENCE = 1   # 데이터 존재함.
+
 # 로그 초기 설정 
 bot_logger = logger.configureLogger(chatbot_helper.openai_objname)
 
@@ -34,37 +44,37 @@ bot_logger = logger.configureLogger(chatbot_helper.openai_objname)
 # box_chunks = pdf.getChunksFromPDF(box_helper._revitBOX_2024_Kor_PDF_Filepath)
 # account_chunks = pdf.getChunksFromPDF(account_helper._change_account_password_PDF_Filepath) 
 
-# TEXT 파일(Autodesk, Box, Account)에 작성된 모든 텍스트 가져오기 
-autodesk_response = text.getResponseFromText(autodesk_helper._autoCAD_2024_Kor_TEXT_Filepath) 
-box_response = text.getResponseFromText(box_helper._revitBOX_2024_Kor_TEXT_Filepath)
-account_response = text.getResponseFromText(account_helper._change_account_password_TEXT_Filepath) 
+# 중간보고 LOT 용도 - TEXT 파일(Autodesk, Box, Account)에 작성된 모든 텍스트 가져오기 
+autoCAD_2024_kor_response = text.getResponseFromText(autodesk_helper._autoCAD_2024_kor_TEXT_Filepath) 
+revitBOX_2024_response = text.getResponseFromText(box_helper._revitBOX_2024_TEXT_Filepath)
+change_account_password_response = text.getResponseFromText(account_helper._change_account_password_TEXT_Filepath) 
 
 
 # level1 - '/level1' 버튼 리스트 (텍스트 + 메세지) 
-level1ButtonList = [ chatbot_helper._autodeskProduct, 
-                     chatbot_helper._boxProduct, 
-                     chatbot_helper._askAccount ]   
+consultBtnList = [ chatbot_helper._autodeskProduct, 
+                   chatbot_helper._boxProduct, 
+                   chatbot_helper._askAccount ]   
 
 # level2 - 서브 카테고리 버튼 리스트 (텍스트 + 메세지)
-subCatButtonList = [ chatbot_helper._askInst, ]
+subCatBtnList = [ chatbot_helper._askInst, ]
 
 # level3 - 1. Autodesk 제품 설치 문의 버튼 리스트 - label(텍스트) + 메세지(텍스트)
-autodeskInstButtonList = [ (autodesk_helper._autoCAD, autodesk_helper._autoCAD_Msg), 
-                           (autodesk_helper._revit, autodesk_helper._revit_Msg), 
-                           (autodesk_helper._navisworks_Manage, autodesk_helper._navisworks_Manage_Msg), 
-                           (autodesk_helper._navisworks_Simulate, autodesk_helper._navisworks_Simulate_Msg), 
-                           (autodesk_helper._civil_3D, autodesk_helper._civil_3D_Msg), 
-                           (autodesk_helper._advance_Steel, autodesk_helper._advance_Steel_Msg), 
-                           (autodesk_helper._inventor, autodesk_helper._inventor_Msg), 
-                           (autodesk_helper._3ds_Max, autodesk_helper._3ds_Max_Msg), 
-                           (autodesk_helper._maya, autodesk_helper._maya_Msg), 
-                           (chatbot_helper._seeMore, chatbot_helper._seeMore) ]
+autodeskInstBtnList = [ (autodesk_helper._autoCAD, autodesk_helper._autoCAD_Msg), 
+                        (autodesk_helper._revit, autodesk_helper._revit_Msg), 
+                        (autodesk_helper._navisworks_Manage, autodesk_helper._navisworks_Manage_Msg), 
+                        (autodesk_helper._navisworks_Simulate, autodesk_helper._navisworks_Simulate_Msg), 
+                        (autodesk_helper._civil_3D, autodesk_helper._civil_3D_Msg), 
+                        (autodesk_helper._advance_Steel, autodesk_helper._advance_Steel_Msg), 
+                        (autodesk_helper._inventor, autodesk_helper._inventor_Msg), 
+                        (autodesk_helper._3ds_Max, autodesk_helper._3ds_Max_Msg), 
+                        (autodesk_helper._maya, autodesk_helper._maya_Msg), 
+                        (chatbot_helper._seeMore, chatbot_helper._seeMore) ]
 # level3 - 더보기 버튼 텍스트 리스트  - label(텍스트) + 메세지(텍스트)
-autodeskSeeMoreButtonList = [ (autodesk_helper._fusion, autodesk_helper._fusion_Msg), 
-                              (autodesk_helper._infraWorks, autodesk_helper._infraWorks_Msg), 
-                              (autodesk_helper._twinmotion, autodesk_helper._twinmotion_Msg),  
-                              (autodesk_helper._dwgTrueView, autodesk_helper._dwgTrueView_Msg),  
-                              (autodesk_helper._navisworks_Converter, autodesk_helper._navisworks_Converter_Msg) ]
+autodeskSeeMoreBtnList = [ (autodesk_helper._fusion, autodesk_helper._fusion_Msg), 
+                           (autodesk_helper._infraWorks, autodesk_helper._infraWorks_Msg), 
+                           (autodesk_helper._twinmotion, autodesk_helper._twinmotion_Msg),  
+                           (autodesk_helper._dwgTrueView, autodesk_helper._dwgTrueView_Msg),  
+                           (autodesk_helper._navisworks_Converter, autodesk_helper._navisworks_Converter_Msg) ]
 
 # level4 - 1. Autodesk 제품 버전 Language Pack 메세지(텍스트) 리스트 
 autodeskInstLangPackVerMsgList = [ autodesk_helper._autoCAD_Msg, 
@@ -77,38 +87,38 @@ autodeskInstLangPackVerMsgList = [ autodesk_helper._autoCAD_Msg,
                                    autodesk_helper._3ds_Max_Msg, 
                                    autodesk_helper._infraWorks_Msg ]
 
-autodeskInstLangPackVerButtonList = [ (chatbot_helper._2026, chatbot_helper._ver, autodesk_helper._langPack), 
-                                      (chatbot_helper._2025, chatbot_helper._ver, autodesk_helper._langPack), 
-                                      (chatbot_helper._2024, chatbot_helper._ver, autodesk_helper._langPack), 
-                                      (chatbot_helper._2023, chatbot_helper._ver, autodesk_helper._langPack) ]
+autodeskInstLangPackVerBtnList = [ (chatbot_helper._2026, chatbot_helper._ver, autodesk_helper._langPack), 
+                                   (chatbot_helper._2025, chatbot_helper._ver, autodesk_helper._langPack), 
+                                   (chatbot_helper._2024, chatbot_helper._ver, autodesk_helper._langPack), 
+                                   (chatbot_helper._2023, chatbot_helper._ver, autodesk_helper._langPack) ]
 
 # level4 - 1. Autodesk 제품 버전 메세지(텍스트) 리스트 
 autodeskInstVerMsgList = [ autodesk_helper._maya_Msg, autodesk_helper._twinmotion_Msg, autodesk_helper._navisworks_Converter_Msg ]
 
-autodeskInstVerButtonList = [ (chatbot_helper._2026, chatbot_helper._ver), 
-                              (chatbot_helper._2025, chatbot_helper._ver), 
-                              (chatbot_helper._2024, chatbot_helper._ver), 
-                              (chatbot_helper._2023, chatbot_helper._ver) ]
+autodeskInstVerBtnList = [ (chatbot_helper._2026, chatbot_helper._ver), 
+                           (chatbot_helper._2025, chatbot_helper._ver), 
+                           (chatbot_helper._2024, chatbot_helper._ver), 
+                           (chatbot_helper._2023, chatbot_helper._ver) ]
 
 # level4 - 1. Autodesk 제품 설치 방법 (버전 X)
 # autodeskInstMsgList = [ autodesk_helper._fusion_Msg, autodesk_helper._dwgTrueView_Msg ]
 
 
 # level5 - 1. Autodesk 제품 설치 언어 
-autodeskInstLangButtonList = [ autodesk_helper._kor, autodesk_helper._eng ]
+autodeskInstLangBtnList = [ autodesk_helper._kor, autodesk_helper._eng ]
 
 # level3 - 2. 상상진화 BOX 제품 설치 문의 버튼 리스트 (텍스트 + 메세지)
-boxInstButtonList = [ (box_helper._revitBOX, box_helper._revitBOX_Msg), 
-                      (box_helper._autoCADBOX, box_helper._autoCADBOX_Msg), 
-                      (box_helper._energyBOX, box_helper._energyBOX_Msg) ]
+boxInstBtnList = [ (box_helper._revitBOX, box_helper._revitBOX_Msg), 
+                   (box_helper._autoCADBOX, box_helper._autoCADBOX_Msg), 
+                   (box_helper._energyBOX, box_helper._energyBOX_Msg) ]
 
 # level4 - 2. 상상진화 BOX 제품 버전 (1. Revit BOX만 해당)
-boxInstVerButtonList = [ (chatbot_helper._2026, chatbot_helper._ver), 
-                         (chatbot_helper._2025, chatbot_helper._ver), 
-                         (chatbot_helper._2024, chatbot_helper._ver), 
-                         (chatbot_helper._2023, chatbot_helper._ver), 
-                         (chatbot_helper._2022, chatbot_helper._ver), 
-                         (chatbot_helper._2021, chatbot_helper._ver) ]
+boxInstVerBtnList = [ (chatbot_helper._2026, chatbot_helper._ver), 
+                      (chatbot_helper._2025, chatbot_helper._ver), 
+                      (chatbot_helper._2024, chatbot_helper._ver), 
+                      (chatbot_helper._2023, chatbot_helper._ver), 
+                      (chatbot_helper._2022, chatbot_helper._ver), 
+                      (chatbot_helper._2021, chatbot_helper._ver) ]
 
 # level4 - 2. 상상진화 BOX 제품 버전 메세지(텍스트) 리스트 
 # TODO : 2. 상상진화 BOX 제품 버전 대상에 1. Revit BOX만 포함되어 있지만 추후 필요시 버전 대상 제품 추가 예정 (2025.04.08 minjae)
@@ -118,16 +128,16 @@ boxInstVerMsgList = [ box_helper._revitBOX_Msg, ]
 # boxInstMsgList = [ box_helper._autoCADBOX_Msg, box_helper._energyBOX_Msg ]
 
 # level3 - 3. 계정&제품배정 문의 버튼 리스트 - label(텍스트) + 메세지(텍스트)
-accountButtonList = [ (account_helper._accountCreation, account_helper._accountCreation_Msg), 
-                      (account_helper._forgetPassword, account_helper._forgetPassword_Msg), 
-                      (account_helper._availableProduct, account_helper._availableProduct_Msg), 
-                      (account_helper._newMember_assignProduct, account_helper._newMember_assignProduct_Msg), 
-                      (account_helper._currentMember_removeProduct, account_helper._currentMember_removeProduct_Msg), 
-                      (account_helper._manageUserGroup, account_helper._manageUserGroup_Msg), 
-                      (account_helper._expirationDate_contractDetail, account_helper._expirationDate_contractDetail_Msg), 
-                      (account_helper._redesignateManager, account_helper._redesignateManager_Msg), 
-                      (account_helper._usageReport, account_helper._usageReport_Msg), 
-                      (account_helper._anyQuestion, account_helper._anyQuestion_Msg) ]
+accountBtnList = [ (account_helper._accountCreation, account_helper._accountCreation_Msg), 
+                   (account_helper._forgetPassword, account_helper._forgetPassword_Msg), 
+                   (account_helper._availableProduct, account_helper._availableProduct_Msg), 
+                   (account_helper._newMember_assignProduct, account_helper._newMember_assignProduct_Msg), 
+                   (account_helper._currentMember_removeProduct, account_helper._currentMember_removeProduct_Msg), 
+                   (account_helper._manageUserGroup, account_helper._manageUserGroup_Msg), 
+                   (account_helper._expirationDate_contractDetail, account_helper._expirationDate_contractDetail_Msg), 
+                   (account_helper._redesignateManager, account_helper._redesignateManager_Msg), 
+                   (account_helper._usageReport, account_helper._usageReport_Msg), 
+                   (account_helper._anyQuestion, account_helper._anyQuestion_Msg) ]
 
 ###### 메인 함수 단계 #######
 
@@ -171,9 +181,9 @@ def lambda_handler(event, context):
     except Exception as e:   # 하위 코드 블록에서 예외가 발생해도 변수 e에다 넣고 아래 코드 실행됨
         # pass
         # 테스트 오류 로그 기록  
-        errorMessage = str(e)  # str() 함수 사용해서 Exception 클래스 객체 e를 문자열로 변환 및 오류 메시지 변수 errorMessage에 할당 (문자열로 변환 안할시 카카오 챗봇에서 스킬서버 오류 출력되면서 챗봇이 답변도 안하고 장시간 멈춤 상태 발생.)
-        # chatbot_logger._error('[테스트] 오류 - %s' %errorMessage)
-        chatbot_logger.log_write(chatbot_logger._error, "[테스트] 오류", errorMessage)
+        error_Msg = str(e)  # str() 함수 사용해서 Exception 클래스 객체 e를 문자열로 변환 및 오류 메시지 변수 error_Msg에 할당 (문자열로 변환 안할시 카카오 챗봇에서 스킬서버 오류 출력되면서 챗봇이 답변도 안하고 장시간 멈춤 상태 발생.)
+        # chatbot_logger._error('[테스트] 오류 - %s' %error_Msg)
+        chatbot_logger.log_write(chatbot_logger._error, "[테스트] 오류", error_Msg)
     finally:   # 예외 발생 여부와 상관없이 항상 마지막에 실행할 코드
         while(time.time() - start_time < 3.5):
             if not response_queue.empty():
@@ -202,6 +212,8 @@ def lambda_handler(event, context):
 # 카카오 챗봇 답변 요청 및 응답 확인
 def responseChatbot(request,response_queue,filename):
     try:
+        isValidator()  # 카카오 챗봇 프로그램 상단에 정의한 변수(문자열, 리스트 객체)에 저장된 데이터 유효성 검증
+
         if '생각 다 끝났나요?' in request["userRequest"]["utterance"]:
             with open(filename) as f:
                 last_update = f.read()  
@@ -219,6 +231,10 @@ def responseChatbot(request,response_queue,filename):
                 dbReset(filename)   
 
         elif '/img' in request["userRequest"]["utterance"]:
+            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
+            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
+            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
+            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
             dbReset(filename)   
             prompt = request["userRequest"]["utterance"].replace("/img", "")
             bot_res = openAI.getImageURLFromDALLE(prompt)
@@ -228,6 +244,10 @@ def responseChatbot(request,response_queue,filename):
             dbSave(filename, save_log)
 
         elif '/ask' in request["userRequest"]["utterance"]:
+            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
+            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
+            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
+            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
             dbReset(filename)  
             prompt = request["userRequest"]["utterance"].replace("/ask", "")
             bot_res = openAI.getMessageFromGPT(prompt)
@@ -238,17 +258,18 @@ def responseChatbot(request,response_queue,filename):
             dbSave(filename, save_log)
 
         elif '/error' in request["userRequest"]["utterance"]:
+            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
+            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
+            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
+            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
             dbReset(filename)   
 
             save_log = "오류 테스트"
             dbSave(filename, save_log)
 
-            raise Exception("[테스트] [오류 안내]\n"+
-                            "오류 사유 : 테스트 오류\n"+
-                            "문제 해결이 어려울시\n"+ 
-                            "상상플렉스 커뮤니티\n"+
-                            "(https://www.ssflex.co.kr/community/open)\n"+
-                            "문의 부탁드립니다.")   # 예외를 발생시킴
+            raise Exception(chatbot_helper._errorTitle + 
+                            '사유 : 테스트 오류\n' +
+                            chatbot_helper._errorSSflex)   # 예외를 발생시킴
         
         # [OpenAI] API 테스트 기능 
         # elif '/openai' in request["userRequest"]["utterance"]:
@@ -284,18 +305,19 @@ def responseChatbot(request,response_queue,filename):
         #         save_log = f"openai {str(bot_res)}" 
         #         dbSave(filename, save_log)
         
-        #         raise Exception("[오류 안내]\n"+
-        #                         # "사유 : PDF 파일 기반 텍스트(chunk) 존재 안 함.\n"+
-        #                         "사유 : TEXT 파일 존재 안 함.\n"+
-        #                         "추가 문의 필요시\n"+
-        #                         "상상플렉스 커뮤니티\n"+
-        #                         "(https://www.ssflex.co.kr/community/open)\n"+
-        #                         "문의 부탁드립니다.")   # 예외를 발생시킴       
+        #         raise Exception(chatbot_helper._errorTitle+
+        #                         # '사유 : PDF 파일 기반 텍스트(chunk) 존재 안 함.\n'+
+        #                         '사유 : TEXT 파일 존재 안 함.\n'+
+        #                         chatbot_helper._errorSSflex)   # 예외를 발생시킴       
 
         # level1 - 상담시간 안내
-        elif chatbot_helper._level1 in request["userRequest"]["utterance"]:
+        elif chatbot_helper._consult in request["userRequest"]["utterance"]:
+            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
+            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
+            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
+            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
             dbReset(filename)   
-            response_queue.put(kakao.level1_textCardResponseFormat(level1ButtonList))
+            response_queue.put(kakao.level1_consult_textCardResponseFormat(consultBtnList))
 
             save_log = "level1 - 상담시간 안내 테스트"
             # chatbot_logger._info(save_log)
@@ -304,9 +326,13 @@ def responseChatbot(request,response_queue,filename):
 
         # level2 - 1. Autodesk 제품 상담 유형
         elif chatbot_helper._autodeskProduct == request["userRequest"]["utterance"]:
+            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
+            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
+            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
+            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
             dbReset(filename)
             userRequest_Msg = request["userRequest"]["utterance"]
-            response_queue.put(kakao.level2_textCardResponseFormat(userRequest_Msg, subCatButtonList))
+            response_queue.put(kakao.level2_textCardResponseFormat(userRequest_Msg, subCatBtnList))
 
             save_log = f"level2 - {userRequest_Msg} 상담 유형 테스트"
             # chatbot_logger._info(save_log)
@@ -315,9 +341,13 @@ def responseChatbot(request,response_queue,filename):
 
         # level2 - 2. 상상진화 BOX 제품 상담 유형
         elif chatbot_helper._boxProduct == request["userRequest"]["utterance"]:
+            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
+            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
+            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
+            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
             dbReset(filename)
             userRequest_Msg = request["userRequest"]["utterance"]
-            response_queue.put(kakao.level2_textCardResponseFormat(userRequest_Msg, subCatButtonList))
+            response_queue.put(kakao.level2_textCardResponseFormat(userRequest_Msg, subCatBtnList))
 
             save_log = f"level2 - {userRequest_Msg} 상담 유형 테스트"
             # chatbot_logger._info(save_log)
@@ -326,9 +356,13 @@ def responseChatbot(request,response_queue,filename):
 
         # level2 - 3. 계정&제품배정 문의
         elif chatbot_helper._askAccount == request["userRequest"]["utterance"]:
+            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
+            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
+            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
+            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
             dbReset(filename)    
             userRequest_Msg = request["userRequest"]["utterance"]
-            response_queue.put(kakao.level2_account_quickRepliesResponseFormat(accountButtonList))
+            response_queue.put(kakao.level2_account_quickRepliesResponseFormat(accountBtnList))
 
             save_log = f"level2 - {userRequest_Msg} 테스트"
             # chatbot_logger._info(save_log)
@@ -337,9 +371,13 @@ def responseChatbot(request,response_queue,filename):
 
         # level3 - 1. Autodesk 제품 설치 문의
         elif chatbot_helper._askInst_autodeskProduct == request["userRequest"]["utterance"]:
+            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
+            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
+            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
+            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
             dbReset(filename)  
             userRequest_Msg = request["userRequest"]["utterance"]
-            response_queue.put(kakao.level3_autodesk_quickRepliesResponseFormat(autodeskInstButtonList))
+            response_queue.put(kakao.level3_autodesk_quickRepliesResponseFormat(autodeskInstBtnList))
 
             save_log = f"level3 - {userRequest_Msg} 테스트"
             # chatbot_logger._info(save_log)
@@ -348,9 +386,13 @@ def responseChatbot(request,response_queue,filename):
 
         # level3 - 더보기 1. Autodesk 제품 설치 문의
         elif chatbot_helper._seeMore == request["userRequest"]["utterance"]:
+            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
+            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
+            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
+            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
             dbReset(filename)  
             userRequest_Msg = request["userRequest"]["utterance"]
-            response_queue.put(kakao.level3_autodesk_quickRepliesResponseFormat(autodeskSeeMoreButtonList))
+            response_queue.put(kakao.level3_autodesk_quickRepliesResponseFormat(autodeskSeeMoreBtnList))
 
             save_log = f"level3 - {userRequest_Msg} {chatbot_helper._askInst_autodeskProduct} 테스트"
             # chatbot_logger._info(save_log)
@@ -359,9 +401,13 @@ def responseChatbot(request,response_queue,filename):
 
         # level3 - 2. 상상진화 BOX 제품 설치 문의
         elif chatbot_helper._askInst_boxProduct == request["userRequest"]["utterance"]:
+            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
+            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
+            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
+            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
             dbReset(filename)    
             userRequest_Msg = request["userRequest"]["utterance"]
-            response_queue.put(kakao.level3_box_textCardResponseFormat(boxInstButtonList))
+            response_queue.put(kakao.level3_box_textCardResponseFormat(boxInstBtnList))
 
             save_log = f"level3 - {userRequest_Msg} 테스트"
             # chatbot_logger._info(save_log)
@@ -370,6 +416,10 @@ def responseChatbot(request,response_queue,filename):
 
         # 1. Autodesk 제품 또는 2. 상상진화 BOX 제품 버전 2026 이상 또는 아직 준비되지 못한 버전
         elif chatbot_helper._2026 in request["userRequest"]["utterance"]: 
+            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
+            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
+            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
+            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
             dbReset(filename)    
 
             save_log = "1. Autodesk 제품 또는 2. 상상진화 BOX 제품 버전 2026 이상 또는 아직 준비되지 못한 버전 테스트"
@@ -377,13 +427,11 @@ def responseChatbot(request,response_queue,filename):
             chatbot_logger.log_write(chatbot_logger._info, "", save_log)
             dbSave(filename, save_log)
 
-            raise Exception("[테스트] [오류 안내]\n"+
-                            "사유 : 제품없음.\n"+
-                            "해당 제품군은 아직 준비 중입니다.\n"+
-                            "추가 문의 필요시\n"+
-                            "상상플렉스 커뮤니티\n"
-                            "(https://www.ssflex.co.kr/community/open)\n"+
-                            "문의 부탁드립니다.")   # 예외를 발생시킴
+            raise Exception(chatbot_helper._errorTitle + 
+                            '사유 : 제품없음.\n'+
+                            '해당 제품군은 아직 준비 중입니다.\n'+
+                            '추가 문의 필요시\n'+
+                            chatbot_helper._errorSSflex)   # 예외를 발생시킴
 
         # level4 - 1. Autodesk 제품 버전 Language Pack
         # TODO : 파이썬 in 연산자 사용하여 리스트 객체 "autodeskInstLangPackVerMsgList" 안에 사용자가 클릭한 버튼 텍스트 메시지 (예) 오토캐드 
@@ -393,9 +441,13 @@ def responseChatbot(request,response_queue,filename):
         # 참고 3 URL - https://cigiko.cafe24.com/python-%EB%A6%AC%EC%8A%A4%ED%8A%B8%EC%9D%98-%EA%B8%B0%EC%B4%88-%EC%97%B0%EC%82%B0%EB%93%A4/
         # 리스트 객체 "autodeskInstLangPackVerMsgList" 내부에 사용자가 클릭한 버튼 텍스트 메시지 "request["userRequest"]["utterance"]" 값 존재하는 경우
         elif request["userRequest"]["utterance"] in autodeskInstLangPackVerMsgList:
+            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
+            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
+            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
+            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
             dbReset(filename)    
             userRequest_Msg = request["userRequest"]["utterance"]
-            response_queue.put(kakao.level4_autodeskInstLangPackVer_quickRepliesResponseFormat(userRequest_Msg, autodeskInstLangPackVerButtonList))
+            response_queue.put(kakao.level4_autodeskInstLangPackVer_quickRepliesResponseFormat(userRequest_Msg, autodeskInstLangPackVerBtnList))
 
             save_log = f"level4 - {userRequest_Msg} 테스트"
             # chatbot_logger._info(save_log)
@@ -410,9 +462,13 @@ def responseChatbot(request,response_queue,filename):
         # 참고 3 URL - https://cigiko.cafe24.com/python-%EB%A6%AC%EC%8A%A4%ED%8A%B8%EC%9D%98-%EA%B8%B0%EC%B4%88-%EC%97%B0%EC%82%B0%EB%93%A4/
         # 리스트 객체 "autodeskInstVerMsgList" 내부에 사용자가 클릭한 버튼 텍스트 메시지 "request["userRequest"]["utterance"]" 값 존재하는 경우
         elif request["userRequest"]["utterance"] in autodeskInstVerMsgList:
+            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
+            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
+            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
+            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
             dbReset(filename)    
             userRequest_Msg = request["userRequest"]["utterance"]
-            response_queue.put(kakao.level4_autodeskInstVer_quickRepliesResponseFormat(userRequest_Msg, autodeskInstVerButtonList))
+            response_queue.put(kakao.level4_autodeskInstVer_quickRepliesResponseFormat(userRequest_Msg, autodeskInstVerBtnList))
 
             save_log = f"level4 - {userRequest_Msg} 테스트"
             # chatbot_logger._info(save_log)
@@ -422,9 +478,13 @@ def responseChatbot(request,response_queue,filename):
         # level4 - 2. 상상진화 BOX 제품 버전 
         # TODO : 2. 상상진화 BOX 제품 버전 대상에 1. Revit BOX만 포함되어 있지만 추후 필요시 버전 대상 제품 추가 예정 (2025.04.08 minjae)
         elif request["userRequest"]["utterance"] in boxInstVerMsgList:
+            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
+            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
+            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
+            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
             dbReset(filename)    
             userRequest_Msg = request["userRequest"]["utterance"]
-            response_queue.put(kakao.level4_boxInstVer_quickRepliesResponseFormat(userRequest_Msg, boxInstVerButtonList))
+            response_queue.put(kakao.level4_boxInstVer_quickRepliesResponseFormat(userRequest_Msg, boxInstVerBtnList))
 
             save_log = f"level4 - {userRequest_Msg} 테스트"
             # chatbot_logger._info(save_log)
@@ -435,9 +495,13 @@ def responseChatbot(request,response_queue,filename):
         # 파이썬 in 연산자 사용하여 사용자가 클릭한 버튼 텍스트 메시지 "request["userRequest"]["utterance"]" 문자열 안에 "autodesk_helper._langPack"이 포함되어 있고 
         # 파이썬 not in 연산자 사용하여 사용자가 클릭한 버튼 텍스트 메시지 "request["userRequest"]["utterance"]" 문자열 안에 "chatbot_helper._softwareInstMethod"이 포함되지 않은 경우 
         elif autodesk_helper._langPack in request["userRequest"]["utterance"] and chatbot_helper._softwareInstMethod not in request["userRequest"]["utterance"]:
+            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
+            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
+            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
+            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
             dbReset(filename)    
             userRequest_Msg = request["userRequest"]["utterance"]
-            response_queue.put(kakao.level5_autodeskInstLang_textCardResponseFormat(userRequest_Msg, autodeskInstLangButtonList))
+            response_queue.put(kakao.level5_autodeskInstLang_textCardResponseFormat(userRequest_Msg, autodeskInstLangBtnList))
 
             save_log = f"level5 - {userRequest_Msg} 테스트"
             # chatbot_logger._info(save_log)
@@ -446,10 +510,14 @@ def responseChatbot(request,response_queue,filename):
 
         # [OpenAI] level6 - 1. Autodesk 제품 설치 방법
         elif autodesk_helper._commandType in request["userRequest"]["utterance"] and chatbot_helper._softwareInstMethod in request["userRequest"]["utterance"]: 
+            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
+            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
+            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
+            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
             dbReset(filename)    
             userRequest_Msg = request["userRequest"]["utterance"]
             if autodesk_helper._autoCAD_Msg in userRequest_Msg and chatbot_helper._2024 in userRequest_Msg and autodesk_helper._kor in userRequest_Msg: 
-                response_queue.put(kakao.simple_textResponseFormat(autodesk_response))
+                response_queue.put(kakao.simple_textResponseFormat(autoCAD_2024_kor_response))
             else:
                 response_queue.put(kakao.simple_textResponseFormat("[구현 예정!] " + userRequest_Msg))
 
@@ -464,10 +532,14 @@ def responseChatbot(request,response_queue,filename):
 
         # [OpenAI] level6 - 2. 상상진화 BOX 제품 설치 방법
         elif box_helper._commandType in request["userRequest"]["utterance"] and chatbot_helper._softwareInstMethod in request["userRequest"]["utterance"]: 
+            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
+            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
+            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
+            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
             dbReset(filename)    
             userRequest_Msg = request["userRequest"]["utterance"]
             if box_helper._revitBOX_Msg in userRequest_Msg and chatbot_helper._2024 in userRequest_Msg:
-                response_queue.put(kakao.simple_textResponseFormat(box_response))
+                response_queue.put(kakao.simple_textResponseFormat(revitBOX_2024_response))
             else:
                 response_queue.put(kakao.simple_textResponseFormat("[구현 예정!] " + userRequest_Msg))
 
@@ -482,6 +554,10 @@ def responseChatbot(request,response_queue,filename):
 
         # [OpenAI] level3 - 3. 계정&제품배정 문의
         elif account_helper._commandType in request["userRequest"]["utterance"]: 
+            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
+            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
+            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
+            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
             dbReset(filename)    
             userRequest_Msg = request["userRequest"]["utterance"]
 
@@ -490,7 +566,7 @@ def responseChatbot(request,response_queue,filename):
                 response_queue.put(kakao.simple_textResponseFormat(account_helper._anyQuestion_response))
             # '계정 비밀번호 분실'일 경우 
             elif account_helper._forgetPassword_Msg in userRequest_Msg:
-                response_queue.put(kakao.simple_textResponseFormat(account_response))
+                response_queue.put(kakao.simple_textResponseFormat(change_account_password_response))
             # '기타 문의', '계정 비밀번호 분실' 제외한 다른 문의일 경우
             else:
                 response_queue.put(kakao.simple_textResponseFormat("[구현 예정!] " + userRequest_Msg))
@@ -524,12 +600,48 @@ def responseChatbot(request,response_queue,filename):
 
     except Exception as e:   # 하위 코드 블록에서 예외가 발생해도 변수 e에다 넣고 아래 코드 실행됨
         # 테스트 오류 로그 기록  
-        errorMessage = str(e)  # str() 함수 사용해서 Exception 클래스 객체 e를 문자열로 변환 및 오류 메시지 변수 errorMessage에 할당 (문자열로 변환 안할시 카카오 챗봇에서 스킬서버 오류 출력되면서 챗봇이 답변도 안하고 장시간 멈춤 상태 발생.)
-        # chatbot_logger._error('[테스트] 오류 - %s' %errorMessage)
-        chatbot_logger.log_write(chatbot_logger._error, "[테스트] 오류", errorMessage)
-        response_queue.put(kakao.error_textResponseFormat(errorMessage))
-        # 오류 로그 기록 
-        raise    # raise로 함수 responseOpenAI의 현재 예외를 다시 발생시켜서 함수 responseOpenAI 호출한 상위 코드 블록으로 넘김
+        error_Msg = str(e)  # str() 함수 사용해서 Exception 클래스 객체 e를 문자열로 변환 및 오류 메시지 변수 error_Msg에 할당 (문자열로 변환 안할시 카카오 챗봇에서 스킬서버 오류 출력되면서 챗봇이 답변도 안하고 장시간 멈춤 상태 발생.)
+        # chatbot_logger._error('[테스트] 오류 - %s' %error_Msg)
+        chatbot_logger.log_write(chatbot_logger._error, "[테스트] 오류", error_Msg)
+        response_queue.put(kakao.error_textResponseFormat(error_Msg))
+        raise    # raise로 함수 responseChatbot의 현재 예외를 다시 발생시켜서 함수 responseChatbot 호출한 상위 코드 블록으로 넘김
+
+# 카카오 챗봇 프로그램 상단에 정의한 
+# 변수(문자열, 리스트 객체)에 저장된 데이터 유효성 검사
+# 참고 URL - https://chatgpt.com/c/68017acc-672c-8010-8649-7fa39f17d834
+def isValidator():
+    try:
+        # 파이썬 함수 len 사용하여 문자열, 리스트 객체 길이 구하기
+        # 참고 URL - https://wikidocs.net/215513 
+        if (EnumValidator.NONE.value >= len(autoCAD_2024_kor_response) 
+            or EnumValidator.NONE.value >= len(revitBOX_2024_response)
+            or EnumValidator.NONE.value >= len(change_account_password_response)     
+            or EnumValidator.NONE.value >= len(consultBtnList)       
+            or EnumValidator.NONE.value >= len(subCatBtnList)
+            or EnumValidator.NONE.value >= len(autodeskInstBtnList)
+            or EnumValidator.NONE.value >= len(autodeskSeeMoreBtnList)
+            or EnumValidator.NONE.value >= len(autodeskInstLangPackVerMsgList) 
+            or EnumValidator.NONE.value >= len(autodeskInstLangPackVerBtnList)
+            or EnumValidator.NONE.value >= len(autodeskInstVerMsgList)
+            or EnumValidator.NONE.value >= len(autodeskInstVerBtnList)        
+            or EnumValidator.NONE.value >= len(autodeskInstLangBtnList)        
+            or EnumValidator.NONE.value >= len(boxInstBtnList)      
+            or EnumValidator.NONE.value >= len(boxInstVerBtnList) 
+            or EnumValidator.NONE.value >= len(boxInstVerMsgList)         
+            or EnumValidator.NONE.value >= len(accountBtnList)):
+            raise Exception(chatbot_helper._errorTitle + 
+                            '사유 : 데이터 유효성 검사 오류.\n'+
+                            chatbot_helper._errorSSflex)
+        
+        chatbot_logger.log_write(chatbot_logger._info, '[테스트] 데이터 유효성 검사 결과', 'OK!')
+
+    except Exception as e:   # 하위 코드 블록에서 예외가 발생해도 변수 e에다 넣고 아래 코드 실행됨
+        # 테스트 오류 로그 기록  
+        error_Msg = str(e)  # str() 함수 사용해서 Exception 클래스 객체 e를 문자열로 변환 및 오류 메시지 변수 error_Msg에 할당 (문자열로 변환 안할시 카카오 챗봇에서 스킬서버 오류 출력되면서 챗봇이 답변도 안하고 장시간 멈춤 상태 발생.)
+        # chatbot_logger._error('[테스트] 오류 - %s' %error_Msg)
+        chatbot_logger.log_write(chatbot_logger._error, '[테스트] 오류', error_Msg)
+        # response_queue.put(kakao.error_textResponseFormat(error_Msg)) 
+        raise    # raise로 함수 isValidator의 현재 예외를 다시 발생시켜서 함수 isValidator 호출한 상위 코드 블록으로 넘김 
 
 # 시간 5초 초과시 응답
 def timeover():

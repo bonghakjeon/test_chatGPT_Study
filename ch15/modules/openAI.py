@@ -43,6 +43,12 @@ import os           # 답변 결과를 테스트 파일로 저장할 때 경로 
 # 참고 4 URL - https://dasoldasol.github.io/aws/serverless/sls-python/
 # 참고 5 URL - https://youtu.be/Ke7DSpsszWY?si=4A7oNpU5e2vffPRy
 
+# TODO : Docker 응용 프로그램(VMWare 가상머신과 비슷한 프로그램) 사용하여 파이썬 Langchain 패키지 (langchain_community, langchain 등등...) 
+#        리눅스 환경에서 다운로드 및 압축 파일(.zip) 생성하여 아마존 웹서비스(AWS) 람다 함수에 계층(Layer)으로 업로드 하기 (2025.04.17 minjae) 
+# 참고 URL - https://chatgpt.com/c/68005088-0ad4-8010-80bc-2c06f4bae328
+# 참고 2 URL - https://yooloo.tistory.com/188
+# 참고 3 URL - https://junside.tistory.com/265
+
 
 # TODO : 아마존 웹서비스(AWS) 람다(Lambda) 함수 실행시 라이브 테일(Live Tail) 로그 실행시 아래와 같은 오류 메시지 출력되어 
 #        (기존) from langchain_openai import ChatOpenAI -> (변경) from langchain_community.chat_models import ChatOpenAI 처리함. (2025.04.15 minjae)

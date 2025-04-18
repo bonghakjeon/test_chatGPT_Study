@@ -3,7 +3,7 @@
 openai_objname = 'openai'  
 
 # (주)상상진화 각 레벨(level)별 처리할 업무 프로세스
-_level1 = '/level1'
+_consult = '/level1'
 _autodeskProduct = '1. Autodesk 제품'
 _boxProduct = '2. 상상진화 BOX 제품'
 _askAccount = '3. 계정&제품배정 문의'
@@ -29,9 +29,13 @@ _2022 = '2022'
 _2021 = '2021'
 
 # 폴더 "modules" -> 카카오 API 전용 모듈 "kakao"
-_level1Title = '[상담시간 안내]'
-_level1Description = '▶ 기술지원문의\n월~금요일: 오전 9시 ~ 오후 6시\n주말, 공휴일: 휴무'
-_level2Title = '상담 유형'
+_consultTitle = '[상담시간 안내]'
+_consultDescription = '▶ 기술지원문의\n월~금요일: 오전 9시 ~ 오후 6시\n주말, 공휴일: 휴무'
+_subCatTitle = '상담 유형'
 _selectInfo = '안내가 필요한 항목 선택해주세요.'
 _selectVersion = '버전을 선택해주세요.'
 _selectLang = '설치 언어를 선택해주세요.'
+
+# 오류 안내 메시지 (raise Exception)
+_errorTitle = '[테스트] [오류 안내]\n'
+_errorSSflex = '상상플렉스 커뮤니티\n(https://www.ssflex.co.kr/community/open)\n문의 부탁드립니다.'
