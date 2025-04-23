@@ -1,6 +1,10 @@
 # 공통 
 # OpenAI Logger 객체 이름 'openai'
-openai_objname = 'openai'  
+_openai_objname = 'openai'  
+
+# 아마존 웹서비스(AWS) 람다 함수(Lambda Function) 
+# -> 로그 텍스트 파일("/tmp/botlog.txt") 경로 
+_botlog_filepath = '/tmp/botlog.txt'
 
 # (주)상상진화 각 레벨(level)별 처리할 업무 프로세스
 _consult = '/level1'
@@ -35,6 +39,8 @@ _subCatTitle = '상담 유형'
 _selectInfo = '안내가 필요한 항목 선택해주세요.'
 _selectVersion = '버전을 선택해주세요.'
 _selectLang = '설치 언어를 선택해주세요.'
+_checkingRequest = '요청사항 확인 중이에요.\n잠시후 아래 말풍선을 눌러주세요.'
+_doneThinking = '생각 다 끝났나요?'
 
 # 오류 안내 메시지 (raise Exception)
 _errorTitle = '[테스트] [오류 안내]\n'

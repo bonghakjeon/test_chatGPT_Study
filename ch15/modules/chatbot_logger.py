@@ -20,7 +20,7 @@ _error = 'error'
 _crictical = 'crictical'
 
 # 아마존 웹서비스(AWS) 람다 함수(Lambda Funtion) 카카오 챗봇 로그 작성 
-def log_write(log_type, content, bot_res):
+def log_write(log_level, content, bot_res):
     # 현재 날짜/시간 구하기
     # TODO : 날짜와 시간을 특정 포맷으로 출력하기 구현 (2025.03.27 minjae)
     # 참고 URL - https://wikidocs.net/269063
@@ -43,4 +43,4 @@ def log_write(log_type, content, bot_res):
     # 참고 URL - https://docs.python.org/ko/3.8/library/inspect.html
     current_lineno = inspect.currentframe().f_back.f_lineno
 
-    print("[Chatbot] [%s] [%s] [%s | %s - L%s] : %s - %s" %(log_type, formatted_current_time, current_filename, current_function_name, current_lineno, content, bot_res))
+    print("[Chatbot] [%s] [%s] [%s | %s - L%s] : %s - %s" %(log_level, formatted_current_time, current_filename, current_function_name, current_lineno, content, bot_res))

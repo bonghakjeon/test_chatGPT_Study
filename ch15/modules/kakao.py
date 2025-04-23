@@ -56,10 +56,10 @@ def image_ResponseFormat(bot_response, prompt):
 
 # 오류 메세지 전송 (카카오톡 서버로 텍스트 전송)
 # 오류 발생시 카카오톡 서버로 오류 메시지 전송 전용 JSON 형태(Format)의 데이터로 전달하기 위한 함수
-# 카카오톡 채팅방에 보낼 메시지를 매개변수 errorMessage에 input으로 받기(인자로 전달)
-def error_textResponseFormat(errorMessage):
-    # 카카오톡 채팅방에 보낼 메시지가 저장된 매개변수 errorMessage를
-    # 아래 json 형태(Format)에서 항목 'outputs' -> 항목 "simpleText" -> "text"안에 매개변수 errorMessage을 넣어서
+# 카카오톡 채팅방에 보낼 메시지를 매개변수 error_Msg에 input으로 받기(인자로 전달)
+def error_textResponseFormat(error_Msg):
+    # 카카오톡 채팅방에 보낼 메시지가 저장된 매개변수 error_Msg를
+    # 아래 json 형태(Format)에서 항목 'outputs' -> 항목 "simpleText" -> "text"안에 매개변수 error_Msg을 넣어서
     # 변수 response에 저장하기 
     response = {
         'version': '2.0', 
@@ -67,7 +67,7 @@ def error_textResponseFormat(errorMessage):
             'outputs': [
                 {
                     "simpleText": {
-                        "text": errorMessage
+                        "text": error_Msg
                     }
                 }
             ], 
@@ -75,6 +75,24 @@ def error_textResponseFormat(errorMessage):
         }
     }
     return response   # 카카오톡 서버로 답변 전송하기 위해 답변 전송 전용 JSON 형태(Format)의 데이터가 저장된 변수 response 리턴    
+
+# 시간 5초 초과시 응답 (바로가기 그룹 전송)
+def timeover_quickRepliesResponseFormat(requestAgain_Msg):
+    response = {"version":"2.0","template":{
+      "outputs":[
+         {
+            "simpleText":{
+               "text": f"{chatbot_helper._checkingRequest}"
+            }
+         }
+      ],
+      "quickReplies":[
+         {
+            "action": "message",
+            "label": f"{requestAgain_Msg}",
+            "messageText": f"{requestAgain_Msg}"
+         }]}}
+    return response   
 
 # level1 텍스트 카드 (카카오톡 서버로 텍스트 전송)
 # 상담시간 안내

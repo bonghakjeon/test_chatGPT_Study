@@ -13,18 +13,20 @@ import time         # ChatGPT 답변 시간 계산하기 위해 패키지 "time"
 import queue as q   # 자료구조 queue(deque 기반) 이용하기 위해 패키지 "queue" 불러오기
 import os           # 답변 결과를 테스트 파일로 저장할 때 경로 생성해야 해서 패키지 "os" 불러오기
 
-from commons import autodesk_helper  # 폴더 "commons" -> 1. Autodesk 제품 전용 도움말 텍스트 "autodesk_helper" 불러오기
-from commons import box_helper       # 폴더 "commons" -> 2. 상상진화 BOX 제품 전용 도움말 텍스트 "box_helper" 불러오기
-from commons import account_helper   # 폴더 "commons" -> 3. 계정&제품배정 문의 전용 도움말 텍스트 "account_helper" 불러오기
-from commons import chatbot_helper   # 폴더 "commons" -> 카카오 챗봇 전용 도움말 텍스트 "chatbot_helper" 불러오기
+# 폴더 "commons" 소스파일 
+from commons import autodesk_helper  # 1. Autodesk 제품 전용 도움말 텍스트 "autodesk_helper" 불러오기
+from commons import box_helper       # 2. 상상진화 BOX 제품 전용 도움말 텍스트 "box_helper" 불러오기
+from commons import account_helper   # 3. 계정&제품배정 문의 전용 도움말 텍스트 "account_helper" 불러오기
+from commons import chatbot_helper   # 카카오 챗봇 전용 도움말 텍스트 "chatbot_helper" 불러오기
 
-from modules import kakao            # 폴더 "modules" -> 카카오 API 전용 모듈 "kakao" 불러오기 
-from modules import logger           # 폴더 "modules" -> 로그 설정 전용 모듈 "logger" 불러오기 
-from modules import openAI           # 폴더 "modules" -> OpenAI 전용 모듈 "openAI" 불러오기 
-from modules import openAI_logger    # 폴더 "modules" -> OpenAI 리턴 값 로그 작성 모듈 "openAI_logger" 불러오기
-from modules import chatbot_logger   # 폴더 "modules" -> 카카오 챗봇 로그 작성 모듈 "chatbot_logger" 불러오기
-from modules import pdf              # 폴더 "modules" -> PDF 전용 모듈 "pdf" 불러오기
-from modules import text             # 폴더 "modules" -> TEXT 전용 모듈 "text" 불러오기
+# 폴더 "modules" 소스파일 
+from modules import kakao            # 카카오 API 전용 모듈 "kakao" 불러오기 
+from modules import logger           # 로그 설정 전용 모듈 "logger" 불러오기 
+from modules import openAI           # OpenAI 전용 모듈 "openAI" 불러오기 
+from modules import openAI_logger    # OpenAI 리턴 값 로그 작성 모듈 "openAI_logger" 불러오기
+from modules import chatbot_logger   # 카카오 챗봇 로그 작성 모듈 "chatbot_logger" 불러오기
+from modules import pdf              # PDF 전용 모듈 "pdf" 불러오기
+from modules import text             # TEXT 전용 모듈 "text" 불러오기
 
 from enum import Enum   # Enum 열거형 구조체 사용하기 위해 패키지 "enum" 불러오기 
 
@@ -37,7 +39,7 @@ class EnumValidator(Enum):
     EXISTENCE = 1   # 데이터 존재함.
 
 # 로그 초기 설정 
-bot_logger = logger.configureLogger(chatbot_helper.openai_objname)
+bot_logger = logger.configureLogger(chatbot_helper._openai_objname)
 
 # PDF 파일(Autodesk, Box, Account)에 작성된 청크(chunk) 단위 텍스트 가져오기 
 # autodesk_chunks = pdf.getChunksFromPDF(autodesk_helper._autoCAD_2024_Kor_PDF_Filepath) 
@@ -69,6 +71,7 @@ autodeskInstBtnList = [ (autodesk_helper._autoCAD, autodesk_helper._autoCAD_Msg)
                         (autodesk_helper._3ds_Max, autodesk_helper._3ds_Max_Msg), 
                         (autodesk_helper._maya, autodesk_helper._maya_Msg), 
                         (chatbot_helper._seeMore, chatbot_helper._seeMore) ]
+
 # level3 - 더보기 버튼 텍스트 리스트  - label(텍스트) + 메세지(텍스트)
 autodeskSeeMoreBtnList = [ (autodesk_helper._fusion, autodesk_helper._fusion_Msg), 
                            (autodesk_helper._infraWorks, autodesk_helper._infraWorks_Msg), 
@@ -87,6 +90,7 @@ autodeskInstLangPackVerMsgList = [ autodesk_helper._autoCAD_Msg,
                                    autodesk_helper._3ds_Max_Msg, 
                                    autodesk_helper._infraWorks_Msg ]
 
+# level4 - 1. Autodesk 제품 버전 Language Pack 버튼 리스트 (텍스트 + 메시지)
 autodeskInstLangPackVerBtnList = [ (chatbot_helper._2026, chatbot_helper._ver, autodesk_helper._langPack), 
                                    (chatbot_helper._2025, chatbot_helper._ver, autodesk_helper._langPack), 
                                    (chatbot_helper._2024, chatbot_helper._ver, autodesk_helper._langPack), 
@@ -95,6 +99,7 @@ autodeskInstLangPackVerBtnList = [ (chatbot_helper._2026, chatbot_helper._ver, a
 # level4 - 1. Autodesk 제품 버전 메세지(텍스트) 리스트 
 autodeskInstVerMsgList = [ autodesk_helper._maya_Msg, autodesk_helper._twinmotion_Msg, autodesk_helper._navisworks_Converter_Msg ]
 
+# level4 - 1. Autodesk 제품 버전 버튼 리스트 (텍스트 + 메시지)
 autodeskInstVerBtnList = [ (chatbot_helper._2026, chatbot_helper._ver), 
                            (chatbot_helper._2025, chatbot_helper._ver), 
                            (chatbot_helper._2024, chatbot_helper._ver), 
@@ -102,7 +107,6 @@ autodeskInstVerBtnList = [ (chatbot_helper._2026, chatbot_helper._ver),
 
 # level4 - 1. Autodesk 제품 설치 방법 (버전 X)
 # autodeskInstMsgList = [ autodesk_helper._fusion_Msg, autodesk_helper._dwgTrueView_Msg ]
-
 
 # level5 - 1. Autodesk 제품 설치 언어 
 autodeskInstLangBtnList = [ autodesk_helper._kor, autodesk_helper._eng ]
@@ -160,12 +164,13 @@ def lambda_handler(event, context):
         # event['body'] - 카카오톡 채팅방 채팅 정보가 들어있는 변수이다.
         kakaorequest = json.loads(event['body'])
 
-        filename = "/tmp/botlog.txt"
-        if not os.path.exists(filename):
+        filename = chatbot_helper._botlog_filepath
+        # if not os.path.exists(filename):
+        if False == os.path.exists(filename):
             dbReset(filename)
         else:
             # print("File Exists")   # print 함수 호출하여 지금 현재 파일이 있다고 메시지 "File Exists" 출력 
-            # chatbot_logger._info("File Exists")   # chatbot_logger._info 함수 호출하여 지금 현재 파일이 있다고 메시지 "File Exists" 로그 기록 
+            # chatbot_logger.log_write 함수 호출하여 지금 현재 파일이 있다고 메시지 "File Exists" 로그 기록 
             chatbot_logger.log_write(chatbot_logger._info, "파일 존재 여부", "File Exists")
 
         # 테스트 로그 기록 
@@ -185,6 +190,7 @@ def lambda_handler(event, context):
         # chatbot_logger._error('[테스트] 오류 - %s' %error_Msg)
         chatbot_logger.log_write(chatbot_logger._error, "[테스트] 오류", error_Msg)
     finally:   # 예외 발생 여부와 상관없이 항상 마지막에 실행할 코드
+        # 시간 3.5초 이내인 경우 
         while(time.time() - start_time < 3.5):
             if not response_queue.empty():
                 response = response_queue.get()
@@ -192,8 +198,9 @@ def lambda_handler(event, context):
                 break   
             time.sleep(0.01)
 
-        if run_flag == False:     
-            response = timeover()   
+        # 시간 5초 초과한 경우 
+        if False == run_flag:     
+            response = kakao.timeover_quickRepliesResponseFormat(chatbot_helper._doneThinking)   
 
         # 테스트 로그 기록
         responseMessage = json.dumps(response)
@@ -210,11 +217,18 @@ def lambda_handler(event, context):
         }
     
 # 카카오 챗봇 답변 요청 및 응답 확인
-def responseChatbot(request,response_queue,filename):
+def responseChatbot(request, response_queue, filename):
     try:
-        isValidator()  # 카카오 챗봇 프로그램 상단에 정의한 변수(문자열, 리스트 객체)에 저장된 데이터 유효성 검증
+        if False == isValidator():   # 데이터 유효성 검사 결과 오류인 경우
+            raise Exception(chatbot_helper._errorTitle + 
+                            '사유 : 데이터 유효성 검사 오류.\n'+
+                            chatbot_helper._errorSSflex)
+        
+        chatbot_logger.log_write(chatbot_logger._info, '[테스트] 데이터 유효성 검사 결과', 'OK!')   # 데이터 유효성 검사 결과 성공   
+        userRequest_Msg = request["userRequest"]["utterance"]   # 사용자 입력 채팅 정보 가져오기 
 
-        if '생각 다 끝났나요?' in request["userRequest"]["utterance"]:
+        # 시간 5초 초과시 응답 재요청
+        if chatbot_helper._doneThinking in userRequest_Msg:
             with open(filename) as f:
                 last_update = f.read()  
             if len(last_update.split())>1:
@@ -230,51 +244,40 @@ def responseChatbot(request,response_queue,filename):
                     response_queue.put(kakao.simple_textResponseFormat(bot_res))
                 dbReset(filename)   
 
-        elif '/img' in request["userRequest"]["utterance"]:
-            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
-            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
-            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
-            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
+        elif '/img' in userRequest_Msg:
             dbReset(filename)   
-            prompt = request["userRequest"]["utterance"].replace("/img", "")
+            prompt = userRequest_Msg.replace("/img", "")
             bot_res = openAI.getImageURLFromDALLE(prompt)
             response_queue.put(kakao.image_ResponseFormat(bot_res,prompt))
 
-            save_log = f"img {str(bot_res)} {str(prompt)}"
-            dbSave(filename, save_log)
+            saveLog_Msg = f"img {str(bot_res)} {str(prompt)}"
+            dbSave(filename, saveLog_Msg)
 
-        elif '/ask' in request["userRequest"]["utterance"]:
-            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
+        elif '/ask' in userRequest_Msg:
+            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, saveLog_Msg) 을 간결하게 하기 위해 
             #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
             #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
             # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
             dbReset(filename)  
-            prompt = request["userRequest"]["utterance"].replace("/ask", "")
+            prompt = userRequest_Msg.replace("/ask", "")
             bot_res = openAI.getMessageFromGPT(prompt)
             response_queue.put(kakao.simple_textResponseFormat(bot_res))
 
             openAI_logger.log_write(openAI_logger._info, "ChatGPT 텍스트 답변", bot_res)
-            save_log = f"ask {str(bot_res)}" 
-            dbSave(filename, save_log)
+            saveLog_Msg = f"ask {str(bot_res)}" 
+            dbSave(filename, saveLog_Msg)
 
-        elif '/error' in request["userRequest"]["utterance"]:
-            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
-            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
-            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
-            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
-            dbReset(filename)   
-
-            save_log = "오류 테스트"
-            dbSave(filename, save_log)
+        elif '/error' in userRequest_Msg:
+            saveLog(filename, chatbot_logger._error, "오류 테스트")
 
             raise Exception(chatbot_helper._errorTitle + 
                             '사유 : 테스트 오류\n' +
                             chatbot_helper._errorSSflex)   # 예외를 발생시킴
         
         # [OpenAI] API 테스트 기능 
-        # elif '/openai' in request["userRequest"]["utterance"]:
+        # elif '/openai' in userRequest_Msg:
         #     dbReset(filename)
-        #     prompt = request["userRequest"]["utterance"].replace("/openai", "")  
+        #     prompt = userRequest_Msg.replace("/openai", "")  
 
         #     if autodesk_helper._commandType in prompt:   # Autodesk 제품 설치 방법 
         #         # chunks = autodesk_chunks 
@@ -295,15 +298,15 @@ def responseChatbot(request,response_queue,filename):
         #         response_queue.put(kakao.simple_textResponseFormat(bot_res))
         #         openAI_logger.log_write(openAI_logger._info, "", bot_res)
 
-        #         save_log = f"openai {str(bot_res)}" 
-        #         dbSave(filename, save_log)
+        #         saveLog_Msg = f"openai {str(bot_res)}" 
+        #         dbSave(filename, saveLog_Msg)
             
         #     else:
         #         bot_res = ''
         #         openAI_logger.log_write(openAI_logger._error, "", bot_res)
 
-        #         save_log = f"openai {str(bot_res)}" 
-        #         dbSave(filename, save_log)
+        #         saveLog_Msg = f"openai {str(bot_res)}" 
+        #         dbSave(filename, saveLog_Msg)
         
         #         raise Exception(chatbot_helper._errorTitle+
         #                         # '사유 : PDF 파일 기반 텍스트(chunk) 존재 안 함.\n'+
@@ -311,121 +314,43 @@ def responseChatbot(request,response_queue,filename):
         #                         chatbot_helper._errorSSflex)   # 예외를 발생시킴       
 
         # level1 - 상담시간 안내
-        elif chatbot_helper._consult in request["userRequest"]["utterance"]:
-            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
-            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
-            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
-            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
-            dbReset(filename)   
+        elif chatbot_helper._consult in userRequest_Msg:
+            saveLog(filename, chatbot_logger._info, "level1 - 상담시간 안내 테스트")   
             response_queue.put(kakao.level1_consult_textCardResponseFormat(consultBtnList))
 
-            save_log = "level1 - 상담시간 안내 테스트"
-            # chatbot_logger._info(save_log)
-            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
-            dbSave(filename, save_log)
-
         # level2 - 1. Autodesk 제품 상담 유형
-        elif chatbot_helper._autodeskProduct == request["userRequest"]["utterance"]:
-            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
-            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
-            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
-            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
-            dbReset(filename)
-            userRequest_Msg = request["userRequest"]["utterance"]
+        elif chatbot_helper._autodeskProduct == userRequest_Msg:
+            saveLog(filename, chatbot_logger._info, f"level2 - {userRequest_Msg} 상담 유형 테스트")
             response_queue.put(kakao.level2_textCardResponseFormat(userRequest_Msg, subCatBtnList))
-
-            save_log = f"level2 - {userRequest_Msg} 상담 유형 테스트"
-            # chatbot_logger._info(save_log)
-            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
-            dbSave(filename, save_log)
 
         # level2 - 2. 상상진화 BOX 제품 상담 유형
-        elif chatbot_helper._boxProduct == request["userRequest"]["utterance"]:
-            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
-            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
-            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
-            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
-            dbReset(filename)
-            userRequest_Msg = request["userRequest"]["utterance"]
+        elif chatbot_helper._boxProduct == userRequest_Msg:
+            saveLog(filename, chatbot_logger._info, f"level2 - {userRequest_Msg} 상담 유형 테스트")
             response_queue.put(kakao.level2_textCardResponseFormat(userRequest_Msg, subCatBtnList))
 
-            save_log = f"level2 - {userRequest_Msg} 상담 유형 테스트"
-            # chatbot_logger._info(save_log)
-            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
-            dbSave(filename, save_log)
-
         # level2 - 3. 계정&제품배정 문의
-        elif chatbot_helper._askAccount == request["userRequest"]["utterance"]:
-            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
-            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
-            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
-            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
-            dbReset(filename)    
-            userRequest_Msg = request["userRequest"]["utterance"]
+        elif chatbot_helper._askAccount == userRequest_Msg:
+            saveLog(filename, chatbot_logger._info, f"level2 - {userRequest_Msg} 테스트")    
             response_queue.put(kakao.level2_account_quickRepliesResponseFormat(accountBtnList))
 
-            save_log = f"level2 - {userRequest_Msg} 테스트"
-            # chatbot_logger._info(save_log)
-            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
-            dbSave(filename, save_log)
-
         # level3 - 1. Autodesk 제품 설치 문의
-        elif chatbot_helper._askInst_autodeskProduct == request["userRequest"]["utterance"]:
-            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
-            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
-            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
-            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
-            dbReset(filename)  
-            userRequest_Msg = request["userRequest"]["utterance"]
+        elif chatbot_helper._askInst_autodeskProduct == userRequest_Msg:
+            saveLog(filename, chatbot_logger._info, f"level3 - {userRequest_Msg} 테스트")
             response_queue.put(kakao.level3_autodesk_quickRepliesResponseFormat(autodeskInstBtnList))
 
-            save_log = f"level3 - {userRequest_Msg} 테스트"
-            # chatbot_logger._info(save_log)
-            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
-            dbSave(filename, save_log)
-
         # level3 - 더보기 1. Autodesk 제품 설치 문의
-        elif chatbot_helper._seeMore == request["userRequest"]["utterance"]:
-            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
-            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
-            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
-            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
-            dbReset(filename)  
-            userRequest_Msg = request["userRequest"]["utterance"]
+        elif chatbot_helper._seeMore == userRequest_Msg:
+            saveLog(filename, chatbot_logger._info, f"level3 - {userRequest_Msg} {chatbot_helper._askInst_autodeskProduct} 테스트")
             response_queue.put(kakao.level3_autodesk_quickRepliesResponseFormat(autodeskSeeMoreBtnList))
 
-            save_log = f"level3 - {userRequest_Msg} {chatbot_helper._askInst_autodeskProduct} 테스트"
-            # chatbot_logger._info(save_log)
-            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
-            dbSave(filename, save_log)
-
         # level3 - 2. 상상진화 BOX 제품 설치 문의
-        elif chatbot_helper._askInst_boxProduct == request["userRequest"]["utterance"]:
-            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
-            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
-            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
-            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
-            dbReset(filename)    
-            userRequest_Msg = request["userRequest"]["utterance"]
+        elif chatbot_helper._askInst_boxProduct == userRequest_Msg:
+            saveLog(filename, chatbot_logger._info, f"level3 - {userRequest_Msg} 테스트")
             response_queue.put(kakao.level3_box_textCardResponseFormat(boxInstBtnList))
 
-            save_log = f"level3 - {userRequest_Msg} 테스트"
-            # chatbot_logger._info(save_log)
-            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
-            dbSave(filename, save_log)
-
         # 1. Autodesk 제품 또는 2. 상상진화 BOX 제품 버전 2026 이상 또는 아직 준비되지 못한 버전
-        elif chatbot_helper._2026 in request["userRequest"]["utterance"]: 
-            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
-            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
-            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
-            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
-            dbReset(filename)    
-
-            save_log = "1. Autodesk 제품 또는 2. 상상진화 BOX 제품 버전 2026 이상 또는 아직 준비되지 못한 버전 테스트"
-            # chatbot_logger._info(save_log)
-            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
-            dbSave(filename, save_log)
+        elif chatbot_helper._2026 in userRequest_Msg: 
+            saveLog(filename, chatbot_logger._error, "1. Autodesk 제품 또는 2. 상상진화 BOX 제품 버전 2026 이상 또는 아직 준비되지 못한 버전 테스트")
 
             raise Exception(chatbot_helper._errorTitle + 
                             '사유 : 제품없음.\n'+
@@ -439,20 +364,10 @@ def responseChatbot(request,response_queue,filename):
         # 참고 URL - https://hun931018.tistory.com/55
         # 참고 2 URL - https://miki3079.tistory.com/40
         # 참고 3 URL - https://cigiko.cafe24.com/python-%EB%A6%AC%EC%8A%A4%ED%8A%B8%EC%9D%98-%EA%B8%B0%EC%B4%88-%EC%97%B0%EC%82%B0%EB%93%A4/
-        # 리스트 객체 "autodeskInstLangPackVerMsgList" 내부에 사용자가 클릭한 버튼 텍스트 메시지 "request["userRequest"]["utterance"]" 값 존재하는 경우
-        elif request["userRequest"]["utterance"] in autodeskInstLangPackVerMsgList:
-            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
-            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
-            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
-            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
-            dbReset(filename)    
-            userRequest_Msg = request["userRequest"]["utterance"]
+        # 리스트 객체 "autodeskInstLangPackVerMsgList" 내부에 사용자가 클릭한 버튼 텍스트 메시지 "userRequest_Msg = request["userRequest"]["utterance"]" 값 존재하는 경우
+        elif userRequest_Msg in autodeskInstLangPackVerMsgList:
+            saveLog(filename, chatbot_logger._info, f"level4 - {userRequest_Msg} 테스트")
             response_queue.put(kakao.level4_autodeskInstLangPackVer_quickRepliesResponseFormat(userRequest_Msg, autodeskInstLangPackVerBtnList))
-
-            save_log = f"level4 - {userRequest_Msg} 테스트"
-            # chatbot_logger._info(save_log)
-            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
-            dbSave(filename, save_log)
 
         # level4 - 1. Autodesk 제품 버전
         # TODO : 파이썬 in 연산자 사용하여 리스트 객체 "autodeskInstVerMsgList" 안에 사용자가 클릭한 버튼 텍스트 메시지 (예) 12. Twinmotion
@@ -460,63 +375,33 @@ def responseChatbot(request,response_queue,filename):
         # 참고 URL - https://hun931018.tistory.com/55
         # 참고 2 URL - https://miki3079.tistory.com/40
         # 참고 3 URL - https://cigiko.cafe24.com/python-%EB%A6%AC%EC%8A%A4%ED%8A%B8%EC%9D%98-%EA%B8%B0%EC%B4%88-%EC%97%B0%EC%82%B0%EB%93%A4/
-        # 리스트 객체 "autodeskInstVerMsgList" 내부에 사용자가 클릭한 버튼 텍스트 메시지 "request["userRequest"]["utterance"]" 값 존재하는 경우
-        elif request["userRequest"]["utterance"] in autodeskInstVerMsgList:
-            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
-            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
-            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
-            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
-            dbReset(filename)    
-            userRequest_Msg = request["userRequest"]["utterance"]
+        # 리스트 객체 "autodeskInstVerMsgList" 내부에 사용자가 클릭한 버튼 텍스트 메시지 "userRequest_Msg = request["userRequest"]["utterance"]" 값 존재하는 경우
+        elif userRequest_Msg in autodeskInstVerMsgList:
+            saveLog(filename, chatbot_logger._info, f"level4 - {userRequest_Msg} 테스트")
             response_queue.put(kakao.level4_autodeskInstVer_quickRepliesResponseFormat(userRequest_Msg, autodeskInstVerBtnList))
-
-            save_log = f"level4 - {userRequest_Msg} 테스트"
-            # chatbot_logger._info(save_log)
-            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
-            dbSave(filename, save_log)
 
         # level4 - 2. 상상진화 BOX 제품 버전 
         # TODO : 2. 상상진화 BOX 제품 버전 대상에 1. Revit BOX만 포함되어 있지만 추후 필요시 버전 대상 제품 추가 예정 (2025.04.08 minjae)
-        elif request["userRequest"]["utterance"] in boxInstVerMsgList:
-            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
-            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
-            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
-            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
-            dbReset(filename)    
-            userRequest_Msg = request["userRequest"]["utterance"]
+        elif userRequest_Msg in boxInstVerMsgList:
+            saveLog(filename, chatbot_logger._info, f"level4 - {userRequest_Msg} 테스트")
             response_queue.put(kakao.level4_boxInstVer_quickRepliesResponseFormat(userRequest_Msg, boxInstVerBtnList))
 
-            save_log = f"level4 - {userRequest_Msg} 테스트"
-            # chatbot_logger._info(save_log)
-            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
-            dbSave(filename, save_log)
-
         # level5 - 1. Autodesk 제품 설치 언어 
-        # 파이썬 in 연산자 사용하여 사용자가 클릭한 버튼 텍스트 메시지 "request["userRequest"]["utterance"]" 문자열 안에 "autodesk_helper._langPack"이 포함되어 있고 
-        # 파이썬 not in 연산자 사용하여 사용자가 클릭한 버튼 텍스트 메시지 "request["userRequest"]["utterance"]" 문자열 안에 "chatbot_helper._softwareInstMethod"이 포함되지 않은 경우 
-        elif autodesk_helper._langPack in request["userRequest"]["utterance"] and chatbot_helper._softwareInstMethod not in request["userRequest"]["utterance"]:
-            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
-            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
-            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
-            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
-            dbReset(filename)    
-            userRequest_Msg = request["userRequest"]["utterance"]
+        # 파이썬 in 연산자 사용하여 사용자가 클릭한 버튼 텍스트 메시지 "userRequest_Msg = request["userRequest"]["utterance"]" 문자열 안에 "autodesk_helper._langPack"이 포함되어 있고 
+        # 파이썬 not in 연산자 사용하여 사용자가 클릭한 버튼 텍스트 메시지 "userRequest_Msg = request["userRequest"]["utterance"]" 문자열 안에 "chatbot_helper._softwareInstMethod"이 포함되지 않은 경우 
+        elif (autodesk_helper._langPack in userRequest_Msg 
+              and chatbot_helper._softwareInstMethod not in userRequest_Msg):
+            saveLog(filename, chatbot_logger._info, f"level5 - {userRequest_Msg} 테스트")    
             response_queue.put(kakao.level5_autodeskInstLang_textCardResponseFormat(userRequest_Msg, autodeskInstLangBtnList))
 
-            save_log = f"level5 - {userRequest_Msg} 테스트"
-            # chatbot_logger._info(save_log)
-            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
-            dbSave(filename, save_log)
-
         # [OpenAI] level6 - 1. Autodesk 제품 설치 방법
-        elif autodesk_helper._commandType in request["userRequest"]["utterance"] and chatbot_helper._softwareInstMethod in request["userRequest"]["utterance"]: 
-            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
-            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
-            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
-            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
-            dbReset(filename)    
-            userRequest_Msg = request["userRequest"]["utterance"]
-            if autodesk_helper._autoCAD_Msg in userRequest_Msg and chatbot_helper._2024 in userRequest_Msg and autodesk_helper._kor in userRequest_Msg: 
+        elif (autodesk_helper._commandType in userRequest_Msg
+              and chatbot_helper._softwareInstMethod in userRequest_Msg): 
+            saveLog(filename, chatbot_logger._info, f"level6 - {userRequest_Msg} 테스트")
+                
+            if (autodesk_helper._autoCAD_Msg in userRequest_Msg 
+                and chatbot_helper._2024 in userRequest_Msg 
+                and autodesk_helper._kor in userRequest_Msg): 
                 response_queue.put(kakao.simple_textResponseFormat(autoCAD_2024_kor_response))
             else:
                 response_queue.put(kakao.simple_textResponseFormat("[구현 예정!] " + userRequest_Msg))
@@ -525,41 +410,24 @@ def responseChatbot(request,response_queue,filename):
             # result_Msg = openAI.(userRequest_Msg)
             # response_queue.put(kakao.simple_textResponseFormat(result_Msg))
 
-            save_log = f"level6 - {userRequest_Msg} 테스트"
-            # chatbot_logger._info(save_log)
-            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
-            dbSave(filename, save_log)   
-
-        # [OpenAI] level6 - 2. 상상진화 BOX 제품 설치 방법
-        elif box_helper._commandType in request["userRequest"]["utterance"] and chatbot_helper._softwareInstMethod in request["userRequest"]["utterance"]: 
-            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
-            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
-            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
-            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
-            dbReset(filename)    
-            userRequest_Msg = request["userRequest"]["utterance"]
-            if box_helper._revitBOX_Msg in userRequest_Msg and chatbot_helper._2024 in userRequest_Msg:
+        # [OpenAI] level5 - 2. 상상진화 BOX 제품 설치 방법
+        elif (box_helper._commandType in userRequest_Msg
+              and chatbot_helper._softwareInstMethod in userRequest_Msg): 
+            saveLog(filename, chatbot_logger._info, f"level5 - {userRequest_Msg} 테스트")
+    
+            if (box_helper._revitBOX_Msg in userRequest_Msg 
+                and chatbot_helper._2024 in userRequest_Msg):
                 response_queue.put(kakao.simple_textResponseFormat(revitBOX_2024_response))
             else:
                 response_queue.put(kakao.simple_textResponseFormat("[구현 예정!] " + userRequest_Msg))
 
             # TODO : 아래 주석친 OpenAI 관련 기능 추후 구현 예정 (2025.04.10 minjae)
             # result_Msg = openAI.(userRequest_Msg)
-            # response_queue.put(kakao.simple_textResponseFormat(result_Msg))
-
-            save_log = f"level6 - {userRequest_Msg} 테스트"
-            # chatbot_logger._info(save_log)
-            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
-            dbSave(filename, save_log) 
+            # response_queue.put(kakao.simple_textResponseFormat(result_Msg)) 
 
         # [OpenAI] level3 - 3. 계정&제품배정 문의
-        elif account_helper._commandType in request["userRequest"]["utterance"]: 
-            # TODO : 아래 함수 호출 구간 dbReset(filename) ~ dbSave(filename, save_log) 을 간결하게 하기 위해 
-            #        함수 dbSetting 구현 및 해당 함수 dbSetting에 파라미터로 카카오 함수(kakao.~~~~~_ResponseFormat())
-            #        전달 가능하도록 구현 예정 (2025.04.17 minjae)
-            # 참고 URL - https://www.codeit.kr/community/questions/UXVlc3Rpb246NWU1Y2M4NzJjZGQwNzQ1OTAzYWU2NGNk
-            dbReset(filename)    
-            userRequest_Msg = request["userRequest"]["utterance"]
+        elif account_helper._commandType in userRequest_Msg: 
+            saveLog(filename, chatbot_logger._info, f"level3 - {userRequest_Msg} 테스트")
 
             # '기타 문의'일 경우 
             if account_helper._anyQuestion_Msg in userRequest_Msg:
@@ -574,25 +442,15 @@ def responseChatbot(request,response_queue,filename):
                 # result_Msg = openAI.(userRequest_Msg)
                 # response_queue.put(kakao.simple_textResponseFormat(result_Msg))
 
-            save_log = f"level3 - {userRequest_Msg} 테스트"
-            # chatbot_logger._info(save_log)
-            chatbot_logger.log_write(chatbot_logger._info, "", save_log)
-            dbSave(filename, save_log) 
-
         # level4 - 1. Autodesk 제품 버전 X
         # TODO : 파이썬 in 연산자 사용하여 리스트 객체 "autodeskInstMsgList" 안에 사용자가 클릭한 버튼 텍스트 메시지 (예) 'Fusion'
         #        존재하는 경우 아래 elif 절 로직 실행할 수 있도록 구현 (2025.03.28 minjae) 
-        # 리스트 객체 "autodeskInstMsgList" 내부에 사용자가 클릭한 버튼 텍스트 메시지 "request["userRequest"]["utterance"]" 값 존재하는 경우
-        # elif request["userRequest"]["utterance"] in autodeskInstMsgList:
-        #     dbReset(filename)    
-        #     userRequest_Msg = request["userRequest"]["utterance"]
-        #     message = f'{userRequest_Msg} {chatbot_helper._softwareInstMethod}'
-        #     response_queue.put(kakao.simple_textResponseFormat(message))
-
-        #     save_log = "level4 - 1. Autodesk 제품 버전 X 테스트"
-        #     # chatbot_logger._info(save_log)
-        #     chatbot_logger.log_write(chatbot_logger._info, "", save_log)
-        #     dbSave(filename, save_log)
+        # 리스트 객체 "autodeskInstMsgList" 내부에 사용자가 클릭한 버튼 텍스트 메시지 "userRequest_Msg = request["userRequest"]["utterance"]" 값 존재하는 경우
+        # elif userRequest_Msg in autodeskInstMsgList:
+        #     saveLog(filename, f"level4 - {userRequest_Msg} 테스트")
+            
+        #     # message = f'{userRequest_Msg} {chatbot_helper._softwareInstMethod}'
+        #     # response_queue.put(kakao.simple_textResponseFormat(message))
 
         else:
             base_response = {'version': '2.0', 'template': {'outputs': [], 'quickReplies': []}}
@@ -610,63 +468,41 @@ def responseChatbot(request,response_queue,filename):
 # 변수(문자열, 리스트 객체)에 저장된 데이터 유효성 검사
 # 참고 URL - https://chatgpt.com/c/68017acc-672c-8010-8649-7fa39f17d834
 def isValidator():
-    try:
-        # 파이썬 함수 len 사용하여 문자열, 리스트 객체 길이 구하기
-        # 참고 URL - https://wikidocs.net/215513 
-        if (EnumValidator.NONE.value >= len(autoCAD_2024_kor_response) 
-            or EnumValidator.NONE.value >= len(revitBOX_2024_response)
-            or EnumValidator.NONE.value >= len(change_account_password_response)     
-            or EnumValidator.NONE.value >= len(consultBtnList)       
-            or EnumValidator.NONE.value >= len(subCatBtnList)
-            or EnumValidator.NONE.value >= len(autodeskInstBtnList)
-            or EnumValidator.NONE.value >= len(autodeskSeeMoreBtnList)
-            or EnumValidator.NONE.value >= len(autodeskInstLangPackVerMsgList) 
-            or EnumValidator.NONE.value >= len(autodeskInstLangPackVerBtnList)
-            or EnumValidator.NONE.value >= len(autodeskInstVerMsgList)
-            or EnumValidator.NONE.value >= len(autodeskInstVerBtnList)        
-            or EnumValidator.NONE.value >= len(autodeskInstLangBtnList)        
-            or EnumValidator.NONE.value >= len(boxInstBtnList)      
-            or EnumValidator.NONE.value >= len(boxInstVerBtnList) 
-            or EnumValidator.NONE.value >= len(boxInstVerMsgList)         
-            or EnumValidator.NONE.value >= len(accountBtnList)):
-            raise Exception(chatbot_helper._errorTitle + 
-                            '사유 : 데이터 유효성 검사 오류.\n'+
-                            chatbot_helper._errorSSflex)
+    # 파이썬 함수 len 사용하여 문자열, 리스트 객체 길이 구하기
+    # 참고 URL - https://wikidocs.net/215513 
+    if (EnumValidator.NONE.value >= len(autoCAD_2024_kor_response) 
+        or EnumValidator.NONE.value >= len(revitBOX_2024_response)
+        or EnumValidator.NONE.value >= len(change_account_password_response)     
+        or EnumValidator.NONE.value >= len(consultBtnList)       
+        or EnumValidator.NONE.value >= len(subCatBtnList)
+        or EnumValidator.NONE.value >= len(autodeskInstBtnList)
+        or EnumValidator.NONE.value >= len(autodeskSeeMoreBtnList)
+        or EnumValidator.NONE.value >= len(autodeskInstLangPackVerMsgList) 
+        or EnumValidator.NONE.value >= len(autodeskInstLangPackVerBtnList)
+        or EnumValidator.NONE.value >= len(autodeskInstVerMsgList)
+        or EnumValidator.NONE.value >= len(autodeskInstVerBtnList)        
+        or EnumValidator.NONE.value >= len(autodeskInstLangBtnList)        
+        or EnumValidator.NONE.value >= len(boxInstBtnList)      
+        or EnumValidator.NONE.value >= len(boxInstVerBtnList) 
+        or EnumValidator.NONE.value >= len(boxInstVerMsgList)         
+        or EnumValidator.NONE.value >= len(accountBtnList)):
+        return False   # 데이터 유효성 검사 오류 
         
-        chatbot_logger.log_write(chatbot_logger._info, '[테스트] 데이터 유효성 검사 결과', 'OK!')
+    return True   # 데이터 유효성 검사 성공
 
-    except Exception as e:   # 하위 코드 블록에서 예외가 발생해도 변수 e에다 넣고 아래 코드 실행됨
-        # 테스트 오류 로그 기록  
-        error_Msg = str(e)  # str() 함수 사용해서 Exception 클래스 객체 e를 문자열로 변환 및 오류 메시지 변수 error_Msg에 할당 (문자열로 변환 안할시 카카오 챗봇에서 스킬서버 오류 출력되면서 챗봇이 답변도 안하고 장시간 멈춤 상태 발생.)
-        # chatbot_logger._error('[테스트] 오류 - %s' %error_Msg)
-        chatbot_logger.log_write(chatbot_logger._error, '[테스트] 오류', error_Msg)
-        # response_queue.put(kakao.error_textResponseFormat(error_Msg)) 
-        raise    # raise로 함수 isValidator의 현재 예외를 다시 발생시켜서 함수 isValidator 호출한 상위 코드 블록으로 넘김 
+# 아마존 웹서비스(AWS) 람다 함수(Lambda Function) 
+# -> 로그 텍스트 파일("/tmp/botlog.txt")에 적힌 로그(텍스트) 초기화 및 작성 
+def saveLog(filename, log_level, saveLog_Msg):
+    dbReset(filename)   
+    chatbot_logger.log_write(log_level, "", saveLog_Msg)
+    dbSave(filename, saveLog_Msg)
 
-# 시간 5초 초과시 응답
-def timeover():
-    response = {"version":"2.0","template":{
-      "outputs":[
-         {
-            "simpleText":{
-               "text":"아직 제가 생각이 끝나지 않았어요??\n잠시후 아래 말풍선을 눌러주세요?"
-            }
-         }
-      ],
-      "quickReplies":[
-         {
-            "action":"message",
-            "label":"생각 다 끝났나요??",
-            "messageText":"생각 다 끝났나요?"
-         }]}}
-    return response   
-
-# 아마존 웹서비스(AWS) 람다 함수(Lambda Function) -> 텍스트 파일("/tmp/botlog.txt")에 적힌 로그(텍스트) 초기화  
+# 아마존 웹서비스(AWS) 람다 함수(Lambda Function) -> 로그 텍스트 파일("/tmp/botlog.txt")에 적힌 로그(텍스트) 초기화  
 def dbReset(filename):
     with open(filename, 'w') as f:
         f.write("")
 
-# 아마존 웹서비스(AWS) 람다 함수(Lambda Function) -> 텍스트 파일("/tmp/botlog.txt")에 적힌 로그(텍스트) 작성  
-def dbSave(filename, save_log):
+# 아마존 웹서비스(AWS) 람다 함수(Lambda Function) -> 로그 텍스트 파일("/tmp/botlog.txt")에 적힌 로그(텍스트) 작성  
+def dbSave(filename, saveLog_Msg):
     with open(filename, 'w') as f:
-        f.write(save_log)
+        f.write(saveLog_Msg)
