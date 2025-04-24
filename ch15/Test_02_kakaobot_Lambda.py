@@ -319,15 +319,16 @@ def responseChatbot(request, response_queue, filename):
             saveLog(filename, chatbot_logger._info, "level1 - 상담시간 안내 테스트")   
             response_queue.put(kakao.level1_consult_textCardResponseFormat(consultBtnList))
 
-        # level2 - 1. Autodesk 제품 상담 유형
-        elif chatbot_helper._autodeskProduct == userRequest_Msg:
+        # level2 - 1. Autodesk 제품 상담 유형 or 2. 상상진화 BOX 제품 상담 유형
+        elif (chatbot_helper._autodeskProduct == userRequest_Msg
+              or chatbot_helper._boxProduct == userRequest_Msg):
             saveLog(filename, chatbot_logger._info, f"level2 - {userRequest_Msg} 상담 유형 테스트")
             response_queue.put(kakao.level2_textCardResponseFormat(userRequest_Msg, subCatBtnList))
 
         # level2 - 2. 상상진화 BOX 제품 상담 유형
-        elif chatbot_helper._boxProduct == userRequest_Msg:
-            saveLog(filename, chatbot_logger._info, f"level2 - {userRequest_Msg} 상담 유형 테스트")
-            response_queue.put(kakao.level2_textCardResponseFormat(userRequest_Msg, subCatBtnList))
+        # elif chatbot_helper._boxProduct == userRequest_Msg:
+        #     saveLog(filename, chatbot_logger._info, f"level2 - {userRequest_Msg} 상담 유형 테스트")
+        #     response_queue.put(kakao.level2_textCardResponseFormat(userRequest_Msg, subCatBtnList))
 
         # level2 - 3. 계정&제품배정 문의
         elif chatbot_helper._askAccount == userRequest_Msg:
