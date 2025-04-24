@@ -7,9 +7,9 @@ _autoCADBOX = '2. CAD BOX'
 _energyBOX = '3. Energy BOX'
 
 # 메세지(텍스트)
-_revitBOX_Msg = 'Revit BOX'
-_autoCADBOX_Msg = 'CAD BOX'
-_energyBOX_Msg = 'Energy BOX'
+_revitBOX_Msg = 'RevitBOX'
+_autoCADBOX_Msg = 'CADBOX'
+_energyBOX_Msg = 'EnergyBOX'
 
 # 파이썬 절대 경로와 상대 경로
 # 참고 URL - https://wikidocs.net/153154

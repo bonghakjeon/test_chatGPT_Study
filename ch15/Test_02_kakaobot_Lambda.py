@@ -349,7 +349,7 @@ def responseChatbot(request, response_queue, filename):
         # level3 - 2. 상상진화 BOX 제품 설치 문의
         elif chatbot_helper._askInst_boxProduct == userRequest_Msg:
             saveLog(filename, chatbot_logger._info, f"level3 - {userRequest_Msg} 테스트")
-            response_queue.put(kakao.level3_box_textCardResponseFormat(boxInstBtnList))
+            response_queue.put(kakao.level3_box_quickRepliesResponseFormat(boxInstBtnList))
 
         # 1. Autodesk 제품 또는 2. 상상진화 BOX 제품 버전 2026 이상 또는 아직 준비되지 못한 버전
         elif chatbot_helper._2026 in userRequest_Msg: 

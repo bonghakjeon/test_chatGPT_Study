@@ -67,7 +67,13 @@ def error_textResponseFormat(error_Msg):
                     }
                 }
             ], 
-            'quickReplies': []
+            "quickReplies": [
+                {
+                    "action": "message",
+                    "label": f"{chatbot_helper._beginning}",
+                    "messageText": f"{chatbot_helper._beginning}"
+                }
+            ]
         }
     }
     return response   # 카카오톡 서버로 답변 전송하기 위해 답변 전송 전용 JSON 형태(Format)의 데이터가 저장된 변수 response 리턴    
@@ -218,33 +224,31 @@ def level3_autodesk_quickRepliesResponseFormat(autodeskInstBtnList):
 
 # level3 텍스트 카드 (카카오톡 서버로 텍스트 전송)
 # 2. 상상진화 BOX 제품 설치 문의
-def level3_box_textCardResponseFormat(boxInstBtnList):
-    boxInstButtons = []
+def level3_box_quickRepliesResponseFormat(boxInstBtnList):
+    boxInstQuickReplies = []
     # 2. 상상진화 BOX 제품 설치 문의 3가지 버튼 텍스트 및 메세지 추가 
     for (boxInstLabel, boxInstMsg) in boxInstBtnList:
         # TODO : 파이썬 삼항 연산자 사용하여 버튼 텍스트 메시지 변수 messageText에 값 할당 기능 구현 (2025.03.28 minjae)
         # 참고 URL - https://wikidocs.net/20701
         # 파이썬 삼항 연산자 사용하여 버튼이 'CAD BOX', 'Energy BOX'일 경우 안내할 버전이 없으므로 값 f"{box_helper._commandType} {boxInstMsg} {chatbot_helper._softwareInstMethod}" 할당
         messageText = f"{box_helper._commandType} {boxInstMsg} {chatbot_helper._softwareInstMethod}" if box_helper._autoCADBOX_Msg == boxInstMsg or box_helper._energyBOX_Msg == boxInstMsg else boxInstMsg
-        boxInstButtons.append({
+        boxInstQuickReplies.append({
             "action": "message",
             "label": boxInstLabel,
             "messageText": messageText
         })
 
     response = {
-        "version": "2.0",
+        "version": "2.0", 
         "template": {
             "outputs": [
                 {
-                    "textCard": {
-                        "title": "",
-                        "description": chatbot_helper._selectInfo,
-                        "buttons" : boxInstButtons
+                    "simpleText": {
+                        "text": chatbot_helper._selectInfo
                     }
                 }
-            ],
-            "quickReplies": []
+            ], 
+            "quickReplies": boxInstQuickReplies
         }
     }
 
