@@ -235,7 +235,7 @@ def responseChatbot(request, response_queue, filename):
                 kind = last_update.split()[0]  
                 if kind == "img":
                     bot_res, prompt = last_update.split()[1],last_update.split()[2]
-                    response_queue.put(kakao.image_ResponseFormat(bot_res,prompt))
+                    response_queue.put(kakao.simple_imageResponseFormat(bot_res,prompt))
                 else:
                     bot_res = last_update[4:]
 
@@ -248,7 +248,7 @@ def responseChatbot(request, response_queue, filename):
             dbReset(filename)   
             prompt = userRequest_Msg.replace("/img", "")
             bot_res = openAI.getImageURLFromDALLE(prompt)
-            response_queue.put(kakao.image_ResponseFormat(bot_res,prompt))
+            response_queue.put(kakao.simple_imageResponseFormat(bot_res,prompt))
 
             saveLog_Msg = f"img {str(bot_res)} {str(prompt)}"
             dbSave(filename, saveLog_Msg)
@@ -313,8 +313,9 @@ def responseChatbot(request, response_queue, filename):
         #                         '사유 : TEXT 파일 존재 안 함.\n'+
         #                         chatbot_helper._errorSSflex)   # 예외를 발생시킴       
 
-        # level1 - 상담시간 안내
-        elif chatbot_helper._consult in userRequest_Msg:
+        # level1 - 상담시간 안내 or 처음으로
+        elif (chatbot_helper._consult in userRequest_Msg
+              or chatbot_helper._beginning in userRequest_Msg):
             saveLog(filename, chatbot_logger._info, "level1 - 상담시간 안내 테스트")   
             response_queue.put(kakao.level1_consult_textCardResponseFormat(consultBtnList))
 
@@ -402,13 +403,13 @@ def responseChatbot(request, response_queue, filename):
             if (autodesk_helper._autoCAD_Msg in userRequest_Msg 
                 and chatbot_helper._2024 in userRequest_Msg 
                 and autodesk_helper._kor in userRequest_Msg): 
-                response_queue.put(kakao.simple_textResponseFormat(autoCAD_2024_kor_response))
+                response_queue.put(kakao.beginning_quickRepliesResponseFormat(autoCAD_2024_kor_response))
             else:
-                response_queue.put(kakao.simple_textResponseFormat("[구현 예정!] " + userRequest_Msg))
+                response_queue.put(kakao.beginning_quickRepliesResponseFormat("[구현 예정!] " + userRequest_Msg))
 
             # TODO : 아래 주석친 OpenAI 관련 기능 추후 구현 예정 (2025.04.10 minjae) 
             # result_Msg = openAI.(userRequest_Msg)
-            # response_queue.put(kakao.simple_textResponseFormat(result_Msg))
+            # response_queue.put(kakao.beginning_quickRepliesResponseFormat(result_Msg))
 
         # [OpenAI] level5 - 2. 상상진화 BOX 제품 설치 방법
         elif (box_helper._commandType in userRequest_Msg
@@ -417,13 +418,13 @@ def responseChatbot(request, response_queue, filename):
     
             if (box_helper._revitBOX_Msg in userRequest_Msg 
                 and chatbot_helper._2024 in userRequest_Msg):
-                response_queue.put(kakao.simple_textResponseFormat(revitBOX_2024_response))
+                response_queue.put(kakao.beginning_quickRepliesResponseFormat(revitBOX_2024_response))
             else:
-                response_queue.put(kakao.simple_textResponseFormat("[구현 예정!] " + userRequest_Msg))
+                response_queue.put(kakao.beginning_quickRepliesResponseFormat("[구현 예정!] " + userRequest_Msg))
 
             # TODO : 아래 주석친 OpenAI 관련 기능 추후 구현 예정 (2025.04.10 minjae)
             # result_Msg = openAI.(userRequest_Msg)
-            # response_queue.put(kakao.simple_textResponseFormat(result_Msg)) 
+            # response_queue.put(kakao.beginning_quickRepliesResponseFormat(result_Msg)) 
 
         # [OpenAI] level3 - 3. 계정&제품배정 문의
         elif account_helper._commandType in userRequest_Msg: 
@@ -431,16 +432,16 @@ def responseChatbot(request, response_queue, filename):
 
             # '기타 문의'일 경우 
             if account_helper._anyQuestion_Msg in userRequest_Msg:
-                response_queue.put(kakao.simple_textResponseFormat(account_helper._anyQuestion_response))
+                response_queue.put(kakao.beginning_quickRepliesResponseFormat(account_helper._anyQuestion_response))
             # '계정 비밀번호 분실'일 경우 
             elif account_helper._forgetPassword_Msg in userRequest_Msg:
-                response_queue.put(kakao.simple_textResponseFormat(change_account_password_response))
+                response_queue.put(kakao.beginning_quickRepliesResponseFormat(change_account_password_response))
             # '기타 문의', '계정 비밀번호 분실' 제외한 다른 문의일 경우
             else:
-                response_queue.put(kakao.simple_textResponseFormat("[구현 예정!] " + userRequest_Msg))
+                response_queue.put(kakao.beginning_quickRepliesResponseFormat("[구현 예정!] " + userRequest_Msg))
                 # TODO : 아래 주석친 OpenAI 관련 기능 추후 구현 예정 (2025.04.10 minjae)
                 # result_Msg = openAI.(userRequest_Msg)
-                # response_queue.put(kakao.simple_textResponseFormat(result_Msg))
+                # response_queue.put(kakao.beginning_quickRepliesResponseFormat(result_Msg))
 
         # level4 - 1. Autodesk 제품 버전 X
         # TODO : 파이썬 in 연산자 사용하여 리스트 객체 "autodeskInstMsgList" 안에 사용자가 클릭한 버튼 텍스트 메시지 (예) 'Fusion'

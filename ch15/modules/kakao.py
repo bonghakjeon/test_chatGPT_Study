@@ -1,18 +1,13 @@
 ###### 기능 구현 단계 #######
 # 카카오톡 챗봇 프로그램을 구동하는데 필요한 모든 기능 함수화 해서
-# 파이썬 스크립트 파일(01_kakaobot_Lambda.py)에 속한 
-# 메인 함수 "lambda_handler" -> 답변/사진 요청 및 응답 확인 함수 "responseOpenAI"에서 사용할 수 있도록 정리 
+# 파이썬 스크립트 파일(Test_02_kakaobot_Lambda.py)에 속한 
+# 메인 함수 "lambda_handler" -> 답변/사진 요청 및 응답 확인 함수 "responseChatbot"에서 사용할 수 있도록 정리 
 
-from commons import autodesk_helper  # 폴더 "commons" -> 1. Autodesk 제품 전용 도움말 텍스트 "autodesk_helper" 불러오기
-from commons import box_helper       # 폴더 "commons" -> 2. 상상진화 BOX 제품 전용 도움말 텍스트 "box_helper" 불러오기
-from commons import account_helper   # 폴더 "commons" -> 3. 계정&제품배정 문의 전용 도움말 텍스트 "account_helper" 불러오기
-from commons import chatbot_helper   # 폴더 "commons" -> 카카오 챗봇 전용 도움말 텍스트 "chatbot_helper" 불러오기
-
-# 메세지 전송 (카카오톡 서버로 텍스트 전송)
-# def textResponseFormat(bot_response):
-#     response = {'version': '2.0', 'template': {
-#     'outputs': [{"simpleText": {"text": bot_response}}], 'quickReplies': []}}
-#     return response   
+# 폴더 "commons" 소스파일
+from commons import autodesk_helper  # 1. Autodesk 제품 전용 도움말 텍스트 "autodesk_helper" 불러오기
+from commons import box_helper       # 2. 상상진화 BOX 제품 전용 도움말 텍스트 "box_helper" 불러오기
+from commons import account_helper   # 3. 계정&제품배정 문의 전용 도움말 텍스트 "account_helper" 불러오기
+from commons import chatbot_helper   # 카카오 챗봇 전용 도움말 텍스트 "chatbot_helper" 불러오기 
 
 # 텍스트 메세지 전송 (카카오톡 서버로 텍스트 전송)
 # 카카오톡 채팅방에 보낼 메시지를 매개변수 message에 input으로 받기(인자로 전달)
@@ -37,8 +32,8 @@ def simple_textResponseFormat(message):
 
 # 그림 전송 (카카오톡 서버로 그림 전송)
 # def imageResponseFormat(bot_response, prompt):
-def image_ResponseFormat(bot_response, prompt):
-    output_text = prompt+"내용에 관한 이미지 입니다"
+def simple_imageResponseFormat(bot_response, prompt):
+    output_text = prompt + "내용에 관한 이미지 입니다"
     response = {
         'version': '2.0', 
         'template': {
@@ -48,8 +43,9 @@ def image_ResponseFormat(bot_response, prompt):
                         "imageUrl": bot_response,
                         "altText": output_text
                     }
-                }], 
-                'quickReplies': []
+                }
+            ], 
+            'quickReplies': []
         }
     }
     return response   
@@ -78,20 +74,25 @@ def error_textResponseFormat(error_Msg):
 
 # 시간 5초 초과시 응답 (바로가기 그룹 전송)
 def timeover_quickRepliesResponseFormat(requestAgain_Msg):
-    response = {"version":"2.0","template":{
-      "outputs":[
-         {
-            "simpleText":{
-               "text": f"{chatbot_helper._checkingRequest}"
-            }
-         }
-      ],
-      "quickReplies":[
-         {
-            "action": "message",
-            "label": f"{requestAgain_Msg}",
-            "messageText": f"{requestAgain_Msg}"
-         }]}}
+    response = {
+        "version":"2.0",
+        "template": {
+            "outputs":[
+                {
+                    "simpleText":{
+                        "text": f"{chatbot_helper._checkingRequest}"
+                    }
+                }
+            ],
+            "quickReplies":[
+                {
+                    "action": "message",
+                    "label": f"{requestAgain_Msg}",
+                    "messageText": f"{requestAgain_Msg}"
+                }
+            ]
+        }
+    }
     return response   
 
 # level1 텍스트 카드 (카카오톡 서버로 텍스트 전송)
@@ -121,13 +122,8 @@ def level1_consult_textCardResponseFormat(consultBtnList):
             "quickReplies": []
         }
     }
-    # TODO : 함수 level1_textCardResponseFormat 로직 수정 예정 (2025.03.05 minjae)
-    # 함수 len 사용하여 testButtons 배열 안에 존재하는 요소의 갯수가 0보다 큰경우
-    # ----- if len(testButtons) > 0:
-    #     response["template"]["buttons"] = testButtons
 
     return response
-
 
 # level2 텍스트 카드 (카카오톡 서버로 텍스트 전송)
 # 상담유형 안내
@@ -156,10 +152,6 @@ def level2_textCardResponseFormat(userRequest_Msg, level2BtnList):
             "quickReplies": []
         }
     }
-    # TODO : 함수 level2_textCardResponseFormat 로직 수정 예정 (2025.03.05 minjae)
-    # 함수 len 사용하여 testButtons 배열 안에 존재하는 요소의 갯수가 0보다 큰경우
-    # ----- if len(testButtons) > 0:
-    #     response["template"]["buttons"] = testButtons
 
     return response
 
@@ -189,10 +181,7 @@ def level2_account_quickRepliesResponseFormat(accountBtnList):
             "quickReplies": accountQuickReplies
         }
     }
-    # TODO : 함수 level3_autodesk_quickRepliesResponseFormat 로직 수정 예정 (2025.03.21 minjae)
-    # 함수 len 사용하여 testQuick 배열 안에 존재하는 요소의 갯수가 0보다 큰경우
-    # ----- if len(testQuick) > 0:
-    #     response["template"]["quickReplies"] = testQuick
+
     return response
 
 # level3 바로가기 그룹 전송 (카카오톡 서버로 텍스트 전송)
@@ -224,10 +213,7 @@ def level3_autodesk_quickRepliesResponseFormat(autodeskInstBtnList):
             "quickReplies": autodeskQuickReplies
         }
     }
-    # TODO : 함수 level3_autodesk_quickRepliesResponseFormat 로직 수정 예정 (2025.03.21 minjae)
-    # 함수 len 사용하여 testQuick 배열 안에 존재하는 요소의 갯수가 0보다 큰경우
-    # ----- if len(testQuick) > 0:
-    #     response["template"]["quickReplies"] = testQuick
+
     return response
 
 # level3 텍스트 카드 (카카오톡 서버로 텍스트 전송)
@@ -262,10 +248,6 @@ def level3_box_textCardResponseFormat(boxInstBtnList):
         }
     }
 
-    # TODO : 함수 level3_box_textCardResponseFormat 로직 수정 예정 (2025.03.05 minjae)
-    # 함수 len 사용하여 testButtons 배열 안에 존재하는 요소의 갯수가 0보다 큰경우
-    # ----- if len(testButtons) > 0:
-    #     response["template"]["buttons"] = testButtons
     return response
 
 
@@ -295,10 +277,6 @@ def level4_autodeskInstLangPackVer_quickRepliesResponseFormat(userRequest_Msg, a
         }
     }
 
-    # TODO : 함수 level4_autodeskInstLangPackVer_quickRepliesResponseFormat 로직 수정 예정 (2025.03.05 minjae)
-    # 함수 len 사용하여 testButtons 배열 안에 존재하는 요소의 갯수가 0보다 큰경우
-    # ----- if len(testButtons) > 0:
-    #     response["template"]["buttons"] = testButtons
     return response
 
 # level4 바로가기 그룹 전송 (카카오톡 서버로 텍스트 전송)
@@ -327,10 +305,6 @@ def level4_autodeskInstVer_quickRepliesResponseFormat(userRequest_Msg, autodeskI
         }
     }
 
-    # TODO : 함수 level4_autodeskInstVer_textCardResponseFormat 로직 수정 예정 (2025.03.05 minjae)
-    # 함수 len 사용하여 testButtons 배열 안에 존재하는 요소의 갯수가 0보다 큰경우
-    # ----- if len(testButtons) > 0:
-    #     response["template"]["buttons"] = testButtons
     return response
 
 # level4 바로가기 그룹 전송 (카카오톡 서버로 텍스트 전송)
@@ -358,10 +332,7 @@ def level4_boxInstVer_quickRepliesResponseFormat(userRequest_Msg, boxInstVerBtnL
             "quickReplies": boxInstVerQuickReplies
         }
     }
-    # TODO : 함수 level4_boxInstVer_quickRepliesResponseFormat 로직 수정 예정 (2025.03.21 minjae)
-    # 함수 len 사용하여 testQuick 배열 안에 존재하는 요소의 갯수가 0보다 큰경우
-    # ----- if len(testQuick) > 0:
-    #     response["template"]["quickReplies"] = testQuick
+
     return response
 
 # level5 텍스트 카드 (카카오톡 서버로 텍스트 전송)
@@ -392,8 +363,28 @@ def level5_autodeskInstLang_textCardResponseFormat(userRequest_Msg, autodeskInst
         }
     }
 
-    # TODO : 함수 level5_autodeskInstLang_textCardResponseFormat 로직 수정 예정 (2025.03.05 minjae)
-    # 함수 len 사용하여 testButtons 배열 안에 존재하는 요소의 갯수가 0보다 큰경우
-    # ----- if len(testButtons) > 0:
-    #     response["template"]["buttons"] = testButtons
     return response
+
+# 텍스트 카드 (카카오톡 서버로 텍스트 전송)
+# 처음으로 
+def beginning_quickRepliesResponseFormat(bot_response):
+    response = {
+        "version":"2.0",
+        "template": {
+            "outputs":[
+                {
+                    "simpleText":{
+                        "text": bot_response
+                    }
+                }
+            ],
+            "quickReplies":[
+                {
+                    "action": "message",
+                    "label": f"{chatbot_helper._beginning}",
+                    "messageText": f"{chatbot_helper._beginning}"
+                }
+            ]
+        }
+    }
+    return response   
