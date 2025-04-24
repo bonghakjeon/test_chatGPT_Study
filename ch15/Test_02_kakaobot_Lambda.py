@@ -325,6 +325,7 @@ def responseChatbot(request, response_queue, filename):
             saveLog(filename, chatbot_logger._info, f"level2 - {userRequest_Msg} 상담 유형 테스트")
             response_queue.put(kakao.level2_textCardResponseFormat(userRequest_Msg, subCatBtnList))
 
+        # TODO : 추후 필요시 아래 주석친 코드 구현 예정 (2025.04.24 minjae)
         # level2 - 2. 상상진화 BOX 제품 상담 유형
         # elif chatbot_helper._boxProduct == userRequest_Msg:
         #     saveLog(filename, chatbot_logger._info, f"level2 - {userRequest_Msg} 상담 유형 테스트")
