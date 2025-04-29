@@ -83,14 +83,14 @@ def timeover_quickRepliesResponseFormat(requestAgain_Msg):
     response = {
         "version":"2.0",
         "template": {
-            "outputs":[
+            "outputs": [
                 {
                     "simpleText":{
                         "text": f"{chatbot_helper._checkingRequest}"
                     }
                 }
             ],
-            "quickReplies":[
+            "quickReplies": [
                 {
                     "action": "message",
                     "label": f"{requestAgain_Msg}",
@@ -375,14 +375,14 @@ def beginning_quickRepliesResponseFormat(bot_response):
     response = {
         "version":"2.0",
         "template": {
-            "outputs":[
+            "outputs": [
                 {
                     "simpleText":{
                         "text": bot_response
                     }
                 }
             ],
-            "quickReplies":[
+            "quickReplies": [
                 {
                     "action": "message",
                     "label": f"{chatbot_helper._beginning}",

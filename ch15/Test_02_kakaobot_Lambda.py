@@ -42,9 +42,9 @@ class EnumValidator(Enum):
 bot_logger = logger.configureLogger(chatbot_helper._openai_objname)
 
 # PDF 파일(Autodesk, Box, Account)에 작성된 청크(chunk) 단위 텍스트 가져오기 
-# autodesk_chunks = pdf.getChunksFromPDF(autodesk_helper._autoCAD_2024_Kor_PDF_Filepath) 
-# box_chunks = pdf.getChunksFromPDF(box_helper._revitBOX_2024_Kor_PDF_Filepath)
-# account_chunks = pdf.getChunksFromPDF(account_helper._change_account_password_PDF_Filepath) 
+autodesk_chunks = pdf.getChunksFromPDF(autodesk_helper._autoCAD_2024_kor_PDF_Filepath) 
+box_chunks = pdf.getChunksFromPDF(box_helper._revitBOX_2024_PDF_Filepath)
+account_chunks = pdf.getChunksFromPDF(account_helper._change_account_password_PDF_Filepath) 
 
 # 중간보고 LOT 용도 - TEXT 파일(Autodesk, Box, Account)에 작성된 모든 텍스트 가져오기 
 autoCAD_2024_kor_response = text.getResponseFromText(autodesk_helper._autoCAD_2024_kor_TEXT_Filepath) 
@@ -143,6 +143,11 @@ accountBtnList = [ (account_helper._accountCreation, account_helper._accountCrea
                    (account_helper._usageReport, account_helper._usageReport_Msg), 
                    (account_helper._anyQuestion, account_helper._anyQuestion_Msg) ]
 
+
+# 카카오 챗봇 프로그램 상단에 정의한 
+# 변수(문자열, 리스트 객체)에 저장된 데이터 유효성 검사 결과 
+isValid = False
+
 ###### 메인 함수 단계 #######
 
 # 람다(lambda)가 실행명령을 받았을 때, 실행되는 메인함수 lambda_handler
@@ -219,6 +224,8 @@ def lambda_handler(event, context):
 # 카카오 챗봇 답변 요청 및 응답 확인
 def responseChatbot(request, response_queue, filename):
     try:
+        # ----- if False == isValid:   # 데이터 유효성 검사 결과 오류인 경우
+
         if False == isValidator():   # 데이터 유효성 검사 결과 오류인 경우
             raise Exception(chatbot_helper._errorTitle + 
                             '사유 : 데이터 유효성 검사 오류.\n'+
@@ -275,43 +282,38 @@ def responseChatbot(request, response_queue, filename):
                             chatbot_helper._errorSSflex)   # 예외를 발생시킴
         
         # [OpenAI] API 테스트 기능 
-        # elif '/openai' in userRequest_Msg:
-        #     dbReset(filename)
-        #     prompt = userRequest_Msg.replace("/openai", "")  
+        elif '/openai' in userRequest_Msg:
+            dbReset(filename)
+            prompt = userRequest_Msg.replace("/openai", "")  
 
-        #     if autodesk_helper._commandType in prompt:   # Autodesk 제품 설치 방법 
-        #         # chunks = autodesk_chunks 
-        #         response = autodesk_response
-        #     elif box_helper._commandType in prompt:      # 상상진화 BOX 제품 설치 방법 
-        #         # chunks = box_chunks
-        #         response = box_response
-        #     elif account_helper._commandType in prompt:  # 계정&제품배정 문의
-        #         # chunks = account_chunks
-        #         response = account_response
+            if autodesk_helper._commandType in prompt:   # Autodesk 제품 설치 방법 
+                chunks = autodesk_chunks 
+            elif box_helper._commandType in prompt:      # 상상진화 BOX 제품 설치 방법 
+                chunks = box_chunks
+            elif account_helper._commandType in prompt:  # 계정&제품배정 문의
+                chunks = account_chunks
 
-        #     # 함수 len 사용하여 리스트 객체 chunks 안에 존재하는 요소의 갯수가 0보다 큰 경우
-        #     # 함수 len 사용하여 문자열 response 길이가 0보다 큰 경우
-        #     # if len(chunks) > 0:
-        #     if len(response) > 0:
-        #         # bot_res = openAI.getMessageFromChunks(chunks, prompt)
-        #         bot_res = response
-        #         response_queue.put(kakao.simple_textResponseFormat(bot_res))
-        #         openAI_logger.log_write(openAI_logger._info, "", bot_res)
+            # 함수 len 사용하여 리스트 객체 chunks 안에 존재하는 요소의 갯수가 0보다 큰 경우
+            if len(chunks) > 0:
+            # if len(response) > 0:
+                bot_res = openAI.getMessageFromChunks(chunks, prompt)
+                response_queue.put(kakao.simple_textResponseFormat(bot_res))
+                openAI_logger.log_write(openAI_logger._info, "", bot_res)
 
-        #         saveLog_Msg = f"openai {str(bot_res)}" 
-        #         dbSave(filename, saveLog_Msg)
+                saveLog_Msg = f"openai {str(bot_res)}" 
+                dbSave(filename, saveLog_Msg)
             
-        #     else:
-        #         bot_res = ''
-        #         openAI_logger.log_write(openAI_logger._error, "", bot_res)
+            else:
+                bot_res = ''
+                openAI_logger.log_write(openAI_logger._error, "", bot_res)
 
-        #         saveLog_Msg = f"openai {str(bot_res)}" 
-        #         dbSave(filename, saveLog_Msg)
+                saveLog_Msg = f"openai {str(bot_res)}" 
+                dbSave(filename, saveLog_Msg)
         
-        #         raise Exception(chatbot_helper._errorTitle+
-        #                         # '사유 : PDF 파일 기반 텍스트(chunk) 존재 안 함.\n'+
-        #                         '사유 : TEXT 파일 존재 안 함.\n'+
-        #                         chatbot_helper._errorSSflex)   # 예외를 발생시킴       
+                raise Exception(chatbot_helper._errorTitle+
+                                # '사유 : PDF 파일 기반 텍스트(chunk) 존재 안 함.\n'+
+                                '사유 : TEXT 파일 존재 안 함.\n'+
+                                chatbot_helper._errorSSflex)   # 예외를 발생시킴       
 
         # level1 - 상담시간 안내 or 처음으로
         elif (chatbot_helper._consult in userRequest_Msg

@@ -48,16 +48,19 @@ import os           # 답변 결과를 테스트 파일로 저장할 때 경로 
 # 참고 URL - https://chatgpt.com/c/68005088-0ad4-8010-80bc-2c06f4bae328
 # 참고 2 URL - https://yooloo.tistory.com/188
 # 참고 3 URL - https://junside.tistory.com/265
-
+# 참고 4 URL - https://velog.io/@nnijgnus/AWS-Lambda%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-AI-%EB%AA%A8%EB%93%88-%EA%B5%AC%ED%98%84-LangChain%EC%9D%84-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EB%89%B4%EC%8A%A4-%EC%9A%94%EC%95%BD-API-%EA%B0%9C%EB%B0%9C
+# 참고 5 URL - https://chatgpt.com/c/68100355-d55c-8010-b573-32ee9f510b79
+# 참고 6 URL - https://seoyeonhwng.medium.com/aws-docker%EB%A1%9C-lambda-layer-%EB%A7%8C%EB%93%A4%EA%B8%B0-b18237c7fbcf
 
 # TODO : 아마존 웹서비스(AWS) 람다(Lambda) 함수 실행시 라이브 테일(Live Tail) 로그 실행시 아래와 같은 오류 메시지 출력되어 
 #        (기존) from langchain_openai import ChatOpenAI -> (변경) from langchain_community.chat_models import ChatOpenAI 처리함. (2025.04.15 minjae)
 # 유튜브 참고 URL - https://youtu.be/CbOZBDfxPl4?si=5Sb476FEHxZlYKw0
 # [ERROR] Runtime.ImportModuleError: Unable to import module 'lambda_function': No module named 'langchain_openai' Traceback (most recent call last):
-# ----- from langchain_community.chat_models import ChatOpenAI
-# ----- from langchain.vectorstores import FAISS
-# ----- from langchain.embeddings import OpenAIEmbeddings
-# ----- from langchain.chains.question_answering import load_qa_chain
+from langchain_openai import ChatOpenAI
+from langchain.text_splitter import CharacterTextSplitter
+from langchain.vectorstores import FAISS
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.chains.question_answering import load_qa_chain
 
 # OpenAI API KEY
 # 테스트용 카카오톡 챗봇 채팅방에서 
@@ -87,25 +90,25 @@ def getImageURLFromDALLE(prompt):
     return image_url
 
 # PDF 파일 청크(chunk) 단위 텍스트 기반 응답 메시지 
-# def getMessageFromChunks(chunks, prompt):
-#     # 질문을 입력한 경우 
-#     if prompt:
-#         # 임베딩/ 시멘틱 인덱스 (API 요금 부과)
-#         embeddings = OpenAIEmbeddings(openai_api_key=openai.api_key)
-#         knowledge_base = FAISS.from_texts(chunks, embeddings)
+def getMessageFromChunks(chunks, prompt):
+    # 질문을 입력한 경우 
+    if prompt:
+        # 임베딩/ 시멘틱 인덱스 (API 요금 부과)
+        embeddings = OpenAIEmbeddings(openai_api_key=openai.api_key)
+        knowledge_base = FAISS.from_texts(chunks, embeddings)
             
-#         docs = knowledge_base.similarity_search(prompt)
+        docs = knowledge_base.similarity_search(prompt)
 
-#         # 질문하기
-#         llm = ChatOpenAI(temperature=0,
-#                          openai_api_key=openai.api_key,
-#                          max_tokens=2000,
-#                          model_name='gpt-3.5-turbo',
-#                          request_timeout=120)
-#         chain = load_qa_chain(llm, chain_type="stuff")
-#         message = chain.run(input_documents=docs, question=prompt)
-#     # 질문을 입력하지 않은 경우
-#     else:
-#         message = '질문을 다시 입력해주세요.'
+        # 질문하기
+        llm = ChatOpenAI(temperature=0,
+                         openai_api_key=openai.api_key,
+                         max_tokens=2000,
+                         model_name='gpt-3.5-turbo',
+                         request_timeout=120)
+        chain = load_qa_chain(llm, chain_type="stuff")
+        message = chain.run(input_documents=docs, question=prompt)
+    # 질문을 입력하지 않은 경우
+    else:
+        message = '질문을 다시 입력해주세요.'
 
-#     return message
+    return message
