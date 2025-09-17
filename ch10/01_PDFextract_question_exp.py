@@ -260,7 +260,7 @@ embeddings = OpenAIEmbeddings(api_key="API_key 입력")
 knowledge_base = FAISS.from_texts(chunks, embeddings)
 # PDF 파일 "Summary of ChatGPTGPT-4 Research.pdf" 내에서 
 # 사용자의 질문 "where can i use chatGPT"과 가장 유사한 내용이 포함되어 있는
-# Chink 4개 추출하기 (질문에 대한 답변이 포함되어 있기 보다는 질문과 가장 유사한 의미를 내포하는 chunk 묶음을 뽑은 것이다.)
+# Chunk 4개 추출하기 (질문에 대한 답변이 포함되어 있기 보다는 질문과 가장 유사한 의미를 내포하는 chunk 묶음을 뽑은 것이다.)
 docs = knowledge_base.similarity_search("where can i use chatGPT")
 # print(docs)
 

@@ -21,6 +21,7 @@ _seeMore = '더보기'
 _ver = '버전'
 _softwareInstMethod = '설치 방법'
 _beginning = '처음으로'
+_video = '동영상'
 
 # 버전 종류 
 # '1. Autodesk 제품', '2. 상상진화 BOX 제품' 공통 버전 

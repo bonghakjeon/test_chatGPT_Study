@@ -41,10 +41,10 @@ class EnumValidator(Enum):
 # 로그 초기 설정 
 bot_logger = logger.configureLogger(chatbot_helper._openai_objname)
 
-# PDF 파일(Autodesk, Box, Account)에 작성된 청크(chunk) 단위 텍스트 가져오기 
-autodesk_chunks = pdf.getChunksFromPDF(autodesk_helper._autoCAD_2024_kor_PDF_Filepath) 
-box_chunks = pdf.getChunksFromPDF(box_helper._revitBOX_2024_PDF_Filepath)
-account_chunks = pdf.getChunksFromPDF(account_helper._change_account_password_PDF_Filepath) 
+# TEXT 파일(Autodesk, Box, Account)에 작성된 청크(chunk) 단위 텍스트 가져오기 
+autodesk_chunks = text.getChunksFromText(autodesk_helper._autoCAD_2024_kor_TEXT_Filepath) 
+box_chunks = text.getChunksFromText(box_helper._revitBOX_2024_TEXT_Filepath)
+account_chunks = text.getChunksFromText(account_helper._change_account_password_TEXT_Filepath) 
 
 # 중간보고 LOT 용도 - TEXT 파일(Autodesk, Box, Account)에 작성된 모든 텍스트 가져오기 
 autoCAD_2024_kor_response = text.getResponseFromText(autodesk_helper._autoCAD_2024_kor_TEXT_Filepath) 
@@ -224,14 +224,9 @@ def lambda_handler(event, context):
 # 카카오 챗봇 답변 요청 및 응답 확인
 def responseChatbot(request, response_queue, filename):
     try:
-        # ----- if False == isValid:   # 데이터 유효성 검사 결과 오류인 경우
-
-        if False == isValidator():   # 데이터 유효성 검사 결과 오류인 경우
-            raise Exception(chatbot_helper._errorTitle + 
-                            '사유 : 데이터 유효성 검사 오류.\n'+
-                            chatbot_helper._errorSSflex)
-        
-        chatbot_logger.log_write(chatbot_logger._info, '[테스트] 데이터 유효성 검사 결과', 'OK!')   # 데이터 유효성 검사 결과 성공   
+        if False == isValid:   # 데이터 유효성 검사 결과 오류인 경우
+            isValidator()
+   
         userRequest_Msg = request["userRequest"]["utterance"]   # 사용자 입력 채팅 정보 가져오기 
 
         # 시간 5초 초과시 응답 재요청
@@ -281,39 +276,110 @@ def responseChatbot(request, response_queue, filename):
                             '사유 : 테스트 오류\n' +
                             chatbot_helper._errorSSflex)   # 예외를 발생시킴
         
-        # [OpenAI] API 테스트 기능 
-        elif '/openai' in userRequest_Msg:
+        # [OpenAI] langchain API '1. Autodesk 제품' 테스트 기능
+        elif '/autodesk' in userRequest_Msg:
+            # saveLog(filename, chatbot_logger._info, "[OpenAI] langchain - 1. Autodesk 제품 테스트")   
             dbReset(filename)
-            prompt = userRequest_Msg.replace("/openai", "")  
+            prompt = userRequest_Msg.replace("/autodesk", "")  
 
-            if autodesk_helper._commandType in prompt:   # Autodesk 제품 설치 방법 
-                chunks = autodesk_chunks 
-            elif box_helper._commandType in prompt:      # 상상진화 BOX 제품 설치 방법 
-                chunks = box_chunks
-            elif account_helper._commandType in prompt:  # 계정&제품배정 문의
-                chunks = account_chunks
-
-            # 함수 len 사용하여 리스트 객체 chunks 안에 존재하는 요소의 갯수가 0보다 큰 경우
-            if len(chunks) > 0:
-            # if len(response) > 0:
-                bot_res = openAI.getMessageFromChunks(chunks, prompt)
+            # 함수 len 사용하여 리스트 객체 autodesk_chunks 안에 존재하는 요소의 갯수가 0보다 큰 경우
+            if len(autodesk_chunks) > 0:
+                # print("[OpenAI] langchain API 1. Autodesk 제품 테스트")
+                bot_res = openAI.getMessageFromChunks(autodesk_chunks, prompt)
                 response_queue.put(kakao.simple_textResponseFormat(bot_res))
                 openAI_logger.log_write(openAI_logger._info, "", bot_res)
 
-                saveLog_Msg = f"openai {str(bot_res)}" 
+                saveLog_Msg = f"autodesk {str(bot_res)}" 
                 dbSave(filename, saveLog_Msg)
-            
+    
             else:
-                bot_res = ''
+                bot_res = '1. Autodesk 제품 text 파일 읽기 오류'
                 openAI_logger.log_write(openAI_logger._error, "", bot_res)
 
-                saveLog_Msg = f"openai {str(bot_res)}" 
+                saveLog_Msg = f"autodesk {str(bot_res)}" 
                 dbSave(filename, saveLog_Msg)
-        
+
                 raise Exception(chatbot_helper._errorTitle+
-                                # '사유 : PDF 파일 기반 텍스트(chunk) 존재 안 함.\n'+
-                                '사유 : TEXT 파일 존재 안 함.\n'+
-                                chatbot_helper._errorSSflex)   # 예외를 발생시킴       
+                                f'사유 : {bot_res}\n'+
+                                chatbot_helper._errorSSflex)   # 예외를 발생시킴
+
+
+        # [OpenAI] langchain API '2. 상상진화 BOX 제품' 테스트 기능
+        elif '/box' in userRequest_Msg:
+            saveLog(filename, chatbot_logger._info, "[OpenAI] langchain - 2. 상상진화 BOX 제품 테스트")   
+            prompt = userRequest_Msg.replace("/box", "")  
+
+            # 함수 len 사용하여 리스트 객체 box_chunks 안에 존재하는 요소의 갯수가 0보다 큰 경우
+            if len(box_chunks) > 0:
+                print("[OpenAI] langchain API 2. 상상진화 BOX 제품 테스트")
+                bot_res = openAI.getMessageFromChunks(box_chunks, prompt)
+                response_queue.put(kakao.simple_textResponseFormat(bot_res))
+                openAI_logger.log_write(openAI_logger._info, "", bot_res)
+    
+            else:
+                bot_res = '2. 상상진화 BOX 제품 text 파일 읽기 오류'
+                openAI_logger.log_write(openAI_logger._error, "", bot_res)
+
+                raise Exception(chatbot_helper._errorTitle+
+                                f'사유 : {bot_res}\n'+
+                                chatbot_helper._errorSSflex)   # 예외를 발생시킴
+
+
+        # [OpenAI] langchain API '3. 계정&제품배정 문의' 테스트 기능
+        elif '/account' in userRequest_Msg:
+            saveLog(filename, chatbot_logger._info, "[OpenAI] langchain - 3. 계정&제품배정 문의 테스트")   
+            prompt = userRequest_Msg.replace("/account", "")  
+
+            # 함수 len 사용하여 리스트 객체 account_chunks 안에 존재하는 요소의 갯수가 0보다 큰 경우
+            if len(account_chunks) > 0:
+                print("[OpenAI] langchain API 3. 계정&제품배정 문의 테스트")
+                bot_res = openAI.getMessageFromChunks(account_chunks, prompt)
+                response_queue.put(kakao.simple_textResponseFormat(bot_res))
+                openAI_logger.log_write(openAI_logger._info, "", bot_res)
+    
+            else:
+                bot_res = '3. 계정&제품배정 문의 text 파일 읽기 오류'
+                openAI_logger.log_write(openAI_logger._error, "", bot_res)
+
+                raise Exception(chatbot_helper._errorTitle+
+                                f'사유 : {bot_res}\n'+
+                                chatbot_helper._errorSSflex)   # 예외를 발생시킴      
+
+
+        
+        # [OpenAI] langchain API 테스트 기능 
+        # elif '/openai' in userRequest_Msg:
+        #     dbReset(filename)
+        #     prompt = userRequest_Msg.replace("/openai", "")  
+
+        #     if autodesk_helper._commandType in prompt:   # Autodesk 제품 설치 방법 
+        #         chunks = autodesk_chunks 
+        #     elif box_helper._commandType in prompt:      # 상상진화 BOX 제품 설치 방법 
+        #         chunks = box_chunks
+        #     elif account_helper._commandType in prompt:  # 계정&제품배정 문의
+        #         chunks = account_chunks
+
+        #     # 함수 len 사용하여 리스트 객체 chunks 안에 존재하는 요소의 갯수가 0보다 큰 경우
+        #     if len(chunks) > 0:
+        #     # if len(response) > 0:
+        #         bot_res = openAI.getMessageFromChunks(chunks, prompt)
+        #         response_queue.put(kakao.simple_textResponseFormat(bot_res))
+        #         openAI_logger.log_write(openAI_logger._info, "", bot_res)
+
+        #         saveLog_Msg = f"openai {str(bot_res)}" 
+        #         dbSave(filename, saveLog_Msg)
+            
+        #     else:
+        #         bot_res = ''
+        #         openAI_logger.log_write(openAI_logger._error, "", bot_res)
+
+        #         saveLog_Msg = f"openai {str(bot_res)}" 
+        #         dbSave(filename, saveLog_Msg)
+        
+        #         raise Exception(chatbot_helper._errorTitle+
+        #                         # '사유 : PDF 파일 기반 텍스트(chunk) 존재 안 함.\n'+
+        #                         '사유 : TEXT 파일 존재 안 함.\n'+
+        #                         chatbot_helper._errorSSflex)   # 예외를 발생시킴       
 
         # level1 - 상담시간 안내 or 처음으로
         elif (chatbot_helper._consult in userRequest_Msg
@@ -473,27 +539,40 @@ def responseChatbot(request, response_queue, filename):
 # 변수(문자열, 리스트 객체)에 저장된 데이터 유효성 검사
 # 참고 URL - https://chatgpt.com/c/68017acc-672c-8010-8649-7fa39f17d834
 def isValidator():
-    # 파이썬 함수 len 사용하여 문자열, 리스트 객체 길이 구하기
-    # 참고 URL - https://wikidocs.net/215513 
-    if (EnumValidator.NONE.value >= len(autoCAD_2024_kor_response) 
-        or EnumValidator.NONE.value >= len(revitBOX_2024_response)
-        or EnumValidator.NONE.value >= len(change_account_password_response)     
-        or EnumValidator.NONE.value >= len(consultBtnList)       
-        or EnumValidator.NONE.value >= len(subCatBtnList)
-        or EnumValidator.NONE.value >= len(autodeskInstBtnList)
-        or EnumValidator.NONE.value >= len(autodeskSeeMoreBtnList)
-        or EnumValidator.NONE.value >= len(autodeskInstLangPackVerMsgList) 
-        or EnumValidator.NONE.value >= len(autodeskInstLangPackVerBtnList)
-        or EnumValidator.NONE.value >= len(autodeskInstVerMsgList)
-        or EnumValidator.NONE.value >= len(autodeskInstVerBtnList)        
-        or EnumValidator.NONE.value >= len(autodeskInstLangBtnList)        
-        or EnumValidator.NONE.value >= len(boxInstBtnList)      
-        or EnumValidator.NONE.value >= len(boxInstVerBtnList) 
-        or EnumValidator.NONE.value >= len(boxInstVerMsgList)         
-        or EnumValidator.NONE.value >= len(accountBtnList)):
-        return False   # 데이터 유효성 검사 오류 
+    try:
+        global isValid
+
+        # 파이썬 함수 len 사용하여 문자열, 리스트 객체 길이 구하기
+        # 참고 URL - https://wikidocs.net/215513 
+        if (EnumValidator.NONE.value >= len(autoCAD_2024_kor_response) 
+            or EnumValidator.NONE.value >= len(revitBOX_2024_response)
+            or EnumValidator.NONE.value >= len(change_account_password_response)     
+            or EnumValidator.NONE.value >= len(consultBtnList)       
+            or EnumValidator.NONE.value >= len(subCatBtnList)
+            or EnumValidator.NONE.value >= len(autodeskInstBtnList)
+            or EnumValidator.NONE.value >= len(autodeskSeeMoreBtnList)
+            or EnumValidator.NONE.value >= len(autodeskInstLangPackVerMsgList) 
+            or EnumValidator.NONE.value >= len(autodeskInstLangPackVerBtnList)
+            or EnumValidator.NONE.value >= len(autodeskInstVerMsgList)
+            or EnumValidator.NONE.value >= len(autodeskInstVerBtnList)        
+            or EnumValidator.NONE.value >= len(autodeskInstLangBtnList)        
+            or EnumValidator.NONE.value >= len(boxInstBtnList)      
+            or EnumValidator.NONE.value >= len(boxInstVerBtnList) 
+            or EnumValidator.NONE.value >= len(boxInstVerMsgList)         
+            or EnumValidator.NONE.value >= len(accountBtnList)):
+            isValid = False   # 데이터 유효성 검사 오류 
+            raise Exception(chatbot_helper._errorTitle + 
+                            '사유 : 데이터 유효성 검사 오류.\n'+
+                            chatbot_helper._errorSSflex)
+    
+        isValid = True   # 데이터 유효성 검사 성공
+        chatbot_logger.log_write(chatbot_logger._info, '[테스트] 데이터 유효성 검사 결과', 'OK!')   # 데이터 유효성 검사 결과 성공
         
-    return True   # 데이터 유효성 검사 성공
+    except Exception as e:   # 하위 코드 블록에서 예외가 발생해도 변수 e에다 넣고 아래 코드 실행됨
+        # 테스트 오류 로그 기록  
+        error_Msg = str(e)  # str() 함수 사용해서 Exception 클래스 객체 e를 문자열로 변환 및 오류 메시지 변수 error_Msg에 할당 (문자열로 변환 안할시 카카오 챗봇에서 스킬서버 오류 출력되면서 챗봇이 답변도 안하고 장시간 멈춤 상태 발생.)      
+        chatbot_logger.log_write(chatbot_logger._error, "[테스트] 오류", error_Msg) 
+        raise    # raise로 함수 isValidator의 현재 예외를 다시 발생시켜서 함수 isValidator 호출한 상위 코드 블록으로 넘김
 
 # 아마존 웹서비스(AWS) 람다 함수(Lambda Function) 
 # -> 로그 텍스트 파일("/tmp/botlog.txt")에 적힌 로그(텍스트) 초기화 및 작성 
